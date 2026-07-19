@@ -1,0 +1,175 @@
+<div class="page-container">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-info">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/student/dashboard">
+        <i class="fas fa-graduation-cap"></i> PlacementTracker
+      </a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" routerLink="/student/dashboard">
+          <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a class="nav-link nav-logout" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="section-header mb-0">
+        <h2><i class="fas fa-user-tie"></i> Mock Interview Records</h2>
+        <p>Track your interview preparation and performance</p>
+      </div>
+      <button *ngIf="!showForm" class="btn btn-info" (click)="showForm = true">
+        <i class="fas fa-plus"></i> Add Record
+      </button>
+    </div>
+
+    <!-- Add Form -->
+    <div *ngIf="showForm" class="form-card mb-4 animate-scaleIn">
+      <div class="form-card-header">
+        <h4><i class="fas fa-plus-circle"></i> Add Interview Record</h4>
+      </div>
+      <div class="form-card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Interview Type</label>
+            <select class="form-select" [(ngModel)]="newInterview.interviewType">
+              <option value="Technical">Technical</option>
+              <option value="HR">HR</option>
+              <option value="Aptitude">Aptitude</option>
+              <option value="Group Discussion">Group Discussion</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Company (Optional)</label>
+            <input type="text" class="form-control" [(ngModel)]="newInterview.company"
+                   placeholder="e.g. TCS">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Technical Score (0-100)</label>
+            <input type="number" class="form-control" [(ngModel)]="newInterview.technicalScore" min="0" max="100">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Aptitude Score (0-100)</label>
+            <input type="number" class="form-control" [(ngModel)]="newInterview.aptitudeScore" min="0" max="100">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Communication Score (0-100)</label>
+            <input type="number" class="form-control" [(ngModel)]="newInterview.communicationScore" min="0" max="100">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Interviewer Name</label>
+            <input type="text" class="form-control" [(ngModel)]="newInterview.interviewerName"
+                   placeholder="Enter interviewer name">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Status</label>
+            <select class="form-select" [(ngModel)]="newInterview.status">
+              <option value="Completed">Completed</option>
+              <option value="Scheduled">Scheduled</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Feedback</label>
+            <textarea class="form-control" [(ngModel)]="newInterview.feedback" rows="3"
+                      placeholder="Enter feedback notes..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-card-footer">
+        <button class="btn btn-success me-2" (click)="saveInterview()">
+          <i class="fas fa-save"></i> Save Record
+        </button>
+        <button class="btn btn-outline-secondary" (click)="showForm = false">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="interviews.length === 0 && !showForm" class="empty-state">
+      <div class="empty-icon"><i class="fas fa-user-tie"></i></div>
+      <h4>No mock interview records yet</h4>
+      <p>Add your first interview record to track your progress!</p>
+      <button class="btn btn-info mt-3" (click)="showForm = true">
+        <i class="fas fa-plus"></i> Add First Record
+      </button>
+    </div>
+
+    <!-- Interview Cards -->
+    <div class="row g-3">
+      <div class="col-lg-6" *ngFor="let interview of interviews; let i = index"
+           [style.animation-delay]="(i * 0.05) + 's'">
+        <div class="card interview-card animate-fadeIn">
+          <div class="card-body">
+            <div class="interview-header">
+              <div class="interview-type-icon" [ngClass]="{
+                'type-technical': interview.interviewType === 'Technical',
+                'type-hr': interview.interviewType === 'HR',
+                'type-aptitude': interview.interviewType === 'Aptitude',
+                'type-gd': interview.interviewType === 'Group Discussion'
+              }">
+                <i class="fas" [ngClass]="{
+                  'fa-laptop-code': interview.interviewType === 'Technical',
+                  'fa-user-tie': interview.interviewType === 'HR',
+                  'fa-brain': interview.interviewType === 'Aptitude',
+                  'fa-comments': interview.interviewType === 'Group Discussion'
+                }"></i>
+              </div>
+              <div class="interview-meta">
+                <h5>{{interview.interviewType}}</h5>
+                <span *ngIf="interview.company" class="company-name">
+                  <i class="fas fa-building"></i> {{interview.company}}
+                </span>
+              </div>
+              <span class="status-badge" [ngClass]="{
+                'status-completed': interview.status === 'Completed',
+                'status-scheduled': interview.status === 'Scheduled',
+                'status-cancelled': interview.status === 'Cancelled'
+              }">
+                {{interview.status}}
+              </span>
+            </div>
+
+            <div class="score-grid">
+              <div class="score-item">
+                <div class="score-circle" [style.background]="getScoreColor(interview.technicalScore)">
+                  {{interview.technicalScore}}
+                </div>
+                <span>Technical</span>
+              </div>
+              <div class="score-item">
+                <div class="score-circle" [style.background]="getScoreColor(interview.aptitudeScore)">
+                  {{interview.aptitudeScore}}
+                </div>
+                <span>Aptitude</span>
+              </div>
+              <div class="score-item">
+                <div class="score-circle" [style.background]="getScoreColor(interview.communicationScore)">
+                  {{interview.communicationScore}}
+                </div>
+                <span>Communication</span>
+              </div>
+            </div>
+
+            <div class="overall-score">
+              <span>Overall Score</span>
+              <strong>{{interview.overallScore}}</strong>
+            </div>
+
+            <p *ngIf="interview.feedback" class="feedback-text">
+              <i class="fas fa-comment-dots"></i> {{interview.feedback}}
+            </p>
+
+            <button class="btn btn-outline-danger btn-sm" (click)="deleteInterview(interview.id)">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

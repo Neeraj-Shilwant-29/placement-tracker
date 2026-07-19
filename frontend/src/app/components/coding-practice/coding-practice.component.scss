@@ -1,0 +1,196 @@
+.page-container {
+  min-height: 100vh;
+  background: var(--gray-100);
+}
+
+.page-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.filter-bar {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+  margin-bottom: 1.5rem;
+}
+
+.results-count {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+}
+
+// Coding Card
+.coding-card {
+  height: 100%;
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--success);
+  }
+}
+
+.coding-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.problem-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--gray-900);
+  margin: 0;
+}
+
+.difficulty-badge {
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &.diff-easy {
+    background: #DCFCE7;
+    color: #166534;
+  }
+
+  &.diff-medium {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+
+  &.diff-hard {
+    background: #FEE2E2;
+    color: #991B1B;
+  }
+}
+
+.category-tag {
+  display: inline-block;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.problem-desc {
+  color: var(--gray-500);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 0.75rem 0 1rem;
+}
+
+// Problem Detail
+.problem-detail-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--gray-200);
+}
+
+.problem-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+
+  h3 {
+    font-weight: 800;
+    color: var(--gray-900);
+    margin: 0;
+  }
+}
+
+.problem-section {
+  margin-top: 1.5rem;
+
+  h5 {
+    font-weight: 700;
+    color: var(--gray-800);
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+
+    i {
+      color: var(--success);
+      margin-right: 0.4rem;
+    }
+  }
+}
+
+.problem-description {
+  color: var(--gray-600);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.io-section {
+  h5 {
+    font-weight: 700;
+    color: var(--gray-800);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+
+    i {
+      color: var(--success);
+      margin-right: 0.4rem;
+    }
+  }
+
+  pre {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    border-radius: var(--radius-md);
+    background: var(--gray-900);
+    color: #E2E8F0;
+    padding: 1rem 1.25rem;
+  }
+}
+
+.constraints-text {
+  color: var(--gray-600);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  background: var(--gray-50);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+}
+
+.nav-logout {
+  color: var(--accent-light) !important;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn { animation: fadeIn 0.4s ease-out both; }
+
+@media (max-width: 768px) {
+  .page-content { padding: 1rem; }
+  .problem-detail-card { padding: 1.5rem; }
+}

@@ -1,0 +1,127 @@
+.admin-login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: linear-gradient(135deg, #0F0F0F 0%, #1A1A2E 50%, #16213E 100%);
+  padding: 2rem;
+}
+
+.admin-login-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(239, 68, 68, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 60%, rgba(245, 158, 11, 0.08) 0%, transparent 60%);
+}
+
+.admin-login-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-2xl);
+  overflow: hidden;
+}
+
+.admin-login-header {
+  text-align: center;
+  padding: 2.5rem 2rem 1.5rem;
+  background: linear-gradient(180deg, #FEF2F2 0%, #fff 100%);
+
+  .admin-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--danger), #DC2626);
+    color: #fff;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 0.25rem;
+  }
+
+  p {
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.admin-login-body {
+  padding: 2rem;
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-label {
+    i {
+      color: var(--gray-400);
+      margin-right: 0.25rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  .btn-block {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+  }
+}
+
+.admin-login-footer {
+  padding: 1.5rem 2rem 2rem;
+  text-align: center;
+  border-top: 1px solid var(--gray-100);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .student-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+    transition: var(--transition);
+
+    &:hover {
+      background: var(--gray-50);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+  }
+
+  .back-link {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

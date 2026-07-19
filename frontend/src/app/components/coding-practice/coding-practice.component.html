@@ -1,0 +1,132 @@
+<div class="page-container">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-success">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/student/dashboard">
+        <i class="fas fa-graduation-cap"></i> PlacementTracker
+      </a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" routerLink="/student/dashboard">
+          <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a class="nav-link nav-logout" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-content">
+    <div class="section-header">
+      <h2><i class="fas fa-code"></i> Coding Practice</h2>
+      <p>Solve coding problems and sharpen your skills</p>
+    </div>
+
+    <div class="filter-bar animate-fadeIn">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label"><i class="fas fa-signal"></i> Difficulty</label>
+          <select class="form-select" [(ngModel)]="filterDifficulty" (change)="filterQuestions()">
+            <option value="">All Difficulties</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label"><i class="fas fa-tags"></i> Category</label>
+          <select class="form-select" [(ngModel)]="filterCategory" (change)="filterQuestions()">
+            <option value="">All Categories</option>
+            <option value="Arrays">Arrays</option>
+            <option value="Strings">Strings</option>
+            <option value="Linked Lists">Linked Lists</option>
+            <option value="Dynamic Programming">Dynamic Programming</option>
+            <option value="Searching">Searching</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <span class="results-count badge bg-success">{{filteredQuestions.length}} problems</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question List -->
+    <div *ngIf="!selectedQuestion">
+      <div class="row g-3">
+        <div class="col-lg-6" *ngFor="let q of filteredQuestions; let i = index"
+             [style.animation-delay]="(i * 0.05) + 's'">
+          <div class="card coding-card animate-fadeIn">
+            <div class="card-body">
+              <div class="coding-card-header">
+                <h5 class="problem-title">{{q.title}}</h5>
+                <span class="difficulty-badge" [ngClass]="{
+                  'diff-easy': q.difficulty === 'Easy',
+                  'diff-medium': q.difficulty === 'Medium',
+                  'diff-hard': q.difficulty === 'Hard'
+                }">
+                  {{q.difficulty}}
+                </span>
+              </div>
+              <span class="category-tag">{{q.category}}</span>
+              <p class="problem-desc">{{q.description | slice:0:120}}...</p>
+              <button class="btn btn-outline-success btn-sm" (click)="selectQuestion(q)">
+                <i class="fas fa-external-link-alt"></i> View Problem
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="filteredQuestions.length === 0" class="empty-state">
+        <div class="empty-icon"><i class="fas fa-code"></i></div>
+        <h4>No problems found</h4>
+        <p>Try adjusting your filters</p>
+      </div>
+    </div>
+
+    <!-- Question Detail -->
+    <div *ngIf="selectedQuestion" class="problem-detail animate-fadeIn">
+      <button class="btn btn-outline-secondary mb-3" (click)="selectedQuestion = null">
+        <i class="fas fa-arrow-left"></i> Back to Problems
+      </button>
+
+      <div class="problem-detail-card">
+        <div class="problem-detail-header">
+          <h3>{{selectedQuestion.title}}</h3>
+          <span class="difficulty-badge" [ngClass]="{
+            'diff-easy': selectedQuestion.difficulty === 'Easy',
+            'diff-medium': selectedQuestion.difficulty === 'Medium',
+            'diff-hard': selectedQuestion.difficulty === 'Hard'
+          }">
+            {{selectedQuestion.difficulty}}
+          </span>
+        </div>
+        <span class="category-tag mb-3">{{selectedQuestion.category}}</span>
+
+        <div class="problem-section">
+          <h5><i class="fas fa-info-circle"></i> Description</h5>
+          <p class="problem-description">{{selectedQuestion.description}}</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="io-section">
+              <h5><i class="fas fa-sign-in-alt"></i> Sample Input</h5>
+              <pre><code>{{selectedQuestion.sampleInput}}</code></pre>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="io-section">
+              <h5><i class="fas fa-sign-out-alt"></i> Sample Output</h5>
+              <pre><code>{{selectedQuestion.sampleOutput}}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="selectedQuestion.constraints" class="problem-section mt-3">
+          <h5><i class="fas fa-ruler"></i> Constraints</h5>
+          <p class="constraints-text">{{selectedQuestion.constraints}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

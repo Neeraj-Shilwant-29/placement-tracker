@@ -1,0 +1,100 @@
+<div class="auth-container">
+  <div class="auth-bg"></div>
+  <div class="auth-card animate-scaleIn">
+    <div class="auth-card-header">
+      <div class="auth-logo">
+        <i class="fas fa-user-plus"></i>
+      </div>
+      <h2>Create Account</h2>
+      <p>Join thousands of students preparing for placements</p>
+    </div>
+
+    <div class="auth-card-body">
+      <div *ngIf="error" class="alert alert-danger">
+        <i class="fas fa-exclamation-circle"></i> {{error}}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-user"></i> Full Name
+          </label>
+          <input type="text" class="form-control" formControlName="fullName"
+                 placeholder="Enter your full name">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-envelope"></i> Email Address
+          </label>
+          <input type="email" class="form-control" formControlName="email"
+                 placeholder="you@college.edu">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-lock"></i> Password
+          </label>
+          <input type="password" class="form-control" formControlName="password"
+                 placeholder="Min 6 characters">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-phone"></i> Phone Number
+          </label>
+          <input type="text" class="form-control" formControlName="phone"
+                 placeholder="Enter phone number">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-university"></i> College
+          </label>
+          <input type="text" class="form-control" formControlName="college"
+                 placeholder="Enter your college name">
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-sitemap"></i> Branch
+              </label>
+              <select class="form-select" formControlName="branch">
+                <option value="">Select</option>
+                <option value="CSE">CSE</option>
+                <option value="IT">IT</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+                <option value="ME">ME</option>
+                <option value="CE">CE</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="fas fa-star"></i> CGPA
+              </label>
+              <input type="text" class="form-control" formControlName="cgpa"
+                     placeholder="e.g. 8.5">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+          {{loading ? 'Creating Account...' : 'Create Account'}}
+        </button>
+      </form>
+    </div>
+
+    <div class="auth-card-footer">
+      <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+      <a routerLink="/" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Home
+      </a>
+    </div>
+  </div>
+</div>
