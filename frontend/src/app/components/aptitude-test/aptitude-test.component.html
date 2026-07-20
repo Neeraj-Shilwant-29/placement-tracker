@@ -38,11 +38,6 @@
                   <i class="fas fa-calculator"></i>
                   <span>Quantitative</span>
                 </div>
-                <div class="option-card" [class.selected]="selectedCategory === 'Verbal'"
-                     (click)="selectedCategory = 'Verbal'">
-                  <i class="fas fa-book"></i>
-                  <span>Verbal</span>
-                </div>
                 <div class="option-card" [class.selected]="selectedCategory === 'Logical'"
                      (click)="selectedCategory = 'Logical'">
                   <i class="fas fa-puzzle-piece"></i>
@@ -50,6 +45,7 @@
                 </div>
               </div>
             </div>
+            <br>
             <div class="col-md-4">
               <label class="form-label">Difficulty</label>
               <select class="form-select" [(ngModel)]="selectedDifficulty">
@@ -59,6 +55,7 @@
                 <option value="Hard">Hard</option>
               </select>
             </div>
+            <br>
             <div class="col-md-4">
               <label class="form-label">Number of Questions</label>
               <input type="number" class="form-control" [(ngModel)]="questionCount" min="1" max="20">
