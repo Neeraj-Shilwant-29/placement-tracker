@@ -39,6 +39,7 @@ public class AptitudeQuestion {
     private String difficulty;
     private String explanation;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean active = true;
 
