@@ -32,6 +32,7 @@
             <option value="Hard">Hard</option>
           </select>
         </div>
+        <br>
         <div class="col-md-4">
           <label class="form-label"><i class="fas fa-tags"></i> Category</label>
           <select class="form-select" [(ngModel)]="filterCategory" (change)="filterQuestions()">
@@ -43,6 +44,7 @@
             <option value="Searching">Searching</option>
           </select>
         </div>
+        <br>
         <div class="col-md-4">
           <span class="results-count badge bg-success">{{filteredQuestions.length}} problems</span>
         </div>

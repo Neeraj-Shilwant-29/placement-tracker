@@ -1,0 +1,170 @@
+<div class="company-details-page" *ngIf="company">
+
+    <!-- Header -->
+    <div class="page-header">
+
+        <button class="back-btn" routerLink="/companies">
+            <i class="fa fa-arrow-left"></i>
+        </button>
+
+        <div class="company-logo">
+            {{company.companyName.charAt(0)}}
+        </div>
+
+        <div class="company-info">
+            <h2>{{company.companyName}}</h2>
+            <p>{{company.industry}}</p>
+        </div>
+
+        <div class="salary">
+            {{company.package}}
+            <span>Min CGPA : {{company.minCgpa}}</span>
+        </div>
+
+    </div>
+
+
+    <!-- Basic Details -->
+
+    <div class="details-grid">
+
+        <div class="detail-card">
+            <label>
+                <i class="fa fa-map-marker-alt"></i>
+                Location
+            </label>
+
+            <h4>{{company.location}}</h4>
+        </div>
+
+        <div class="detail-card">
+            <label>
+                <i class="fa fa-building"></i>
+                Industry
+            </label>
+
+            <h4>{{company.industry}}</h4>
+        </div>
+
+        <div class="detail-card">
+            <label>
+                <i class="fa fa-graduation-cap"></i>
+                Minimum CGPA
+            </label>
+
+            <h4>{{company.minCgpa}}</h4>
+        </div>
+
+    </div>
+
+
+    <!-- About -->
+
+    <div class="section">
+
+        <h3>About Company</h3>
+
+        <p>{{company.description}}</p>
+
+    </div>
+
+
+    <!-- Eligibility -->
+
+    <div class="section">
+
+        <h3>Eligible Branches</h3>
+
+        <div class="chips">
+
+            <span *ngFor="let branch of company.branches">
+                {{branch}}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Recruitment -->
+
+    <div class="section">
+
+        <h3>Recruitment Process</h3>
+
+        <div class="steps">
+
+            <div *ngFor="let step of company.process" class="step">
+
+                <div class="number">
+                    {{step.order}}
+                </div>
+
+                <div>
+                    <h4>{{step.title}}</h4>
+                    <p>{{step.description}}</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Job Description -->
+
+    <div class="section">
+
+        <h3>Job Description</h3>
+
+        <p>{{company.jobDescription}}</p>
+
+    </div>
+
+
+    <!-- Skills -->
+
+    <div class="section">
+
+        <h3>Required Skills</h3>
+
+        <div class="chips">
+
+            <span *ngFor="let skill of company.skills">
+                {{skill}}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Documents -->
+
+    <div class="section">
+
+        <h3>Required Documents</h3>
+
+        <ul>
+
+            <li *ngFor="let doc of company.documents">
+                {{doc}}
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- Apply -->
+
+    <div class="footer">
+
+        <button class="apply-btn">
+            Apply Now
+        </button>
+
+    </div>
+
+</div>

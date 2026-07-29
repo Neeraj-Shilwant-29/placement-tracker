@@ -139,144 +139,214 @@
 }
 
 /* ===================================================
-   COMPANY GRID
+   COMPANY LIST
 =================================================== */
 
-.company-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(340px,1fr));
-  gap: 1.5rem;
+.company-list{
+  display:flex;
+  flex-direction:column;
+  gap:1.5rem;
 }
 
 /* ===================================================
    COMPANY CARD
 =================================================== */
 
-.company-card {
-  background: white;
-  border-radius: 18px;
-  border: none;
-  overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0,0,0,.06);
-  transition: .3s ease;
-  animation: fadeIn .4s ease;
+.company-card{
+  background:#fff;
+  border-radius:20px;
+  padding:1.8rem;
+  box-shadow:0 10px 30px rgba(15,23,42,.08);
+  transition:.35s;
+  border:none;
+  overflow:hidden;
 
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 35px rgba(0,0,0,.12);
+  &:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 45px rgba(15,23,42,.15);
   }
-
-  .card-body {
-    padding: 1.4rem;
-  }
-}
-
-.company-card-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.company-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 15px;
-  background: linear-gradient(135deg,#4f46e5,#2563eb);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.4rem;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
-.company-info {
-  flex: 1;
-
-  h5 {
-    margin: 0;
-    font-weight: 700;
-    color: #111827;
-  }
-}
-
-.company-industry {
-  color: #6b7280;
-  font-size: .82rem;
 }
 
 /* ===================================================
-   DETAILS
+   HEADER
 =================================================== */
 
-.company-details {
-  margin: 1rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: .75rem;
+.company-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1.5rem;
 }
 
-.detail-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: .9rem;
-  color: #6b7280;
-
-  i {
-    color: #4f46e5;
-    margin-right: .5rem;
-    width: 18px;
-  }
-
-  strong {
-    color: #111827;
-  }
+.company-left{
+  display:flex;
+  align-items:center;
+  gap:1rem;
 }
 
-.package-badge {
-  color: #16a34a !important;
-  font-weight: 700;
+.company-avatar{
+  width:70px;
+  height:70px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#5b4cf3,#2563eb);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  font-size:28px;
+  font-weight:700;
+  box-shadow:0 10px 20px rgba(79,70,229,.25);
+}
+
+.company-title{
+
+  h4{
+    margin:0;
+    font-size:1.4rem;
+    font-weight:700;
+    color:#111827;
+  }
+
+  .industry{
+    color:#64748b;
+    font-size:.9rem;
+  }
+
+}
+
+.company-package{
+  text-align:right;
+
+  h4{
+    color:#16a34a;
+    margin:0;
+    font-size:1.5rem;
+    font-weight:700;
+  }
+
+  span{
+    color:#6b7280;
+    font-size:.9rem;
+  }
 }
 
 /* ===================================================
-   BRANCHES
+   INFO GRID
 =================================================== */
 
-.eligible-branches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
-  border-top: 1px solid #f3f4f6;
-  margin-top: 1rem;
-  padding-top: 1rem;
+.company-info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1rem;
+  margin-bottom:1.5rem;
 }
 
-.branch-tag {
-  background: #eef2ff;
-  color: #4338ca;
-  padding: .35rem .8rem;
-  border-radius: 30px;
-  font-size: .75rem;
-  font-weight: 600;
+.info-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:#f8fafc;
+  border:1px solid #e5e7eb;
+  border-radius:14px;
+  padding:1rem;
+
+  i{
+    color:#4f46e5;
+    font-size:20px;
+  }
+
+  label{
+    display:block;
+    margin:0;
+    color:#94a3b8;
+    font-size:.75rem;
+    font-weight:600;
+  }
+
+  span{
+    color:#0f172a;
+    font-weight:600;
+  }
 }
 
 /* ===================================================
    DESCRIPTION
 =================================================== */
 
-.company-desc {
-  margin-top: 1rem;
-  color: #6b7280;
-  line-height: 1.6;
-  font-size: .85rem;
+.company-description{
+  margin-bottom:1.5rem;
+
+  h6{
+    font-weight:700;
+    margin-bottom:.6rem;
+    color:#111827;
+
+    i{
+      color:#4f46e5;
+      margin-right:.4rem;
+    }
+  }
+
+  p{
+    margin:0;
+    color:#64748b;
+    line-height:1.7;
+  }
 }
 
 /* ===================================================
-   EMPTY STATE
+   BRANCHES
 =================================================== */
+
+.company-branches{
+  border-top:1px solid #edf2f7;
+  padding-top:1.25rem;
+}
+
+.branch-title{
+  font-weight:700;
+  margin-bottom:.8rem;
+  color:#111827;
+
+  i{
+    color:#4f46e5;
+    margin-right:.4rem;
+  }
+}
+
+.branch-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.6rem;
+}
+
+.branch-chip{
+  background:#eef2ff;
+  color:#4f46e5;
+  padding:.45rem .95rem;
+  border-radius:30px;
+  font-size:.8rem;
+  font-weight:600;
+}
+
+/* ===================================================
+   FOOTER
+=================================================== */
+
+.company-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:1.8rem;
+  padding-top:1.3rem;
+  border-top:1px solid #edf2f7;
+
+  .btn{
+    border-radius:10px;
+    padding:.6rem 1.2rem;
+    font-weight:600;
+  }
+}
 
 .empty-state {
   background: white;
@@ -351,35 +421,29 @@
   animation: fadeIn .4s ease;
 }
 
-/* ===================================================
-   RESPONSIVE
-=================================================== */
+@media(max-width:991px){
 
-@media(max-width:992px){
-
-  .page-header{
+  .company-header{
     flex-direction:column;
     align-items:flex-start;
     gap:1rem;
   }
 
-  .filter-controls{
+  .company-package{
+    text-align:left;
+  }
+
+  .company-info-grid{
+    grid-template-columns:1fr;
+  }
+
+  .company-footer{
     flex-direction:column;
-    align-items:stretch;
-  }
+    gap:1rem;
 
-  .search-box,
-  .industry-filter{
-    width:100%;
-  }
-
-  .results-count{
-    width:100%;
-    text-align:center;
-  }
-
-  .company-grid{
-    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    .btn{
+      width:100%;
+    }
   }
 
 }
@@ -390,23 +454,22 @@
     padding:1rem;
   }
 
-  .company-grid{
-    grid-template-columns:1fr;
-  }
-
-  .company-card-header{
+  .company-left{
     flex-direction:column;
     align-items:flex-start;
   }
 
-  .page-title{
-    h2{
-      font-size:1.5rem;
-    }
+  .company-avatar{
+    width:60px;
+    height:60px;
+    font-size:24px;
+  }
+
+  .company-title h4{
+    font-size:1.2rem;
   }
 
 }
-
 /* ===================================================
    TOP NAVBAR
 =================================================== */
