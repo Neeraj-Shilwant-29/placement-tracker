@@ -1,94 +1,80 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
 import { DashboardService } from '../../services/dashboard.service';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
 @Component({
-  selector: 'app-student-dashboard',
-  templateUrl: './student-dashboard.component.html',
-  styleUrls: ['./student-dashboard.component.scss']
+  selector: 'app-admin-overview',
+  templateUrl: './admin-overview.component.html',
+  styleUrls: ['./admin-overview.component.scss']
 })
-export class StudentDashboardComponent implements OnInit, AfterViewInit {
+export class AdminOverviewComponent implements OnInit, AfterViewInit {
   @ViewChild('barChart') barChartRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('doughnutChart') doughnutChartRef!: ElementRef<HTMLCanvasElement>;
 
-  user: any;
-  dashboard: any;
-  todayLabel = new Intl.DateTimeFormat('en-GB', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  }).format(new Date());
-
+  stats: any;
   private barChart: Chart | null = null;
   private doughnutChart: Chart | null = null;
 
-  constructor(
-    private authService: AuthService,
-    private dashboardService: DashboardService,
-    private router: Router
-  ) {
-    this.user = this.authService.getCurrentUser();
-  }
+  constructor(private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
-    if (this.user?.id) {
-      this.dashboardService.getStudentDashboard(this.user.id).subscribe({
-        next: (data) => {
-          this.dashboard = data;
-          this.renderCharts();
-        },
-        error: (err) => console.error('Error loading dashboard:', err)
-      });
-    }
+    this.dashboardService.getAdminStats().subscribe({
+      next: (data) => {
+        this.stats = data;
+        this.renderCharts();
+      },
+      error: (err) => console.error(err)
+    });
   }
 
   ngAfterViewInit(): void {
-    if (this.dashboard) {
+    if (this.stats) {
       this.renderCharts();
     }
   }
 
   renderCharts(): void {
     if (!this.barChartRef?.nativeElement || !this.doughnutChartRef?.nativeElement) return;
-
     this.renderBarChart();
     this.renderDoughnutChart();
   }
 
   private renderBarChart(): void {
     if (this.barChart) this.barChart.destroy();
-
     const ctx = this.barChartRef.nativeElement.getContext('2d');
     if (!ctx) return;
 
     this.barChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Aptitude Score', 'Interview Score', 'Tests Done', 'Interviews'],
+        labels: ['Students', 'Companies', 'Aptitude Qs', 'Coding Qs', 'Tests Taken', 'Interviews'],
         datasets: [{
-          label: 'Your Performance',
+          label: 'Platform Statistics',
           data: [
-            this.dashboard?.averageAptitudeScore || 0,
-            this.dashboard?.averageInterviewScore || 0,
-            this.dashboard?.aptitudeTestsCompleted || 0,
-            this.dashboard?.mockInterviewsCompleted || 0
+            this.stats?.totalStudents || 0,
+            this.stats?.totalCompanies || 0,
+            this.stats?.totalAptitudeQuestions || 0,
+            this.stats?.totalCodingQuestions || 0,
+            this.stats?.totalAptitudeTests || 0,
+            this.stats?.totalMockInterviews || 0
           ],
           backgroundColor: [
-            'rgba(139, 92, 246, 0.8)',
+            'rgba(79, 70, 229, 0.8)',
             'rgba(16, 185, 129, 0.8)',
+            'rgba(139, 92, 246, 0.8)',
             'rgba(59, 130, 246, 0.8)',
-            'rgba(245, 158, 11, 0.8)'
+            'rgba(245, 158, 11, 0.8)',
+            'rgba(236, 72, 153, 0.8)'
           ],
           borderColor: [
-            'rgb(139, 92, 246)',
+            'rgb(79, 70, 229)',
             'rgb(16, 185, 129)',
+            'rgb(139, 92, 246)',
             'rgb(59, 130, 246)',
-            'rgb(245, 158, 11)'
+            'rgb(245, 158, 11)',
+            'rgb(236, 72, 153)'
           ],
           borderWidth: 2,
           borderRadius: 8,
@@ -112,17 +98,11 @@ export class StudentDashboardComponent implements OnInit, AfterViewInit {
           y: {
             beginAtZero: true,
             grid: { color: 'rgba(0,0,0,0.04)' },
-            ticks: {
-              font: { family: 'Inter', size: 11 },
-              color: '#94A3B8'
-            }
+            ticks: { font: { family: 'Inter', size: 11 }, color: '#94A3B8' }
           },
           x: {
             grid: { display: false },
-            ticks: {
-              font: { family: 'Inter', size: 11, weight: 'normal' },
-              color: '#64748B'
-            }
+            ticks: { font: { family: 'Inter', size: 11, weight: 'normal' }, color: '#64748B' }
           }
         }
       }
@@ -131,26 +111,25 @@ export class StudentDashboardComponent implements OnInit, AfterViewInit {
 
   private renderDoughnutChart(): void {
     if (this.doughnutChart) this.doughnutChart.destroy();
-
     const ctx = this.doughnutChartRef.nativeElement.getContext('2d');
     if (!ctx) return;
 
-    const aptitude = this.dashboard?.aptitudeTestsCompleted || 0;
-    const coding = this.dashboard?.codingProblemsSolved || 0;
-    const interviews = this.dashboard?.mockInterviewsCompleted || 0;
-    const hasData = aptitude + coding + interviews > 0;
+    const aptitude = this.stats?.totalAptitudeQuestions || 0;
+    const coding = this.stats?.totalCodingQuestions || 0;
+    const companies = this.stats?.totalCompanies || 0;
+    const hasData = aptitude + coding + companies > 0;
 
     this.doughnutChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: hasData ? ['Aptitude Tests', 'Coding Solved', 'Mock Interviews'] : ['No Activity Yet'],
+        labels: hasData ? ['Aptitude Questions', 'Coding Questions', 'Companies'] : ['No Data'],
         datasets: [{
-          data: hasData ? [aptitude, coding, interviews] : [1],
+          data: hasData ? [aptitude, coding, companies] : [1],
           backgroundColor: hasData
-            ? ['rgba(139, 92, 246, 0.85)', 'rgba(16, 185, 129, 0.85)', 'rgba(59, 130, 246, 0.85)']
+            ? ['rgba(139, 92, 246, 0.85)', 'rgba(59, 130, 246, 0.85)', 'rgba(16, 185, 129, 0.85)']
             : ['rgba(203, 213, 225, 0.5)'],
           borderColor: hasData
-            ? ['rgb(139, 92, 246)', 'rgb(16, 185, 129)', 'rgb(59, 130, 246)']
+            ? ['rgb(139, 92, 246)', 'rgb(59, 130, 246)', 'rgb(16, 185, 129)']
             : ['rgb(203, 213, 225)'],
           borderWidth: 2,
           hoverOffset: 6
@@ -181,23 +160,5 @@ export class StudentDashboardComponent implements OnInit, AfterViewInit {
         }
       }
     });
-  }
-
-  getInterviewProgress(): number {
-    const done = this.dashboard?.mockInterviewsCompleted || 0;
-    return Math.min(done * 10, 100);
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
-  getFirstName(): string {
-    return (this.user?.fullName || 'Student').split(' ')[0];
-  }
-
-  getInitial(): string {
-    return this.getFirstName().charAt(0).toUpperCase();
   }
 }

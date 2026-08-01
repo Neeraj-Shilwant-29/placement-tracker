@@ -1,0 +1,99 @@
+<div class="admin-page animate-fadeIn">
+  <div class="page-header">
+    <div>
+      <h1><i class="fas fa-brain"></i> Aptitude Questions</h1>
+      <p>Add or manage aptitude test questions</p>
+    </div>
+    <button class="btn" [ngClass]="showForm ? 'btn-outline-secondary' : 'btn-primary'"
+            (click)="showForm ? resetForm() : showForm = true">
+      <i class="fas" [ngClass]="showForm ? 'fa-times' : 'fa-plus'"></i>
+      {{showForm ? 'Cancel' : 'Add Question'}}
+    </button>
+  </div>
+
+  <!-- Form -->
+  <div *ngIf="showForm" class="form-card mb-4 animate-scaleIn">
+    <div class="form-card-header">
+      <h4>
+        <i class="fas" [ngClass]="editingQuestion ? 'fa-edit' : 'fa-plus-circle'"></i>
+        {{editingQuestion ? 'Edit Question' : 'Add Aptitude Question'}}
+      </h4>
+    </div>
+    <div class="form-card-body">
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="form-label">Question</label>
+          <textarea class="form-control" [(ngModel)]="form.question" rows="2"
+                    placeholder="Enter the question text"></textarea>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Option A</label>
+          <input type="text" class="form-control" [(ngModel)]="form.optionA">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Option B</label>
+          <input type="text" class="form-control" [(ngModel)]="form.optionB">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Option C</label>
+          <input type="text" class="form-control" [(ngModel)]="form.optionC">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Option D</label>
+          <input type="text" class="form-control" [(ngModel)]="form.optionD">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Correct Answer</label>
+          <select class="form-select" [(ngModel)]="form.correctAnswer">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Category</label>
+          <select class="form-select" [(ngModel)]="form.category">
+            <option value="Quantitative">Quantitative</option>
+            <option value="Verbal">Verbal</option>
+            <option value="Logical">Logical</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Difficulty</label>
+          <select class="form-select" [(ngModel)]="form.difficulty">
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="form-card-footer">
+      <button class="btn btn-primary me-2" (click)="saveQuestion()">
+        <i class="fas fa-save"></i> {{editingQuestion ? 'Update' : 'Save'}}
+      </button>
+      <button class="btn btn-outline-secondary" (click)="resetForm()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid-card">
+    <ag-grid-angular
+      *ngIf="questions.length > 0"
+      class="ag-theme-alpine"
+      [rowData]="questions"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [animateRows]="true"
+      [domLayout]="'autoHeight'"
+      (gridReady)="onGridReady($event)"
+      (cellClicked)="onCellClicked($event)">
+    </ag-grid-angular>
+    <div *ngIf="questions.length === 0" class="empty-state">
+      <div class="empty-icon"><i class="fas fa-brain"></i></div>
+      <h4>No aptitude questions yet</h4>
+      <p>Add your first question to get started</p>
+    </div>
+  </div>
+</div>

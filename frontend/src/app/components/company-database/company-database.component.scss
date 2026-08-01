@@ -1,603 +1,152 @@
-/* ===================================================
-   PAGE LAYOUT
-=================================================== */
-
-.page-container {
-  min-height: 100vh;
-  background: #f4f7fc;
-}
-
-.page-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-/* ===================================================
-   PAGE HEADER
-=================================================== */
+.companies-page { animation: fadeIn 0.4s ease-out; }
 
 .page-header {
-  background: linear-gradient(135deg, #4f46e5, #2563eb);
-  color: #fff;
-  border-radius: 18px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 15px 35px rgba(37, 99, 235, .15);
-}
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 1.75rem;
 
-.page-title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  i {
-    font-size: 2rem;
+  h1 {
+    font-weight: 800; font-size: 1.65rem; letter-spacing: -0.025em;
+    color: var(--gray-900); margin: 0;
+    i { color: var(--primary); margin-right: 0.5rem; }
   }
-
-  h2 {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 700;
-  }
-
-  p {
-    margin: .3rem 0 0;
-    color: rgba(255,255,255,.85);
-    font-size: .95rem;
-  }
-}
-
-.page-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-/* ===================================================
-   FILTER BAR
-=================================================== */
-
-.filter-bar {
-  background: #fff;
-  border-radius: 18px;
-  padding: 1.5rem;
-  box-shadow: 0 10px 25px rgba(0,0,0,.06);
-  border: 1px solid #e5e7eb;
-  margin-bottom: 2rem;
-}
-
-.filter-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.25rem;
-}
-
-.filter-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--gray-800);
-}
-
-.filter-controls {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-end;
-  flex-wrap: wrap;
-}
-
-.search-box {
-  flex: 1;
-  min-width: 280px;
-}
-
-.industry-filter {
-  width: 220px;
-}
-
-.search-input-wrapper {
-  position: relative;
-
-  .search-icon {
-    position: absolute;
-    top: 50%;
-    left: 16px;
-    transform: translateY(-50%);
-    color: #9ca3af;
-    font-size: .9rem;
-  }
-
-  .search-input {
-    height: 48px;
-    border-radius: 12px;
-    padding-left: 45px;
-    border: 1px solid #d1d5db;
-
-    &:focus {
-      border-color: #4f46e5;
-      box-shadow: 0 0 0 .15rem rgba(79,70,229,.15);
-    }
-  }
-}
-
-.industry-filter select {
-  height: 48px;
-  border-radius: 12px;
+  p { color: var(--gray-500); font-size: 0.9rem; margin: 0.2rem 0 0; }
 }
 
 .results-count {
-  background: linear-gradient(135deg,#4f46e5,#2563eb);
-  color: white;
-  padding: .75rem 1rem;
-  border-radius: 10px;
-  font-size: .85rem;
-  font-weight: 600;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius-full);
+  padding: 0.45rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--gray-600);
   white-space: nowrap;
+  i { color: var(--primary); }
 }
 
-/* ===================================================
-   COMPANY LIST
-=================================================== */
-
-.company-list{
-  display:flex;
-  flex-direction:column;
-  gap:1.5rem;
+// ─── FILTER BAR ────────────────────────────────────────────
+.filter-bar {
+  display: flex; gap: 1rem; margin-bottom: 1.5rem;
+  background: #fff; padding: 1.15rem 1.5rem; border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200); align-items: center;
 }
 
-/* ===================================================
-   COMPANY CARD
-=================================================== */
+.search-wrap {
+  flex: 1; position: relative;
 
-.company-card{
-  background:#fff;
-  border-radius:20px;
-  padding:1.8rem;
-  box-shadow:0 10px 30px rgba(15,23,42,.08);
-  transition:.35s;
-  border:none;
-  overflow:hidden;
+  .search-icon {
+    position: absolute; top: 50%; left: 14px; transform: translateY(-50%);
+    color: var(--gray-400); font-size: 0.88rem;
+  }
 
-  &:hover{
-    transform:translateY(-6px);
-    box-shadow:0 20px 45px rgba(15,23,42,.15);
+  .search-input {
+    padding-left: 40px; height: 44px; border-radius: var(--radius);
   }
 }
 
-/* ===================================================
-   HEADER
-=================================================== */
-
-.company-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:1.5rem;
+.filter-group {
+  width: 200px;
 }
 
-.company-left{
-  display:flex;
-  align-items:center;
-  gap:1rem;
+// ─── COMPANY LIST ──────────────────────────────────────────
+.company-list {
+  display: flex; flex-direction: column; gap: 1rem;
 }
 
-.company-avatar{
-  width:70px;
-  height:70px;
-  border-radius:18px;
-  background:linear-gradient(135deg,#5b4cf3,#2563eb);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:#fff;
-  font-size:28px;
-  font-weight:700;
-  box-shadow:0 10px 20px rgba(79,70,229,.25);
-}
-
-.company-title{
-
-  h4{
-    margin:0;
-    font-size:1.4rem;
-    font-weight:700;
-    color:#111827;
-  }
-
-  .industry{
-    color:#64748b;
-    font-size:.9rem;
-  }
-
-}
-
-.company-package{
-  text-align:right;
-
-  h4{
-    color:#16a34a;
-    margin:0;
-    font-size:1.5rem;
-    font-weight:700;
-  }
-
-  span{
-    color:#6b7280;
-    font-size:.9rem;
-  }
-}
-
-/* ===================================================
-   INFO GRID
-=================================================== */
-
-.company-info-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1rem;
-  margin-bottom:1.5rem;
-}
-
-.info-box{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  background:#f8fafc;
-  border:1px solid #e5e7eb;
-  border-radius:14px;
-  padding:1rem;
-
-  i{
-    color:#4f46e5;
-    font-size:20px;
-  }
-
-  label{
-    display:block;
-    margin:0;
-    color:#94a3b8;
-    font-size:.75rem;
-    font-weight:600;
-  }
-
-  span{
-    color:#0f172a;
-    font-weight:600;
-  }
-}
-
-/* ===================================================
-   DESCRIPTION
-=================================================== */
-
-.company-description{
-  margin-bottom:1.5rem;
-
-  h6{
-    font-weight:700;
-    margin-bottom:.6rem;
-    color:#111827;
-
-    i{
-      color:#4f46e5;
-      margin-right:.4rem;
-    }
-  }
-
-  p{
-    margin:0;
-    color:#64748b;
-    line-height:1.7;
-  }
-}
-
-/* ===================================================
-   BRANCHES
-=================================================== */
-
-.company-branches{
-  border-top:1px solid #edf2f7;
-  padding-top:1.25rem;
-}
-
-.branch-title{
-  font-weight:700;
-  margin-bottom:.8rem;
-  color:#111827;
-
-  i{
-    color:#4f46e5;
-    margin-right:.4rem;
-  }
-}
-
-.branch-list{
-  display:flex;
-  flex-wrap:wrap;
-  gap:.6rem;
-}
-
-.branch-chip{
-  background:#eef2ff;
-  color:#4f46e5;
-  padding:.45rem .95rem;
-  border-radius:30px;
-  font-size:.8rem;
-  font-weight:600;
-}
-
-/* ===================================================
-   FOOTER
-=================================================== */
-
-.company-footer{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:1.8rem;
-  padding-top:1.3rem;
-  border-top:1px solid #edf2f7;
-
-  .btn{
-    border-radius:10px;
-    padding:.6rem 1.2rem;
-    font-weight:600;
-  }
-}
-
-.empty-state {
-  background: white;
-  border-radius: 18px;
-  padding: 5rem 2rem;
-  text-align: center;
-  box-shadow: 0 5px 20px rgba(0,0,0,.05);
-
-  i {
-    font-size: 5rem;
-    color: #d1d5db;
-    margin-bottom: 1rem;
-  }
-
-  h4 {
-    margin-bottom: .5rem;
-    color: #374151;
-  }
-
-  p {
-    color: #6b7280;
-  }
-}
-
-/* ===================================================
-   LOGOUT BUTTON
-=================================================== */
-
-.nav-logout {
-  color: #fff !important;
-  border-radius: 10px;
-  padding: .6rem 1rem;
-  transition: .3s;
+.company-card {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: var(--transition-slow);
 
   &:hover {
-    background: rgba(255,255,255,.15);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--gray-300);
   }
 }
 
-/* ===================================================
-   BUTTONS
-=================================================== */
-
-.btn-primary {
-  border-radius: 10px;
-  font-weight: 600;
+.company-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1.25rem;
 }
 
-.btn-outline-primary {
-  border-radius: 10px;
+.company-left {
+  display: flex; align-items: center; gap: 0.85rem;
 }
 
-/* ===================================================
-   ANIMATION
-=================================================== */
-
-@keyframes fadeIn {
-
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
+.company-avatar {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  display: flex; justify-content: center; align-items: center;
+  color: #fff; font-size: 1.3rem; font-weight: 800; flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.2);
 }
 
-.animate-fadeIn {
-  animation: fadeIn .4s ease;
+.company-title {
+  h4 { margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--gray-900); }
 }
 
-@media(max-width:991px){
-
-  .company-header{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:1rem;
-  }
-
-  .company-package{
-    text-align:left;
-  }
-
-  .company-info-grid{
-    grid-template-columns:1fr;
-  }
-
-  .company-footer{
-    flex-direction:column;
-    gap:1rem;
-
-    .btn{
-      width:100%;
-    }
-  }
-
+.industry-tag {
+  font-size: 0.8rem; color: var(--gray-500);
 }
 
-@media(max-width:768px){
-
-  .page-content{
-    padding:1rem;
-  }
-
-  .company-left{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .company-avatar{
-    width:60px;
-    height:60px;
-    font-size:24px;
-  }
-
-  .company-title h4{
-    font-size:1.2rem;
-  }
-
-}
-/* ===================================================
-   TOP NAVBAR
-=================================================== */
-
-/* ===================================================
-   NAVBAR
-=================================================== */
-
-.custom-navbar {
-  background: linear-gradient(135deg, #4338ca, #2563eb);
-  height: 74px;
-  padding: 0 32px;
-  box-shadow: 0 4px 18px rgba(0,0,0,.12);
-
-  .container-fluid{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    height:100%;
-  }
+.company-package {
+  text-align: right;
+  strong { display: block; color: var(--success); font-size: 1.2rem; font-weight: 800; }
+  small { color: var(--gray-500); font-size: 0.8rem; }
 }
 
-/* Brand */
-
-.navbar-brand{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  color:#fff !important;
-  text-decoration:none;
+// ─── INFO GRID ─────────────────────────────────────────────
+.company-info-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
+  margin-bottom: 1.15rem;
 }
 
-.brand-icon{
-  width:48px;
-  height:48px;
-  border-radius:14px;
-  background:rgba(255,255,255,.15);
+.info-box {
+  display: flex; align-items: center; gap: 0.6rem;
+  background: var(--gray-50); border: 1px solid var(--gray-100);
+  border-radius: var(--radius); padding: 0.75rem 0.85rem;
 
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  i{
-    color:white;
-    font-size:20px;
-  }
+  i { color: var(--primary); font-size: 0.95rem; }
+  label { display: block; margin: 0; color: var(--gray-400); font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+  span { color: var(--gray-800); font-weight: 600; font-size: 0.88rem; }
 }
 
-.brand-text{
-  display:flex;
-  flex-direction:column;
+// ─── DESCRIPTION & BRANCHES ───────────────────────────────
+.company-description {
+  margin-bottom: 1rem;
+  p { margin: 0; color: var(--gray-600); font-size: 0.88rem; line-height: 1.65; }
 }
 
-.brand-title{
-  font-size:18px;
-  font-weight:700;
-  color:white;
-  line-height:1;
+.company-branches {
+  border-top: 1px solid var(--gray-100); padding-top: 1rem;
 }
 
-.brand-text small{
-  color:rgba(255,255,255,.8);
-  font-size:12px;
+.branches-label {
+  font-weight: 700; font-size: 0.82rem; color: var(--gray-700);
+  display: block; margin-bottom: 0.5rem;
+  i { color: var(--primary); margin-right: 0.35rem; }
 }
 
-/* Right Side */
+.branch-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 
-.ms-auto{
-  display:flex;
-  align-items:center;
-  gap:12px;
+.branch-chip {
+  background: #EEF2FF; color: var(--primary);
+  padding: 0.3rem 0.75rem; border-radius: var(--radius-full);
+  font-size: 0.75rem; font-weight: 600;
 }
 
-/* Menu */
+// ─── ANIMATIONS & RESPONSIVE ──────────────────────────────
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fadeIn { animation: fadeIn 0.4s ease-out both; }
 
-.nav-link{
-  color:white !important;
-  text-decoration:none;
-
-  display:flex;
-  align-items:center;
-  gap:8px;
-
-  padding:10px 18px;
-  border-radius:10px;
-
-  font-weight:600;
-
-  transition:.3s;
-
-  &:hover{
-    background:rgba(255,255,255,.15);
-  }
-
-  i{
-    font-size:15px;
-  }
+@media (max-width: 991px) {
+  .company-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .company-package { text-align: left; }
+  .company-info-grid { grid-template-columns: 1fr; }
 }
 
-/* Logout */
-
-.logout-btn{
-  background:rgba(255,255,255,.12);
-
-  &:hover{
-    background:#ef4444;
-  }
-}
-
-/* Mobile */
-
-@media(max-width:768px){
-
-  .custom-navbar{
-    height:auto;
-    padding:15px;
-  }
-
-  .container-fluid{
-    flex-direction:column;
-    gap:15px;
-    align-items:flex-start !important;
-  }
-
-  .ms-auto{
-    width:100%;
-    justify-content:flex-start;
-    flex-wrap:wrap;
-  }
-
+@media (max-width: 768px) {
+  .filter-bar { flex-direction: column; }
+  .filter-group { width: 100%; }
+  .page-header { flex-direction: column; gap: 0.75rem; }
+  .company-avatar { width: 44px; height: 44px; font-size: 1.1rem; }
 }

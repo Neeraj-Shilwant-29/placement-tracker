@@ -1,0 +1,107 @@
+<div class="profile-page animate-fadeIn">
+  <!-- Page header -->
+  <div class="page-header">
+    <div>
+      <h1>My Profile</h1>
+      <p>Manage your personal and academic information</p>
+    </div>
+    <button class="btn" [ngClass]="editMode ? 'btn-outline-secondary' : 'btn-primary'"
+            (click)="toggleEdit()" *ngIf="!loading">
+      <i class="fas" [ngClass]="editMode ? 'fa-times' : 'fa-pen'"></i>
+      {{editMode ? 'Cancel' : 'Edit Profile'}}
+    </button>
+  </div>
+
+  <!-- Alerts -->
+  <div *ngIf="successMsg" class="alert alert-success animate-fadeIn">
+    <i class="fas fa-check-circle"></i> {{successMsg}}
+  </div>
+  <div *ngIf="errorMsg" class="alert alert-danger animate-fadeIn">
+    <i class="fas fa-exclamation-circle"></i> {{errorMsg}}
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner-border text-primary"></div>
+    <p>Loading profile...</p>
+  </div>
+
+  <div *ngIf="!loading" class="profile-content">
+    <!-- Profile header card -->
+    <div class="profile-hero">
+      <div class="profile-avatar-section">
+        <div class="profile-avatar-large">{{getInitial()}}</div>
+        <div class="profile-hero-info">
+          <h2>{{profile?.fullName}}</h2>
+          <p><i class="fas fa-envelope"></i> {{profile?.email}}</p>
+          <div class="profile-badges">
+            <span class="p-badge branch" *ngIf="profile?.branch">
+              <i class="fas fa-code-branch"></i> {{profile?.branch}}
+            </span>
+            <span class="p-badge college" *ngIf="profile?.college">
+              <i class="fas fa-university"></i> {{profile?.college}}
+            </span>
+            <span class="p-badge cgpa" *ngIf="profile?.cgpa">
+              <i class="fas fa-star"></i> CGPA: {{profile?.cgpa}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile form -->
+    <div class="profile-form-card" [class.editing]="editMode">
+      <div class="form-card-header">
+        <h3><i class="fas fa-user-edit"></i> Personal Details</h3>
+      </div>
+
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <div class="form-card-body">
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" formControlName="fullName"
+                     [readonly]="!editMode">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" formControlName="email" readonly>
+              <small class="form-text">Email cannot be changed</small>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" formControlName="phone"
+                     [readonly]="!editMode" placeholder="Enter phone number">
+            </div>
+            <div class="form-field">
+              <label class="form-label">College / University</label>
+              <input type="text" class="form-control" formControlName="college"
+                     [readonly]="!editMode" placeholder="Enter college name">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Branch</label>
+              <input type="text" class="form-control" formControlName="branch"
+                     [readonly]="!editMode" placeholder="e.g. CSE, IT, ECE">
+            </div>
+            <div class="form-field">
+              <label class="form-label">CGPA</label>
+              <input type="number" class="form-control" formControlName="cgpa"
+                     [readonly]="!editMode" step="0.01" min="0" max="10">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-card-footer" *ngIf="editMode">
+          <button type="submit" class="btn btn-primary" [disabled]="saving || profileForm.invalid">
+            <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!saving" class="fas fa-save"></i>
+            {{saving ? 'Saving...' : 'Save Changes'}}
+          </button>
+          <button type="button" class="btn btn-outline-secondary" (click)="toggleEdit()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

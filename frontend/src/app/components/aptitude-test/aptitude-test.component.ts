@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { AptitudeService } from '../../services/aptitude.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -23,6 +24,30 @@ export class AptitudeTestComponent implements OnInit {
   timeElapsed = 0;
   timer: any;
   user: any;
+
+  gridApi!: GridApi;
+  defaultColDef: ColDef = { sortable: true, filter: true, resizable: true };
+  historyColumnDefs: ColDef[] = [
+    {
+      headerName: 'Category', field: 'category', flex: 1,
+      cellRenderer: (params: any) => `<span class="badge bg-info">${params.value}</span>`
+    },
+    { headerName: 'Marks', field: 'marksObtained', flex: 1, cellStyle: { fontWeight: '700', color: '#4F46E5' } },
+    { headerName: 'Correct', field: 'correctAnswers', flex: 1 },
+    { headerName: 'Total', field: 'totalQuestions', flex: 1 },
+    {
+      headerName: 'Date', field: 'attemptedAt', flex: 1,
+      valueFormatter: (params: any) => {
+        if (!params.value) return '';
+        return new Date(params.value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      }
+    }
+  ];
+
+  onGridReady(event: GridReadyEvent): void {
+    this.gridApi = event.api;
+    this.gridApi.sizeColumnsToFit();
+  }
 
   constructor(
     private aptitudeService: AptitudeService,

@@ -1,0 +1,98 @@
+<div class="app-shell" [class.sidebar-collapsed]="sidebarCollapsed">
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" [class.active]="mobileMenuOpen" (click)="closeMobileMenu()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.mobile-open]="mobileMenuOpen">
+    <div class="sidebar-header">
+      <a class="brand" routerLink="/student/dashboard" (click)="closeMobileMenu()">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="brand-text">PlacementTracker</span>
+      </a>
+      <button class="sidebar-close d-lg-none" (click)="closeMobileMenu()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+
+      <a class="nav-item" routerLink="/student/dashboard" routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+        <i class="fas fa-th-large"></i>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/student/companies" routerLinkActive="active"
+         (click)="closeMobileMenu()">
+        <i class="fas fa-building"></i>
+        <span>Companies</span>
+      </a>
+      <a class="nav-item" routerLink="/student/aptitude" routerLinkActive="active"
+         (click)="closeMobileMenu()">
+        <i class="fas fa-brain"></i>
+        <span>Aptitude Tests</span>
+      </a>
+      <a class="nav-item" routerLink="/student/coding" routerLinkActive="active"
+         (click)="closeMobileMenu()">
+        <i class="fas fa-code"></i>
+        <span>Coding Practice</span>
+      </a>
+      <a class="nav-item" routerLink="/student/mock-interview" routerLinkActive="active"
+         (click)="closeMobileMenu()">
+        <i class="fas fa-user-tie"></i>
+        <span>Mock Interviews</span>
+      </a>
+      <a class="nav-item" routerLink="/student/eligibility" routerLinkActive="active"
+         (click)="closeMobileMenu()">
+        <i class="fas fa-check-double"></i>
+        <span>Eligibility</span>
+      </a>
+
+      <span class="nav-section-label">Account</span>
+
+      <a class="nav-item" routerLink="/student/profile" routerLinkActive="active"
+         (click)="closeMobileMenu()">
+        <i class="fas fa-user-circle"></i>
+        <span>My Profile</span>
+      </a>
+      <button class="nav-item nav-button logout-item" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Sign Out</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user" routerLink="/student/profile" (click)="closeMobileMenu()">
+        <div class="user-avatar">{{getInitial()}}</div>
+        <div class="user-info">
+          <strong>{{getFirstName()}}</strong>
+          <small>{{user?.email}}</small>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main area -->
+  <div class="main-area">
+    <header class="topbar">
+      <button class="menu-toggle d-lg-none" (click)="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+      <button class="collapse-toggle d-none d-lg-flex" (click)="toggleSidebar()">
+        <i class="fas" [ngClass]="sidebarCollapsed ? 'fa-indent' : 'fa-outdent'"></i>
+      </button>
+
+      <div class="topbar-right">
+        <div class="topbar-user" routerLink="/student/profile">
+          <div class="topbar-avatar">{{getInitial()}}</div>
+          <span class="topbar-name d-none d-md-inline">{{getFirstName()}}</span>
+          <i class="fas fa-chevron-down d-none d-md-inline"></i>
+        </div>
+      </div>
+    </header>
+
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

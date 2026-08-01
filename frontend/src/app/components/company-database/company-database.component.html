@@ -1,242 +1,92 @@
-<div class="page-container">
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary">
-    <div class="container-fluid">
-      <a class="navbar-brand" routerLink="/student/dashboard">
-        <i class="fas fa-graduation-cap"></i>
-        <span>PlacementTracker</span>
-      </a>
-
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link" routerLink="/student/dashboard">
-          <i class="fas fa-home"></i>
-          Dashboard
-        </a>
-
-        <a class="nav-link nav-logout" (click)="logout()">
-          <i class="fas fa-sign-out-alt"></i>
-          Logout
-        </a>
-      </div>
+<div class="companies-page animate-fadeIn">
+  <div class="page-header">
+    <div>
+      <h1><i class="fas fa-building"></i> Company Database</h1>
+      <p>Explore placement opportunities from top recruiting companies</p>
     </div>
-  </nav>
+    <span class="results-count">
+      <i class="fas fa-chart-bar"></i> {{companies.length}} Companies
+    </span>
+  </div>
 
-  <!-- Content -->
-  <div class="page-content">
-
-    <!-- Page Header -->
-    <div class="section-header">
-      <h2>
-        <i class="fas fa-building"></i>
-        Company Database
-      </h2>
-      <p>Explore placement opportunities from top recruiting companies.</p>
+  <!-- Search & Filter -->
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" class="form-control search-input" placeholder="Search by company name..."
+             [(ngModel)]="searchTerm" (input)="search()">
     </div>
-
-    <!-- Search & Filter -->
-    <div class="filter-bar animate-fadeIn">
-      <div class="row g-3 align-items-end">
-
-        <div class="col-lg-6">
-          <label class="form-label">
-            <i class="fas fa-search"></i>
-            Search Company
-          </label>
-
-          <div class="search-input-wrapper">
-            <i class="fas fa-search search-icon"></i>
-
-            <input type="text" class="form-control search-input" placeholder="Search by company name..."
-              [(ngModel)]="searchTerm" (input)="search()">
-          </div>
-        </div>
-
-        <div class="col-lg-4">
-          <label class="form-label">
-            <i class="fas fa-filter"></i>
-            Industry
-          </label>
-
-          <select class="form-select" [(ngModel)]="filterIndustry" (change)="filterByIndustry()">
-
-            <option value="">All Industries</option>
-            <option value="IT Services">IT Services</option>
-            <option value="Technology">Technology</option>
-            <option value="E-Commerce/Technology">E-Commerce</option>
-            <option value="Finance">Finance</option>
-
-          </select>
-        </div>
-
-        <div class="col-lg-2 text-lg-end">
-          <div class="results-count">
-            <i class="fas fa-chart-bar"></i>
-            {{companies.length}} Companies
-          </div>
-        </div>
-
-      </div>
+    <div class="filter-group">
+      <select class="form-select" [(ngModel)]="filterIndustry" (change)="filterByIndustry()">
+        <option value="">All Industries</option>
+        <option value="IT Services">IT Services</option>
+        <option value="Technology">Technology</option>
+        <option value="E-Commerce/Technology">E-Commerce</option>
+        <option value="Finance">Finance</option>
+      </select>
     </div>
+  </div>
 
-    <!-- Company Cards -->
-    <div class="company-list">
+  <!-- Company Cards -->
+  <div class="company-list">
+    <div class="company-card animate-fadeIn" *ngFor="let company of companies; let i = index"
+         [style.animation-delay]="(i * 0.04) + 's'">
 
-      <div class="company-card animate-fadeIn" *ngFor="let company of companies; let i=index"
-        [style.animation-delay]="(i*0.05)+'s'">
-
-        <!-- Header -->
-        <div class="company-header">
-
-          <div class="company-left">
-
-            <div class="company-avatar">
-              {{company.name?.charAt(0)}}
-            </div>
-
-            <div class="company-title">
-
-              <h4>{{company.name}}</h4>
-
-              <span class="industry">
-                {{company.industry}}
-              </span>
-
-            </div>
-
+      <div class="company-header">
+        <div class="company-left">
+          <div class="company-avatar">{{company.name?.charAt(0)}}</div>
+          <div class="company-title">
+            <h4>{{company.name}}</h4>
+            <span class="industry-tag">{{company.industry}}</span>
           </div>
-
-          <div class="company-package">
-
-            <h4>{{company.packageOffered}}</h4>
-
-            <span>Min CGPA : {{company.minCgpa}}</span>
-
-          </div>
-
         </div>
-
-        <!-- Information Row -->
-        <div class="company-info-grid">
-
-          <div class="info-box">
-
-            <i class="fas fa-map-marker-alt"></i>
-
-            <div>
-
-              <label>Location</label>
-
-              <span>{{company.location}}</span>
-
-            </div>
-
-          </div>
-
-          <div class="info-box">
-
-            <i class="fas fa-building"></i>
-
-            <div>
-
-              <label>Industry</label>
-
-              <span>{{company.industry}}</span>
-
-            </div>
-
-          </div>
-
-          <div class="info-box">
-
-            <i class="fas fa-graduation-cap"></i>
-
-            <div>
-
-              <label>Minimum CGPA</label>
-
-              <span>{{company.minCgpa}}</span>
-
-            </div>
-
-          </div>
-
+        <div class="company-package">
+          <strong>{{company.packageOffered}}</strong>
+          <small>Min CGPA: {{company.minCgpa}}</small>
         </div>
-
-        <!-- Description -->
-        <div class="company-description" *ngIf="company.description">
-
-          <h6>
-            <i class="fas fa-info-circle"></i>
-            About Company
-          </h6>
-
-          <p>
-            {{company.description}}
-          </p>
-
-        </div>
-
-        <!-- Branches -->
-        <div class="company-branches">
-
-          <div class="branch-title">
-
-            <i class="fas fa-users"></i>
-
-            Eligible Branches
-
-          </div>
-
-          <div class="branch-list">
-
-            <span class="branch-chip" *ngFor="let branch of company.eligibleBranches">
-
-              {{branch}}
-
-            </span>
-
-          </div>
-
-        </div>
-
-        <!-- Footer -->
-        <div class="company-footer">
-
-          <button class="btn btn-outline-primary" (click)="viewDetails(company.id)">
-
-            <i class="fas fa-eye"></i>
-            View Details
-
-          </button>
-
-          <button class="btn btn-success">
-
-            <i class="fas fa-check-circle"></i>
-
-            Eligible
-
-          </button>
-
-        </div>
-
       </div>
 
-    </div>
-
-    <!-- Empty State -->
-    <div *ngIf="companies.length==0" class="empty-state">
-
-      <div class="empty-icon">
-
-        <i class="fas fa-building"></i>
-
+      <div class="company-info-grid">
+        <div class="info-box">
+          <i class="fas fa-map-marker-alt"></i>
+          <div>
+            <label>Location</label>
+            <span>{{company.location}}</span>
+          </div>
+        </div>
+        <div class="info-box">
+          <i class="fas fa-building"></i>
+          <div>
+            <label>Industry</label>
+            <span>{{company.industry}}</span>
+          </div>
+        </div>
+        <div class="info-box">
+          <i class="fas fa-graduation-cap"></i>
+          <div>
+            <label>Min CGPA</label>
+            <span>{{company.minCgpa}}</span>
+          </div>
+        </div>
       </div>
 
-      <h3>No Companies Found</h3>
+      <div class="company-description" *ngIf="company.description">
+        <p>{{company.description}}</p>
+      </div>
 
-      <p>Try changing your search or filter options.</p>
-
+      <div class="company-branches">
+        <span class="branches-label"><i class="fas fa-users"></i> Eligible Branches</span>
+        <div class="branch-list">
+          <span class="branch-chip" *ngFor="let branch of company.eligibleBranches">{{branch}}</span>
+        </div>
+      </div>
     </div>
+  </div>
 
+  <!-- Empty State -->
+  <div *ngIf="companies.length === 0" class="empty-state">
+    <div class="empty-icon"><i class="fas fa-building"></i></div>
+    <h4>No Companies Found</h4>
+    <p>Try changing your search or filter options.</p>
   </div>
 </div>

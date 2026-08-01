@@ -1,0 +1,121 @@
+<div class="overview-page animate-fadeIn">
+  <div class="page-header">
+    <div>
+      <h1><i class="fas fa-chart-pie"></i> Admin Dashboard</h1>
+      <p>Overview of your placement tracker system</p>
+    </div>
+  </div>
+
+  <!-- Stats grid -->
+  <section class="stats-grid">
+    <article class="stat-card indigo animate-fadeIn">
+      <div class="stat-icon"><i class="fas fa-users"></i></div>
+      <div class="stat-body">
+        <span class="stat-value">{{stats?.totalStudents || 0}}</span>
+        <span class="stat-label">Students</span>
+      </div>
+      <i class="stat-watermark fas fa-users"></i>
+    </article>
+
+    <article class="stat-card green animate-fadeIn">
+      <div class="stat-icon"><i class="fas fa-building"></i></div>
+      <div class="stat-body">
+        <span class="stat-value">{{stats?.totalCompanies || 0}}</span>
+        <span class="stat-label">Companies</span>
+      </div>
+      <i class="stat-watermark fas fa-building"></i>
+    </article>
+
+    <article class="stat-card purple animate-fadeIn">
+      <div class="stat-icon"><i class="fas fa-brain"></i></div>
+      <div class="stat-body">
+        <span class="stat-value">{{stats?.totalAptitudeQuestions || 0}}</span>
+        <span class="stat-label">Aptitude Qs</span>
+      </div>
+      <i class="stat-watermark fas fa-brain"></i>
+    </article>
+
+    <article class="stat-card blue animate-fadeIn">
+      <div class="stat-icon"><i class="fas fa-code"></i></div>
+      <div class="stat-body">
+        <span class="stat-value">{{stats?.totalCodingQuestions || 0}}</span>
+        <span class="stat-label">Coding Qs</span>
+      </div>
+      <i class="stat-watermark fas fa-code"></i>
+    </article>
+
+    <article class="stat-card orange animate-fadeIn">
+      <div class="stat-icon"><i class="fas fa-clipboard-check"></i></div>
+      <div class="stat-body">
+        <span class="stat-value">{{stats?.totalAptitudeTests || 0}}</span>
+        <span class="stat-label">Tests Taken</span>
+      </div>
+      <i class="stat-watermark fas fa-clipboard-check"></i>
+    </article>
+
+    <article class="stat-card pink animate-fadeIn">
+      <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
+      <div class="stat-body">
+        <span class="stat-value">{{stats?.totalMockInterviews || 0}}</span>
+        <span class="stat-label">Interviews</span>
+      </div>
+      <i class="stat-watermark fas fa-user-tie"></i>
+    </article>
+  </section>
+
+  <!-- Charts row -->
+  <section class="charts-row">
+    <div class="chart-card animate-fadeIn">
+      <div class="chart-header">
+        <h3>Platform Statistics</h3>
+        <span class="chart-badge"><i class="fas fa-chart-bar"></i> Overview</span>
+      </div>
+      <div class="chart-body">
+        <canvas #barChart></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card animate-fadeIn">
+      <div class="chart-header">
+        <h3>Content Distribution</h3>
+        <span class="chart-badge"><i class="fas fa-chart-pie"></i> Breakdown</span>
+      </div>
+      <div class="chart-body chart-body-doughnut">
+        <canvas #doughnutChart></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick links -->
+  <section class="actions-section">
+    <h3 class="section-title">Quick Actions</h3>
+    <div class="actions-grid">
+      <a routerLink="/admin/companies" class="action-card animate-fadeIn">
+        <div class="action-icon green"><i class="fas fa-plus-circle"></i></div>
+        <div class="action-body">
+          <h4>Add Company</h4>
+          <p>Add a new company to the database</p>
+        </div>
+        <i class="fas fa-arrow-right action-arrow"></i>
+      </a>
+
+      <a routerLink="/admin/aptitude" class="action-card animate-fadeIn">
+        <div class="action-icon purple"><i class="fas fa-plus-circle"></i></div>
+        <div class="action-body">
+          <h4>Add Aptitude Question</h4>
+          <p>Create new aptitude test questions</p>
+        </div>
+        <i class="fas fa-arrow-right action-arrow"></i>
+      </a>
+
+      <a routerLink="/admin/coding" class="action-card animate-fadeIn">
+        <div class="action-icon blue"><i class="fas fa-plus-circle"></i></div>
+        <div class="action-body">
+          <h4>Add Coding Question</h4>
+          <p>Create new coding practice problems</p>
+        </div>
+        <i class="fas fa-arrow-right action-arrow"></i>
+      </a>
+    </div>
+  </section>
+</div>

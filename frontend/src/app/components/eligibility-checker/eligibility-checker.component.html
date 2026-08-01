@@ -1,95 +1,71 @@
-<div class="page-container">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-accent">
-    <div class="container-fluid">
-      <a class="navbar-brand text-dark" routerLink="/student/dashboard">
-        <i class="fas fa-graduation-cap"></i> PlacementTracker
-      </a>
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link text-dark" routerLink="/student/dashboard">
-          <i class="fas fa-home"></i> Dashboard
-        </a>
-        <a class="nav-link text-danger" (click)="logout()">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
-      </div>
-    </div>
-  </nav>
-
-  <div class="page-content">
-    <div class="section-header">
-      <h2><i class="fas fa-check-circle"></i> Placement Eligibility Checker</h2>
+<div class="eligibility-page animate-fadeIn">
+  <div class="page-header">
+    <div>
+      <h1><i class="fas fa-check-double"></i> Eligibility Checker</h1>
       <p>See which companies you qualify for based on your profile</p>
     </div>
+  </div>
 
-    <!-- Loading -->
-    <div *ngIf="loading" class="loading-section">
-      <div class="loading-card">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner-border text-primary"></div>
+    <p>Checking eligibility across all companies...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && results.length === 0" class="empty-state">
+    <div class="empty-icon"><i class="fas fa-clipboard-list"></i></div>
+    <h4>No companies to check</h4>
+    <p>Companies need to be added to the system first</p>
+  </div>
+
+  <!-- Results -->
+  <div class="eligibility-grid" *ngIf="!loading">
+    <div class="eligibility-card animate-fadeIn" *ngFor="let result of results; let i = index"
+         [class.eligible]="result.eligible" [class.not-eligible]="!result.eligible"
+         [style.animation-delay]="(i * 0.04) + 's'">
+
+      <div class="elig-header">
+        <div class="company-info-row">
+          <div class="company-avatar" [class.avatar-eligible]="result.eligible">
+            {{result.company?.name?.charAt(0)}}
+          </div>
+          <div>
+            <h4>{{result.company?.name}}</h4>
+            <span class="company-meta">{{result.company?.industry}} &middot; {{result.company?.location}}</span>
+          </div>
         </div>
-        <p class="mt-3">Checking eligibility across all companies...</p>
+        <div class="elig-badge" [class.badge-eligible]="result.eligible"
+             [class.badge-not-eligible]="!result.eligible">
+          <i class="fas" [ngClass]="result.eligible ? 'fa-check-circle' : 'fa-times-circle'"></i>
+          {{result.eligible ? 'ELIGIBLE' : 'NOT ELIGIBLE'}}
+        </div>
       </div>
-    </div>
 
-    <!-- Empty State -->
-    <div *ngIf="!loading && results.length === 0" class="empty-state">
-      <div class="empty-icon"><i class="fas fa-clipboard-list"></i></div>
-      <h4>No companies to check</h4>
-      <p>Companies need to be added to the system first</p>
-    </div>
+      <p class="elig-message">{{result.message}}</p>
 
-    <!-- Results -->
-    <div class="row g-3" *ngIf="!loading">
-      <div class="col-lg-6" *ngFor="let result of results; let i = index"
-           [style.animation-delay]="(i * 0.05) + 's'">
-        <div class="card eligibility-card animate-fadeIn"
-             [class.eligible]="result.eligible"
-             [class.not-eligible]="!result.eligible">
-          <div class="card-body">
-            <div class="eligibility-header">
-              <div class="company-info-section">
-                <div class="company-avatar" [class.avatar-eligible]="result.eligible">
-                  {{result.company?.name?.charAt(0)}}
-                </div>
-                <div>
-                  <h5>{{result.company?.name}}</h5>
-                  <span class="company-meta">{{result.company?.industry}} | {{result.company?.location}}</span>
-                </div>
-              </div>
-              <div class="eligibility-badge" [class.badge-eligible]="result.eligible"
-                   [class.badge-not-eligible]="!result.eligible">
-                <i class="fas" [ngClass]="result.eligible ? 'fa-check-circle' : 'fa-times-circle'"></i>
-                {{result.eligible ? 'ELIGIBLE' : 'NOT ELIGIBLE'}}
-              </div>
-            </div>
-
-            <p class="eligibility-message">{{result.message}}</p>
-
-            <div class="eligibility-details">
-              <div class="detail-block">
-                <i class="fas fa-money-bill-wave"></i>
-                <div>
-                  <small>Package</small>
-                  <strong>{{result.company?.packageOffered}}</strong>
-                </div>
-              </div>
-              <div class="detail-block">
-                <i class="fas fa-star"></i>
-                <div>
-                  <small>Min CGPA</small>
-                  <strong>{{result.company?.minCgpa}}</strong>
-                </div>
-              </div>
-              <div class="detail-block">
-                <i class="fas fa-sitemap"></i>
-                <div>
-                  <small>Branches</small>
-                  <span class="branch-tags">
-                    <span *ngFor="let b of result.company?.eligibleBranches" class="branch-chip">{{b}}</span>
-                  </span>
-                </div>
-              </div>
-            </div>
+      <div class="elig-details">
+        <div class="detail-chip">
+          <i class="fas fa-money-bill-wave"></i>
+          <div>
+            <small>Package</small>
+            <strong>{{result.company?.packageOffered}}</strong>
+          </div>
+        </div>
+        <div class="detail-chip">
+          <i class="fas fa-star"></i>
+          <div>
+            <small>Min CGPA</small>
+            <strong>{{result.company?.minCgpa}}</strong>
+          </div>
+        </div>
+        <div class="detail-chip branches-chip">
+          <i class="fas fa-sitemap"></i>
+          <div>
+            <small>Branches</small>
+            <span class="branch-tags">
+              <span *ngFor="let b of result.company?.eligibleBranches" class="branch-chip">{{b}}</span>
+            </span>
           </div>
         </div>
       </div>
