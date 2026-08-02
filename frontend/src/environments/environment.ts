@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  apiBaseUrl: 'http://localhost:8080/api'
+  production: true,
+  apiBaseUrl: 'https://satisfied-stillness-production-69ae.up.railway.app/api'
 };
