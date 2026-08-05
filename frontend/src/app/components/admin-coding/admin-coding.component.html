@@ -1,34 +1,66 @@
 <div class="admin-page animate-fadeIn">
+
   <div class="page-header">
     <div>
       <h1><i class="fas fa-code"></i> Coding Questions</h1>
       <p>Add or manage coding practice questions</p>
     </div>
-    <button class="btn" [ngClass]="showForm ? 'btn-outline-secondary' : 'btn-primary'"
+
+    <button class="btn"
+            [ngClass]="showForm ? 'btn-outline-secondary' : 'btn-primary'"
             (click)="showForm ? resetForm() : showForm = true">
+
       <i class="fas" [ngClass]="showForm ? 'fa-times' : 'fa-plus'"></i>
       {{showForm ? 'Cancel' : 'Add Question'}}
+
     </button>
   </div>
 
+
   <!-- Form -->
-  <div *ngIf="showForm" class="form-card mb-4 animate-scaleIn">
+  <div *ngIf="showForm"
+       class="form-card mb-4 animate-scaleIn">
+
+
     <div class="form-card-header">
       <h4>
-        <i class="fas" [ngClass]="editingQuestion ? 'fa-edit' : 'fa-plus-circle'"></i>
+        <i class="fas"
+           [ngClass]="editingQuestion ? 'fa-edit' : 'fa-plus-circle'">
+        </i>
+
         {{editingQuestion ? 'Edit Question' : 'Add Coding Question'}}
+
       </h4>
     </div>
+
+
+
     <div class="form-card-body">
-      <div class="row g-3">
-        <div class="col-md-8">
+
+      <div class="row g-4">
+
+
+        <!-- Title -->
+        <div class="col-md-6">
           <label class="form-label">Title</label>
-          <input type="text" class="form-control" [(ngModel)]="form.title"
+
+          <input type="text"
+                 class="form-control"
+                 [(ngModel)]="form.title"
                  placeholder="e.g. Two Sum, Reverse Linked List">
+
         </div>
-        <div class="col-md-4">
+
+
+
+        <!-- Category -->
+        <div class="col-md-6">
+
           <label class="form-label">Category</label>
-          <select class="form-select" [(ngModel)]="form.category">
+
+          <select class="form-select"
+                  [(ngModel)]="form.category">
+
             <option value="">Select category</option>
             <option value="Arrays">Arrays</option>
             <option value="Strings">Strings</option>
@@ -40,48 +72,141 @@
             <option value="Searching">Searching</option>
             <option value="Stacks & Queues">Stacks & Queues</option>
             <option value="Recursion">Recursion</option>
+
           </select>
+
         </div>
-        <div class="col-12">
+
+
+
+
+        <!-- Description -->
+        <div class="col-md-6">
+
           <label class="form-label">Description</label>
-          <textarea class="form-control" [(ngModel)]="form.description" rows="3"
-                    placeholder="Describe the problem statement"></textarea>
+
+          <textarea
+            class="form-control"
+            [(ngModel)]="form.description"
+            rows="4"
+            placeholder="Describe the problem statement">
+          </textarea>
+
         </div>
+
+
+
+
+        <!-- Constraints -->
+        <div class="col-md-6">
+
+          <label class="form-label">Constraints</label>
+
+          <textarea
+            class="form-control"
+            [(ngModel)]="form.constraints"
+            rows="4"
+            placeholder="e.g. 2 <= nums.length <= 10^4">
+          </textarea>
+
+        </div>
+
+
+
+
+
+        <!-- Difficulty -->
         <div class="col-md-4">
+
           <label class="form-label">Difficulty</label>
-          <select class="form-select" [(ngModel)]="form.difficulty">
+
+          <select class="form-select"
+                  [(ngModel)]="form.difficulty">
+
             <option value="Easy">Easy</option>
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
+
           </select>
+
         </div>
+
+
+
+
+
+        <!-- Sample Input -->
         <div class="col-md-4">
+
           <label class="form-label">Sample Input</label>
-          <textarea class="form-control code-input" [(ngModel)]="form.sampleInput" rows="2"
-                    placeholder="e.g. [2, 7, 11, 15], target = 9"></textarea>
+
+          <textarea
+            class="form-control code-input"
+            [(ngModel)]="form.sampleInput"
+            rows="2"
+            placeholder="e.g. [2, 7, 11, 15], target = 9">
+          </textarea>
+
         </div>
+
+
+
+
+
+        <!-- Sample Output -->
         <div class="col-md-4">
+
           <label class="form-label">Sample Output</label>
-          <textarea class="form-control code-input" [(ngModel)]="form.sampleOutput" rows="2"
-                    placeholder="e.g. [0, 1]"></textarea>
+
+          <textarea
+            class="form-control code-input"
+            [(ngModel)]="form.sampleOutput"
+            rows="2"
+            placeholder="e.g. [0, 1]">
+          </textarea>
+
         </div>
-        <div class="col-12">
-          <label class="form-label">Constraints</label>
-          <textarea class="form-control" [(ngModel)]="form.constraints" rows="2"
-                    placeholder="e.g. 2 <= nums.length <= 10^4"></textarea>
-        </div>
+
+
+
       </div>
+
     </div>
+
+
+
+
+
     <div class="form-card-footer">
-      <button class="btn btn-primary me-2" (click)="saveQuestion()">
-        <i class="fas fa-save"></i> {{editingQuestion ? 'Update' : 'Save'}}
+
+      <button class="btn btn-primary me-2"
+              (click)="saveQuestion()">
+
+        <i class="fas fa-save"></i>
+        {{editingQuestion ? 'Update' : 'Save'}}
+
       </button>
-      <button class="btn btn-outline-secondary" (click)="resetForm()">Cancel</button>
+
+
+      <button class="btn btn-outline-secondary"
+              (click)="resetForm()">
+
+        Cancel
+
+      </button>
+
     </div>
+
+
   </div>
+
+
+
+
 
   <!-- Grid -->
   <div class="grid-card">
+
     <ag-grid-angular
       *ngIf="questions.length > 0"
       class="ag-theme-alpine"
@@ -93,10 +218,24 @@
       (gridReady)="onGridReady($event)"
       (cellClicked)="onCellClicked($event)">
     </ag-grid-angular>
-    <div *ngIf="questions.length === 0" class="empty-state">
-      <div class="empty-icon"><i class="fas fa-code"></i></div>
+
+
+
+    <div *ngIf="questions.length === 0"
+         class="empty-state">
+
+      <div class="empty-icon">
+        <i class="fas fa-code"></i>
+      </div>
+
       <h4>No coding questions yet</h4>
+
       <p>Add your first coding question to get started</p>
+
     </div>
+
+
   </div>
+
+
 </div>

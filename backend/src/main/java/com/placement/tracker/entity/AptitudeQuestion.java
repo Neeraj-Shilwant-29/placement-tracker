@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class AptitudeQuestion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,7 +37,11 @@ public class AptitudeQuestion {
     @Column(nullable = false)
     private String category;
 
+    @Column(nullable = false)
+    private String topic;
+
     private String difficulty;
+
     private String explanation;
 
     @Builder.Default

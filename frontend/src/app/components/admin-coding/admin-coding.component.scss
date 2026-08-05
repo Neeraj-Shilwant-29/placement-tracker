@@ -1,7 +1,203 @@
 @import '../admin-shared';
 @import '../ag-grid-shared';
 
+
+/* Form Card */
+.form-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+
+/* Header */
+.form-card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e9ecef;
+  background: #f8f9fa;
+
+  h4 {
+    margin: 0;
+    font-weight: 600;
+    color: #343a40;
+  }
+}
+
+
+/* Body */
+.form-card-body {
+  padding: 24px;
+}
+
+
+/* Row alignment */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -12px;
+}
+
+
+/* Two boxes in one row */
+.col-md-6 {
+  width: 50%;
+  padding: 0 12px;
+}
+
+
+/* Three boxes in one row */
+.col-md-4 {
+  width: 33.33%;
+  padding: 0 12px;
+}
+
+
+/* Full row */
+.col-12 {
+  width: 100%;
+  padding: 0 12px;
+}
+
+
+/* Labels */
+.form-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #495057;
+  display: block;
+}
+
+
+/* Inputs */
+.form-control,
+.form-select {
+
+  width: 90%;
+  height: 45px;
+
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+
+  padding: 10px 12px;
+
+  transition: all 0.2s ease;
+}
+
+
+.form-control:focus,
+.form-select:focus {
+
+  border-color: #6366f1;
+
+  box-shadow:
+    0 0 0 0.15rem rgba(99,102,241,0.15);
+}
+
+
+
+/* Text Areas */
+textarea.form-control {
+
+  height: 120px;
+  min-height: 120px;
+
+  resize: vertical;
+}
+
+
+/* Code input */
 .code-input {
-  font-family: 'Fira Code', 'Courier New', monospace;
-  font-size: 0.85rem;
+
+  font-family: 'Courier New', monospace;
+  background: #f8f9fa;
+
+}
+
+
+
+/* Footer */
+.form-card-footer {
+
+  padding: 16px 24px;
+
+  border-top: 1px solid #e9ecef;
+
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 12px;
+}
+
+
+.form-card-footer .btn {
+
+  min-width: 110px;
+
+  border-radius: 8px;
+
+}
+
+
+
+/* Grid spacing */
+.grid-card {
+
+  margin-top: 20px;
+
+}
+
+
+
+/* Empty state */
+.empty-state {
+
+  text-align: center;
+  padding: 50px;
+
+}
+
+
+
+/* Responsive */
+@media(max-width:768px) {
+
+
+  .col-md-6,
+  .col-md-4,
+  .col-12 {
+
+    width: 100%;
+
+  }
+
+
+  .form-control,
+  .form-select {
+
+    width: 100%;
+
+  }
+
+
+  .form-card-body {
+
+    padding: 16px;
+
+  }
+
+
+  .form-card-footer {
+
+    flex-direction: column;
+
+  }
+
+
+  .form-card-footer .btn {
+
+    width: 100%;
+
+  }
+
 }
