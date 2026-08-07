@@ -2,6 +2,7 @@ package com.placement.tracker.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -40,8 +41,10 @@ public class AptitudeQuestion {
     @Column(nullable = false)
     private String topic;
 
+    @Column(nullable = false)
     private String difficulty;
 
+    @Column(length = 2000)
     private String explanation;
 
     @Builder.Default

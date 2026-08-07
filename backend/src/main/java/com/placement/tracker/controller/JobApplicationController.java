@@ -1,6 +1,5 @@
 package com.placement.tracker.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,22 +12,23 @@ import com.placement.tracker.service.JobApplicationService;
 
 import lombok.RequiredArgsConstructor;
 
-
 @RestController
 @RequestMapping("/api/applications")
 @RequiredArgsConstructor
 public class JobApplicationController {
+
     private final JobApplicationService jobApplicationService;
-    @Autowired
-   @PostMapping("/{companyId}")
+
+    @PostMapping("/{companyId}")
     public ResponseEntity<String> apply(
-        @PathVariable Long companyId,
-        @RequestBody JobApplicationRequest request) {
+            @PathVariable("companyId") Long companyId,
+            @RequestBody JobApplicationRequest request) {
 
         jobApplicationService.apply(
-            request.getStudentId(),
-            companyId);
+                request.getStudentId(),
+                companyId
+        );
 
-    return ResponseEntity.ok("Application submitted successfully.");
-}
+        return ResponseEntity.ok("Application submitted successfully.");
+    }
 }
