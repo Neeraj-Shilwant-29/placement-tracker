@@ -6,6 +6,7 @@
     </div>
   </div>
 
+  
   <!-- Setup Phase -->
   <div *ngIf="!testStarted && !showResults" class="setup-section">
     <div class="config-card">
@@ -26,10 +27,7 @@
                       (click)="selectedCategory = 'Logical'">
                 <i class="fas fa-puzzle-piece"></i> Logical
               </button>
-              <button class="pill" [class.active]="selectedCategory === 'Verbal'"
-                      (click)="selectedCategory = 'Verbal'">
-                <i class="fas fa-spell-check"></i> Verbal
-              </button>
+          
             </div>
           </div>
           <div class="config-field">
@@ -42,8 +40,17 @@
             </select>
           </div>
           <div class="config-field">
-            <label class="form-label">Number of Questions</label>
-            <input type="number" class="form-control" [(ngModel)]="questionCount" min="1" max="20">
+            <label class="form-label">Test Time</label>
+
+<select
+  class="form-select"
+  [(ngModel)]="selectedTime">
+
+  <option [ngValue]="60">60 Minutes</option>
+  <option [ngValue]="30">30 Minutes</option>
+  <option [ngValue]="15">15 Minutes</option>
+
+</select>
           </div>
         </div>
       </div>
