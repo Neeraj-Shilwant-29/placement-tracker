@@ -132,10 +132,10 @@
                 <label class="form-label">Location</label>
                 <input type="text" class="form-control" [(ngModel)]="companyForm.location" placeholder="e.g. Bangalore">
               </div>
-              <div class="col-md-4 mb-3">
+              <!-- <div class="col-md-4 mb-3">
                 <label class="form-label">Package Offered</label>
                 <input type="text" class="form-control" [(ngModel)]="companyForm.packageOffered" placeholder="e.g. 6 LPA">
-              </div>
+              </div> -->
               <div class="col-md-4 mb-3">
                 <label class="form-label">Minimum CGPA</label>
                 <input type="number" class="form-control" [(ngModel)]="companyForm.minCgpa" step="0.1" placeholder="e.g. 7.0">
@@ -179,7 +179,6 @@
                 <td><strong>{{company.name}}</strong></td>
                 <td>{{company.industry}}</td>
                 <td>{{company.location}}</td>
-                <td><span class="badge bg-success">{{company.packageOffered}}</span></td>
                 <td>{{company.minCgpa}}</td>
                 <td>
                   <button class="btn btn-sm btn-outline-primary me-1" (click)="editCompany(company)">

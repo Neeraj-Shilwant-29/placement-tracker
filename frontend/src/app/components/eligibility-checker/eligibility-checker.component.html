@@ -6,22 +6,34 @@
     </div>
   </div>
 
-  <!-- Loading -->
-  <div *ngIf="loading" class="loading-state">
-    <div class="spinner-border text-primary"></div>
-    <p>Checking eligibility across all companies...</p>
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'jobs'" (click)="activeTab = 'jobs'">
+      <i class="fas fa-briefcase"></i> Jobs
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'applied'" (click)="activeTab = 'applied'">
+      <i class="fas fa-paper-plane"></i> <p>{{this.appliedJobs?.length}}</p> Applied
+    </button>
   </div>
 
-  <!-- Empty State -->
-  <div *ngIf="!loading && results.length === 0" class="empty-state">
-    <div class="empty-icon"><i class="fas fa-clipboard-list"></i></div>
-    <h4>No companies to check</h4>
-    <p>Companies need to be added to the system first</p>
-  </div>
+  <!-- JOBS TAB -->
+  <ng-container *ngIf="activeTab === 'jobs'">
+    <!-- Loading -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner-border text-primary"></div>
+      <p>Checking eligibility across all companies...</p>
+    </div>
 
-  <!-- Results -->
-  <div class="eligibility-grid" *ngIf="!loading">
-    <div class="eligibility-card animate-fadeIn" *ngFor="let result of results; let i = index"
+    <!-- Empty State -->
+    <div *ngIf="!loading && companiesList.length === 0" class="empty-state">
+      <div class="empty-icon"><i class="fas fa-clipboard-list"></i></div>
+      <h4>No companies to check</h4>
+      <p>Companies need to be added to the system first</p>
+    </div>
+
+    <!-- companiesList -->
+    <div class="eligibility-grid" *ngIf="!loading">
+    <div class="eligibility-card animate-fadeIn" *ngFor="let result of companiesList; let i = index"
          [class.eligible]="result.eligible" [class.not-eligible]="!result.eligible"
          [style.animation-delay]="(i * 0.04) + 's'">
 
@@ -35,23 +47,41 @@
             <span class="company-meta">{{result.company?.industry}} &middot; {{result.company?.location}}</span>
           </div>
         </div>
-        <div class="elig-badge" [class.badge-eligible]="result.eligible"
+        <div class="elig-actions">
+          <div>
+            @if(result?.status === "APPLIED"){
+              <div class="elig-badge badge-applied">
+                <i class="fas fa-check"></i>
+                  Applied
+                </div>
+            }
+            @else if(result.eligible)  {
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="applyByCompanyId(result?.company?.id)">
+                Apply
+              </button>
+            }
+          </div>
+          <div class="elig-badge" [class.badge-eligible]="result.eligible"
              [class.badge-not-eligible]="!result.eligible">
           <i class="fas" [ngClass]="result.eligible ? 'fa-check-circle' : 'fa-times-circle'"></i>
           {{result.eligible ? 'ELIGIBLE' : 'NOT ELIGIBLE'}}
+        </div>
         </div>
       </div>
 
       <p class="elig-message">{{result.message}}</p>
 
       <div class="elig-details">
-        <div class="detail-chip">
+         <!-- <div class="detail-chip">
           <i class="fas fa-money-bill-wave"></i>
           <div>
             <small>Package</small>
             <strong>{{result.company?.packageOffered}}</strong>
-          </div>
-        </div>
+          </div> 
+        </div>  -->
         <div class="detail-chip">
           <i class="fas fa-star"></i>
           <div>
@@ -71,4 +101,47 @@
       </div>
     </div>
   </div>
+  </ng-container>
+
+  <!-- APPLIED TAB -->
+  <ng-container *ngIf="activeTab === 'applied'">
+    <!-- Empty State -->
+    <div *ngIf="appliedJobs.length === 0" class="empty-state">
+      <div class="empty-icon"><i class="fas fa-paper-plane"></i></div>
+      <h4>No applications yet</h4>
+      <p>Apply to eligible companies from the Jobs tab</p>
+    </div>
+
+    <!-- Applied Jobs List -->
+    <div class="eligibility-grid" *ngIf="appliedJobs.length > 0">
+      <div class="eligibility-card eligible animate-fadeIn" *ngFor="let app of appliedJobs; let i = index"
+           [style.animation-delay]="(i * 0.04) + 's'">
+
+        <div class="elig-header">
+          <div class="company-info-row">
+            <div class="company-avatar avatar-eligible">
+              {{app.companyName?.charAt(0)}}
+            </div>
+            <div>
+              <h4>{{app.companyName}}</h4>
+            </div>
+          </div>
+          <div class="elig-badge badge-applied">
+            <i class="fas fa-check"></i>
+            {{app.status}}
+          </div>
+        </div>
+
+        <div class="elig-details">
+          <div class="detail-chip">
+            <i class="fas fa-calendar-alt"></i>
+            <div>
+              <small>Applied On</small>
+              <strong>{{app.appliedAt | date:'mediumDate'}}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </div>

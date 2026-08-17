@@ -29,6 +29,18 @@ export class CompanyService {
     return this.http.post(`${this.apiUrl}/admin`, company);
   }
 
+  getAllJobOpenings(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/openings`);
+  }
+
+  getJobOpeningsByCompany(companyId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${companyId}/openings`);
+  }
+
+  createJobOpening(companyId: number, opening: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${companyId}/openings`, opening);
+  }
+
   updateCompany(id: number, company: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/admin/${id}`, company);
   }

@@ -1,7 +1,10 @@
 package com.placement.tracker.controller;
 
 import com.placement.tracker.dto.CompanyDTO;
+import com.placement.tracker.dto.OpeningRoleRequest;
+import com.placement.tracker.dto.OpeningRoleResponse;
 import com.placement.tracker.service.CompanyService;
+import com.placement.tracker.service.OpeningRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +20,17 @@ public class CompanyController {
     @Autowired
     private CompanyService companyService;
 
+    @Autowired
+    private OpeningRoleService openingRoleService;
+
     @GetMapping
     public ResponseEntity<List<CompanyDTO>> getAllCompanies() {
         return ResponseEntity.ok(companyService.getAllCompanies());
+    }
+
+    @GetMapping("/openings")
+    public ResponseEntity<List<OpeningRoleResponse>> getAllOpenings() {
+        return ResponseEntity.ok(openingRoleService.getAllOpenings());
     }
 
     @GetMapping("/{id}")
@@ -51,5 +62,24 @@ public class CompanyController {
     public ResponseEntity<?> deleteCompany(@PathVariable Long id) {
         companyService.deleteCompany(id);
         return ResponseEntity.ok(Map.of("message", "Company deleted successfully"));
+    }
+
+    @GetMapping("/{companyId}/openings")
+    public ResponseEntity<List<OpeningRoleResponse>> getOpeningsByCompany(@PathVariable Long companyId) {
+        return ResponseEntity.ok(openingRoleService.getOpeningsByCompany(companyId));
+    }
+
+    @PostMapping("/{companyId}/openings")
+    public ResponseEntity<OpeningRoleResponse> createOpenRole(
+            @PathVariable Long companyId,
+            @RequestBody OpeningRoleRequest dto) {
+        return ResponseEntity.ok(openingRoleService.createOpeningRole(companyId, dto));
+    }
+
+    @PostMapping("/{companyId}/createRole")
+    public ResponseEntity<OpeningRoleResponse> createOpenRoleLegacy(
+            @PathVariable Long companyId,
+            @RequestBody OpeningRoleRequest dto) {
+        return ResponseEntity.ok(openingRoleService.createOpeningRole(companyId, dto));
     }
 }

@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(
     name = "job_applications",
     uniqueConstraints = @UniqueConstraint(
-        columnNames = {"student_id_fk","company_id_fk"}
+        columnNames = {"student_id","company_id"}
     )
 )
 @Data
@@ -35,7 +35,7 @@ public class JobApplications {
     @ManyToOne
     @JoinColumn(name="student_id")
     private Student student;
-    
+
     @ManyToOne
     @JoinColumn(name="company_id")
     private Company company;

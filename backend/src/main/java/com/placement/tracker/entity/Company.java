@@ -16,7 +16,6 @@ public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false)
     private String name;
 
@@ -28,7 +27,6 @@ public class Company {
     private String industry;
 
     private String location;
-    private String packageOffered;
     private String bond;
 
     private double minCgpa;

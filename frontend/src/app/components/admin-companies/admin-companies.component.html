@@ -6,14 +6,25 @@
       <p>Add, edit, or remove companies from the database</p>
     </div>
 
-    <button class="btn"
-            [ngClass]="showForm ? 'btn-outline-secondary' : 'btn-primary'"
-            (click)="showForm ? resetForm() : showForm = true">
+    <div class="header-actions">
+      <button class="btn"
+              [ngClass]="showOpeningForm ? 'btn-outline-secondary' : 'btn-success'"
+              (click)="showOpeningForm ? resetOpeningForm() : openJobOpeningForm()">
 
-      <i class="fas" [ngClass]="showForm ? 'fa-times' : 'fa-plus'"></i>
-      {{showForm ? 'Cancel' : 'Add Company'}}
+        <i class="fas" [ngClass]="showOpeningForm ? 'fa-times' : 'fa-briefcase'"></i>
+        {{showOpeningForm ? 'Cancel' : 'Create Job Opening'}}
 
-    </button>
+      </button>
+
+      <button class="btn"
+              [ngClass]="showForm ? 'btn-outline-secondary' : 'btn-primary'"
+              (click)="showForm ? resetForm() : openCompanyForm()">
+
+        <i class="fas" [ngClass]="showForm ? 'fa-times' : 'fa-plus'"></i>
+        {{showForm ? 'Cancel' : 'Add Company'}}
+
+      </button>
+    </div>
   </div>
 
 
@@ -79,16 +90,6 @@
                  [(ngModel)]="companyForm.location"
                  placeholder="e.g. Bangalore">
         </div>
-
-
-        <div class="col-md-4">
-          <label class="form-label">Package Offered</label>
-          <input type="text"
-                 class="form-control"
-                 [(ngModel)]="companyForm.packageOffered"
-                 placeholder="e.g. 6 LPA">
-        </div>
-
 
         <div class="col-md-4">
           <label class="form-label">Minimum CGPA</label>
@@ -174,6 +175,162 @@
   </div>
 
 
+  <!-- Job Opening Form -->
+  <div *ngIf="showOpeningForm"
+       class="form-card mb-4 animate-scaleIn">
+
+
+    <div class="form-card-header">
+      <h4>
+        <i class="fas fa-briefcase"></i>
+        Create Job Opening
+      </h4>
+    </div>
+
+
+    <div class="form-card-body">
+
+      <div class="row g-4">
+
+
+        <div class="col-md-4">
+          <label class="form-label">Company</label>
+          <select class="form-control"
+                  [(ngModel)]="openingForm.companyId">
+            <option [ngValue]="null">Select company</option>
+            <option *ngFor="let company of companies"
+                    [ngValue]="company.id">
+              {{company.name}}
+            </option>
+          </select>
+        </div>
+
+
+        <div class="col-md-4">
+          <label class="form-label">Role Name</label>
+          <input type="text"
+                 class="form-control"
+                 [(ngModel)]="openingForm.roleName"
+                 placeholder="e.g. Software Engineer">
+        </div>
+
+
+        <div class="col-md-4">
+          <label class="form-label">Openings</label>
+          <input type="number"
+                 class="form-control"
+                 [(ngModel)]="openingForm.openings"
+                 min="1">
+        </div>
+
+
+        <div class="col-md-4">
+          <label class="form-label">Package Offered</label>
+          <input type="text"
+                 class="form-control"
+                 [(ngModel)]="openingForm.packageOffered"
+                 placeholder="e.g. 8 LPA">
+        </div>
+
+
+        <div class="col-md-4">
+          <label class="form-label">Location</label>
+          <input type="text"
+                 class="form-control"
+                 [(ngModel)]="openingForm.location"
+                 placeholder="e.g. Pune">
+        </div>
+
+
+        <div class="col-md-4">
+          <label class="form-label">Minimum CGPA</label>
+          <input type="number"
+                 class="form-control"
+                 [(ngModel)]="openingForm.minCgpa"
+                 step="0.1">
+        </div>
+
+
+        <div class="col-md-4">
+          <label class="form-label">Minimum 10th %</label>
+          <input type="number"
+                 class="form-control"
+                 [(ngModel)]="openingForm.minTenth"
+                 step="0.1">
+        </div>
+
+
+        <div class="col-md-4">
+          <label class="form-label">Minimum 12th %</label>
+          <input type="number"
+                 class="form-control"
+                 [(ngModel)]="openingForm.minTwelfth"
+                 step="0.1">
+        </div>
+
+
+        <div class="col-md-6">
+          <label class="form-label">Skills</label>
+          <textarea
+            class="form-control"
+            rows="4"
+            [(ngModel)]="openingForm.skills"
+            placeholder="Java, Angular, SQL">
+          </textarea>
+        </div>
+
+
+        <div class="col-md-6">
+          <label class="form-label">Eligible Branches</label>
+          <textarea
+            class="form-control"
+            rows="4"
+            [(ngModel)]="openingBranchesInput"
+            placeholder="CSE, IT, ECE">
+          </textarea>
+        </div>
+
+
+        <div class="col-md-12">
+          <label class="form-label">Job Description</label>
+          <textarea
+            class="form-control"
+            rows="4"
+            [(ngModel)]="openingForm.jd"
+            placeholder="Describe responsibilities and requirements">
+          </textarea>
+        </div>
+
+
+      </div>
+
+    </div>
+
+
+    <div class="form-card-footer">
+
+      <button class="btn btn-primary me-2"
+              (click)="saveJobOpening()">
+
+        <i class="fas fa-save"></i>
+        Save Opening
+
+      </button>
+
+
+      <button class="btn btn-outline-secondary"
+              (click)="resetOpeningForm()">
+
+        Cancel
+
+      </button>
+
+    </div>
+
+
+  </div>
+
+
 
   <!-- Grid -->
   <div class="grid-card">
@@ -205,6 +362,52 @@
     </div>
 
 
+  </div>
+
+  <!-- Job Openings -->
+  <div class="grid-card openings-card mt-4">
+    <div class="section-title">
+      <div>
+        <h3><i class="fas fa-briefcase"></i> Job Openings</h3>
+        <p>{{jobOpenings.length}} active openings</p>
+      </div>
+    </div>
+
+    <div class="openings-list" *ngIf="jobOpenings.length > 0">
+      <div class="opening-item" *ngFor="let opening of jobOpenings">
+        <div class="opening-main">
+          <h4>{{opening.roleName}}</h4>
+          <span>{{opening.companyName}} &middot; {{opening.location || 'Location TBD'}}</span>
+        </div>
+
+        <div class="opening-meta">
+          <strong>{{opening.packageOffered || 'Package TBD'}}</strong>
+          <span>{{opening.openings || 0}} openings</span>
+          <span>Min CGPA {{opening.minCgpa || 0}}</span>
+        </div>
+
+        <div class="opening-description" *ngIf="opening.jd">
+          {{opening.jd}}
+        </div>
+
+        <div class="branch-list" *ngIf="opening.eligibleBranches?.length">
+          <span class="branch-chip" *ngFor="let branch of opening.eligibleBranches">{{branch}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="jobOpenings.length === 0"
+         class="empty-state">
+
+      <div class="empty-icon">
+        <i class="fas fa-briefcase"></i>
+      </div>
+
+      <h4>No job openings yet</h4>
+
+      <p>Create your first opening from the button above</p>
+
+    </div>
   </div>
 
 

@@ -57,8 +57,7 @@ public class EligibilityService {
             result.setCompany(new com.placement.tracker.dto.CompanyDTO(
                     company.getId(), company.getName(), company.getLogo(),
                     company.getWebsite(), company.getDescription(),
-                    company.getIndustry(), company.getLocation(),
-                    company.getPackageOffered(), company.getBond(),
+                    company.getIndustry(), company.getLocation(), company.getBond(),
                     company.getMinCgpa(), company.getMinTenth(),
                     company.getMinTwelfth(), company.getEligibleBranches(),
                     company.isActive()
@@ -105,7 +104,7 @@ public class EligibilityService {
                 company.getId(), company.getName(), company.getLogo(),
                 company.getWebsite(), company.getDescription(),
                 company.getIndustry(), company.getLocation(),
-                company.getPackageOffered(), company.getBond(),
+                company.getBond(),
                 company.getMinCgpa(), company.getMinTenth(),
                 company.getMinTwelfth(), company.getEligibleBranches(),
                 company.isActive()

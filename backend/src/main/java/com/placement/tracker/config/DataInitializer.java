@@ -45,37 +45,37 @@ public class DataInitializer {
         if (companyRepository.count() == 0) {
             companyRepository.save(Company.builder()
                     .name("TCS").industry("IT Services").location("Pan India")
-                    .packageOffered("3.36 - 7 LPA").minCgpa(6.0).minTenth(60).minTwelfth(60)
+                    .minCgpa(6.0).minTenth(60).minTwelfth(60)
                     .eligibleBranches(Set.of("CSE", "IT", "ECE", "EEE", "ME", "CE"))
                     .description("Tata Consultancy Services - Leading IT services company").build());
 
             companyRepository.save(Company.builder()
                     .name("Infosys").industry("IT Services").location("Pan India")
-                    .packageOffered("3.6 - 8 LPA").minCgpa(6.0).minTenth(60).minTwelfth(60)
+                    .minCgpa(6.0).minTenth(60).minTwelfth(60)
                     .eligibleBranches(Set.of("CSE", "IT", "ECE", "EEE"))
                     .description("Infosys - Global leader in digital services").build());
 
             companyRepository.save(Company.builder()
                     .name("Wipro").industry("IT Services").location("Pan India")
-                    .packageOffered("3.5 - 7 LPA").minCgpa(6.0).minTenth(60).minTwelfth(60)
+                    .minCgpa(6.0).minTenth(60).minTwelfth(60)
                     .eligibleBranches(Set.of("CSE", "IT", "ECE"))
                     .description("Wipro - Technology services and consulting company").build());
 
             companyRepository.save(Company.builder()
                     .name("Google").industry("Technology").location("Bangalore, Hyderabad")
-                    .packageOffered("15 - 30 LPA").minCgpa(7.5).minTenth(80).minTwelfth(80)
+                    .minCgpa(7.5).minTenth(80).minTwelfth(80)
                     .eligibleBranches(Set.of("CSE", "IT"))
                     .description("Google - Leading technology company").build());
 
             companyRepository.save(Company.builder()
                     .name("Microsoft").industry("Technology").location("Hyderabad")
-                    .packageOffered("12 - 25 LPA").minCgpa(7.5).minTenth(80).minTwelfth(80)
+                     .minCgpa(7.5).minTenth(80).minTwelfth(80)
                     .eligibleBranches(Set.of("CSE", "IT"))
                     .description("Microsoft - Global technology corporation").build());
 
             companyRepository.save(Company.builder()
                     .name("Amazon").industry("E-Commerce/Technology").location("Hyderabad, Chennai")
-                    .packageOffered("10 - 20 LPA").minCgpa(7.0).minTenth(75).minTwelfth(75)
+                    .minCgpa(7.0).minTenth(75).minTwelfth(75)
                     .eligibleBranches(Set.of("CSE", "IT", "ECE"))
                     .description("Amazon - World's largest e-commerce company").build());
 

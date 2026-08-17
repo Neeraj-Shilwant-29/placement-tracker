@@ -16,7 +16,6 @@ public class CompanyDTO {
     private String description;
     private String industry;
     private String location;
-    private String packageOffered;
     private String bond;
     private double minCgpa;
     private double minTenth;

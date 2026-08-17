@@ -1,10 +1,12 @@
 package com.placement.tracker.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.placement.tracker.dto.AppliedJobResponse;
 import com.placement.tracker.entity.Company;
 import com.placement.tracker.entity.JobApplications;
 import com.placement.tracker.entity.Student;
@@ -23,6 +25,11 @@ public class JobApplicationService {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    public JobApplications getApplicationById(Long id) {
+        return jobApplicationsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
+    }
 
     public void apply(Long studentId, Long companyId) {
 
@@ -44,5 +51,20 @@ public class JobApplicationService {
                 .build();
 
         jobApplicationsRepository.save(application);
+    }
+
+
+    public List<AppliedJobResponse> getAppliedJobs(Long studentId){
+        List<JobApplications> applications = jobApplicationsRepository.findByStudentId(studentId);
+
+        return applications.stream()
+            .map(application -> new AppliedJobResponse(
+                    application.getId(),
+                    application.getCompany().getId(),
+                    application.getCompany().getName(),
+                    application.getStatus(),
+                    application.getAppliedAt()
+            ))
+            .toList();
     }
 }

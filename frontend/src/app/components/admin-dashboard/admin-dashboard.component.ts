@@ -25,7 +25,7 @@ export class AdminDashboardComponent implements OnInit {
   editingCompany: any = null;
   eligibleBranchesInput = '';
 
-  companyForm: any = { name: '', industry: '', location: '', packageOffered: '', minCgpa: 0, website: '', description: '', eligibleBranches: [] };
+  companyForm: any = { name: '', industry: '', location: '', minCgpa: 0, website: '', description: '', eligibleBranches: [] };
   aptitudeForm: any = { question: '', optionA: '', optionB: '', optionC: '', optionD: '', correctAnswer: 'A', category: 'Quantitative', difficulty: 'Easy', explanation: '' };
   codingForm: any = { title: '', description: '', category: '', difficulty: 'Easy', sampleInput: '', sampleOutput: '', constraints: '' };
 
@@ -107,7 +107,7 @@ export class AdminDashboardComponent implements OnInit {
   resetCompanyForm(): void {
     this.showCompanyForm = false;
     this.editingCompany = null;
-    this.companyForm = { name: '', industry: '', location: '', packageOffered: '', minCgpa: 0, website: '', description: '', eligibleBranches: [] };
+    this.companyForm = { name: '', industry: '', location: '', minCgpa: 0, website: '', description: '', eligibleBranches: [] };
     this.eligibleBranchesInput = '';
   }
 

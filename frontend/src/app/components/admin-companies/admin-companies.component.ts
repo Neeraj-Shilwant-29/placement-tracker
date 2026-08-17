@@ -9,9 +9,12 @@ import { CompanyService } from '../../services/company.service';
 })
 export class AdminCompaniesComponent implements OnInit {
   companies: any[] = [];
+  jobOpenings: any[] = [];
   showForm = false;
+  showOpeningForm = false;
   editingCompany: any = null;
   eligibleBranchesInput = '';
+  openingBranchesInput = '';
 
   // Success message
   successMessage = '';
@@ -20,11 +23,25 @@ export class AdminCompaniesComponent implements OnInit {
     name: '',
     industry: '',
     location: '',
-    packageOffered: '',
     minCgpa: 0,
     website: '',
     description: '',
     eligibleBranches: []
+  };
+
+  openingForm: any = {
+    companyId: null,
+    roleName: '',
+    skills: '',
+    jd: '',
+    openings: 1,
+    packageOffered: '',
+    eligibleBranches: [],
+    minCgpa: 0,
+    minTenth: 0,
+    minTwelfth: 0,
+    location: '',
+    active: true
   };
 
   gridApi!: GridApi;
@@ -53,15 +70,6 @@ export class AdminCompaniesComponent implements OnInit {
       flex: 1
     },
     {
-      headerName: 'Package',
-      field: 'packageOffered',
-      flex: 1,
-      cellRenderer: (params: any) =>
-        params.value
-          ? `<span class="badge bg-success">${params.value}</span>`
-          : ''
-    },
-    {
       headerName: 'Min CGPA',
       field: 'minCgpa',
       flex: 1
@@ -88,6 +96,7 @@ export class AdminCompaniesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCompanies();
+    this.loadJobOpenings();
   }
 
   onGridReady(event: GridReadyEvent): void {
@@ -117,6 +126,24 @@ export class AdminCompaniesComponent implements OnInit {
       next: (data) => (this.companies = data),
       error: (err) => console.error(err)
     });
+  }
+
+  loadJobOpenings(): void {
+    this.companyService.getAllJobOpenings().subscribe({
+      next: (data) => (this.jobOpenings = data),
+      error: (err) => console.error(err)
+    });
+  }
+
+  openCompanyForm(): void {
+    this.resetOpeningForm();
+    this.showForm = true;
+  }
+
+  openJobOpeningForm(): void {
+    this.resetForm();
+    this.showOpeningForm = true;
+    this.openingForm.companyId = this.companies[0]?.id || null;
   }
 
   saveCompany(): void {
@@ -164,6 +191,42 @@ export class AdminCompaniesComponent implements OnInit {
     }
   }
 
+  saveJobOpening(): void {
+    const companyId = Number(this.openingForm.companyId);
+
+    if (!companyId) {
+      alert('Please select a company.');
+      return;
+    }
+
+    const payload = {
+      ...this.openingForm,
+      eligibleBranches: this.openingBranchesInput
+        .split(',')
+        .map((s: string) => s.trim())
+        .filter((s: string) => s)
+    };
+
+    delete payload.companyId;
+
+    this.companyService.createJobOpening(companyId, payload).subscribe({
+      next: () => {
+        this.loadJobOpenings();
+        this.resetOpeningForm();
+
+        this.successMessage = 'Job opening created successfully!';
+
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Failed to create job opening.');
+      }
+    });
+  }
+
   editCompany(company: any): void {
     this.editingCompany = company;
     this.companyForm = { ...company };
@@ -197,7 +260,6 @@ export class AdminCompaniesComponent implements OnInit {
       name: '',
       industry: '',
       location: '',
-      packageOffered: '',
       minCgpa: 0,
       website: '',
       description: '',
@@ -205,5 +267,26 @@ export class AdminCompaniesComponent implements OnInit {
     };
 
     this.eligibleBranchesInput = '';
+  }
+
+  resetOpeningForm(): void {
+    this.showOpeningForm = false;
+
+    this.openingForm = {
+      companyId: null,
+      roleName: '',
+      skills: '',
+      jd: '',
+      openings: 1,
+      packageOffered: '',
+      eligibleBranches: [],
+      minCgpa: 0,
+      minTenth: 0,
+      minTwelfth: 0,
+      location: '',
+      active: true
+    };
+
+    this.openingBranchesInput = '';
   }
 }

@@ -1,5 +1,4 @@
 package com.placement.tracker.service;
-
 import com.placement.tracker.dto.CompanyDTO;
 import com.placement.tracker.entity.Company;
 import com.placement.tracker.repository.CompanyRepository;
@@ -47,7 +46,6 @@ public class CompanyService {
                 .description(dto.getDescription())
                 .industry(dto.getIndustry())
                 .location(dto.getLocation())
-                .packageOffered(dto.getPackageOffered())
                 .bond(dto.getBond())
                 .minCgpa(dto.getMinCgpa())
                 .minTenth(dto.getMinTenth())
@@ -66,7 +64,6 @@ public class CompanyService {
         company.setDescription(dto.getDescription());
         company.setIndustry(dto.getIndustry());
         company.setLocation(dto.getLocation());
-        company.setPackageOffered(dto.getPackageOffered());
         company.setBond(dto.getBond());
         company.setMinCgpa(dto.getMinCgpa());
         company.setMinTenth(dto.getMinTenth());
@@ -91,7 +88,6 @@ public class CompanyService {
         dto.setDescription(company.getDescription());
         dto.setIndustry(company.getIndustry());
         dto.setLocation(company.getLocation());
-        dto.setPackageOffered(company.getPackageOffered());
         dto.setBond(company.getBond());
         dto.setMinCgpa(company.getMinCgpa());
         dto.setMinTenth(company.getMinTenth());
@@ -100,4 +96,6 @@ public class CompanyService {
         dto.setActive(company.isActive());
         return dto;
     }
+
+   
 }

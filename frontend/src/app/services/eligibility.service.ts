@@ -16,4 +16,18 @@ export class EligibilityService {
   checkCompanyEligibility(studentId: number, companyId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/check/${studentId}/company/${companyId}`);
   }
+
+  applyByCompanyId(companyId: number,studentId:number): Observable<any>{
+  return this.http.post<any>(
+      `${environment?.apiBaseUrl}/applications/company/${companyId}`,
+      {
+        studentId: studentId
+      }
+    ); 
+  }
+
+  getAppliedJobsData(studentId:number){
+    return this.http.get<any>(`${environment?.apiBaseUrl}/applications/applied-jobs/${studentId}`);
+
+  }
 }
