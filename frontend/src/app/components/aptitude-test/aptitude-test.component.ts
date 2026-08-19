@@ -16,11 +16,11 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
   selectedCategory = 'Quantitative';
   selectedDifficulty = '';
 
-  // Test duration in minutes
-  selectedTime = 15;
+  // Default selected time
+  selectedTime: number = 15;
 
-  // Number of questions will automatically match selectedTime
-  questionCount = 15;
+  // 1 minute = 1 question
+  questionCount: number = 15;
 
   // ================= TEST DATA =================
 
@@ -33,11 +33,15 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
   showResults = false;
   loading = false;
 
+  // Prevent duplicate submission
+  isSubmitting = false;
+
   result: any;
   results: any[] = [];
 
   // ================= TIMER =================
 
+  // Total time already used
   timeElapsed = 0;
 
   // Remaining time in seconds
@@ -124,10 +128,47 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadResults();
+
+    // Initialize timer according to selected time
+    this.setTestConfiguration();
   }
 
   ngOnDestroy(): void {
     this.stopTimer();
+  }
+
+  // ================= TEST CONFIGURATION =================
+
+  setTestConfiguration(): void {
+
+    // Make absolutely sure selectedTime is a number
+    this.selectedTime = Number(this.selectedTime);
+
+    // 1 minute = 1 question
+    this.questionCount = this.selectedTime;
+
+    // Convert minutes to seconds
+    this.timeRemaining = this.selectedTime * 60;
+
+    // Reset elapsed time
+    this.timeElapsed = 0;
+
+    console.log(
+      'Selected Time:',
+      this.selectedTime,
+      'minutes'
+    );
+
+    console.log(
+      'Question Count:',
+      this.questionCount
+    );
+
+    console.log(
+      'Time Remaining:',
+      this.timeRemaining,
+      'seconds'
+    );
   }
 
   // ================= GRID =================
@@ -141,49 +182,71 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
 
   loadResults(): void {
 
-    if (this.user?.id) {
-
-      this.aptitudeService
-        .getResults(this.user.id)
-        .subscribe({
-
-          next: (data) => {
-            this.results = data;
-          },
-
-          error: (err) => {
-            console.error('Error loading results:', err);
-          }
-
-        });
+    if (!this.user?.id) {
+      return;
     }
+
+    this.aptitudeService
+      .getResults(this.user.id)
+      .subscribe({
+
+        next: (data) => {
+          this.results = data;
+        },
+
+        error: (err) => {
+          console.error(
+            'Error loading results:',
+            err
+          );
+        }
+
+      });
   }
 
   // ================= START TEST =================
 
   startTest(): void {
 
-    this.loading = true;
+    if (this.loading || this.isSubmitting) {
+      return;
+    }
+
+    // Make sure selected time is a number
+    this.selectedTime = Number(this.selectedTime);
 
     /*
-     * Number of questions is automatically based
-     * on selected test duration.
+     * Configure test.
      *
-     * 15 minutes = 15 questions
-     * 30 minutes = 30 questions
-     * 60 minutes = 60 questions
+     * 15 minutes -> 15 questions
+     * 30 minutes -> 30 questions
+     * 60 minutes -> 60 questions
      */
+    this.setTestConfiguration();
 
-    this.questionCount = this.selectedTime;
-
-    // Convert minutes to seconds
-    this.timeRemaining = this.selectedTime * 60;
-
-    // Reset elapsed time
-    this.timeElapsed = 0;
-
-    // Stop any old timer
+    // Stop any previous timer
     this.stopTimer();
+
+    // Reset test data
+    this.questions = [];
+    this.answers = [];
+    this.currentQuestionIndex = 0;
+
+    this.testStarted = false;
+    this.showResults = false;
+    this.isSubmitting = false;
+
+    this.loading = true;
+
+    console.log('Starting test...');
+    console.log('Selected time:', this.selectedTime);
+    console.log('Questions:', this.questionCount);
+    console.log(
+      'Timer:',
+      this.formatTime(this.timeRemaining)
+    );
+
+    // ================= GET QUESTIONS =================
 
     this.aptitudeService
       .getQuestions(
@@ -195,26 +258,58 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
 
         next: (data) => {
 
-          this.questions = data;
+          /*
+           * Only use the required number of questions.
+           */
+          this.questions = data.slice(
+            0,
+            this.questionCount
+          );
 
-          this.answers = new Array(this.questions.length);
+          /*
+           * Create empty answer array.
+           */
+          this.answers = new Array(
+            this.questions.length
+          ).fill('');
 
           this.currentQuestionIndex = 0;
 
+          /*
+           * IMPORTANT:
+           * Set timer AGAIN immediately before
+           * starting the test.
+           */
+          this.timeRemaining =
+            this.selectedTime * 60;
+
+          this.timeElapsed = 0;
+
+          // Test is now running
           this.testStarted = true;
           this.showResults = false;
-
           this.loading = false;
 
-          // Start countdown timer
+          console.log(
+            'Test started with timer:',
+            this.formatTime(this.timeRemaining)
+          );
+
+          // Start timer
           this.startTimer();
         },
 
         error: (err) => {
 
-          console.error('Error loading questions:', err);
+          console.error(
+            'Error loading questions:',
+            err
+          );
 
           this.loading = false;
+          this.testStarted = false;
+
+          this.setTestConfiguration();
         }
 
       });
@@ -224,23 +319,71 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
 
   startTimer(): void {
 
-    // Make sure only one timer is running
+    // Stop any existing timer
     this.stopTimer();
 
+    /*
+     * Safety check.
+     *
+     * If somehow timer is 0, initialize it
+     * from selectedTime.
+     */
+    if (
+      !this.timeRemaining ||
+      this.timeRemaining <= 0
+    ) {
+      this.timeRemaining =
+        Number(this.selectedTime) * 60;
+    }
+
+    console.log(
+      'TIMER START:',
+      this.formatTime(this.timeRemaining)
+    );
+
+    /*
+     * Run every second.
+     */
     this.timer = setInterval(() => {
 
+      // Stop timer if test is no longer active
+      if (!this.testStarted) {
+        this.stopTimer();
+        return;
+      }
+
+      // Countdown
       if (this.timeRemaining > 0) {
 
         this.timeRemaining--;
 
         this.timeElapsed++;
 
+        console.log(
+          'Time remaining:',
+          this.formatTime(this.timeRemaining)
+        );
+
+        /*
+         * Time has reached 00:00.
+         * Automatically submit.
+         */
+        if (this.timeRemaining === 0) {
+
+          console.log(
+            'TIME OVER - AUTO SUBMIT'
+          );
+
+          this.stopTimer();
+
+          this.submitTest();
+        }
+
       } else {
 
-        // Time is over
+        // Safety fallback
         this.stopTimer();
 
-        // Automatically submit the test
         if (this.testStarted) {
           this.submitTest();
         }
@@ -248,6 +391,8 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
 
     }, 1000);
   }
+
+  // ================= STOP TIMER =================
 
   stopTimer(): void {
 
@@ -263,7 +408,6 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
 
   formatTime(totalSeconds: number): string {
 
-    // Prevent NaN / invalid timer values
     if (
       totalSeconds === null ||
       totalSeconds === undefined ||
@@ -272,15 +416,22 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
       return '00:00';
     }
 
-    const minutes = Math.floor(totalSeconds / 60);
+    const minutes = Math.floor(
+      totalSeconds / 60
+    );
 
     const seconds = totalSeconds % 60;
 
-    return `${minutes
-      .toString()
-      .padStart(2, '0')}:${seconds
-      .toString()
-      .padStart(2, '0')}`;
+    return (
+      minutes
+        .toString()
+        .padStart(2, '0')
+      +
+      ':' +
+      seconds
+        .toString()
+        .padStart(2, '0')
+    );
   }
 
   // ================= NEXT QUESTION =================
@@ -291,7 +442,6 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
       this.currentQuestionIndex <
       this.questions.length - 1
     ) {
-
       this.currentQuestionIndex++;
     }
   }
@@ -301,7 +451,6 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
   previousQuestion(): void {
 
     if (this.currentQuestionIndex > 0) {
-
       this.currentQuestionIndex--;
     }
   }
@@ -310,13 +459,27 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
 
   submitTest(): void {
 
-    // Prevent multiple submissions
-    if (!this.testStarted && !this.questions.length) {
+    /*
+     * Prevent duplicate submission.
+     */
+    if (
+      this.isSubmitting ||
+      this.questions.length === 0
+    ) {
       return;
     }
 
+    this.isSubmitting = true;
+
+    // Stop timer
     this.stopTimer();
 
+    /*
+     * Submit ALL questions.
+     *
+     * Unanswered questions:
+     * selectedAnswer = ''
+     */
     const submission = {
 
       category: this.selectedCategory,
@@ -329,10 +492,16 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
 
         questionId: q.id,
 
-        selectedAnswer: this.answers[i] || ''
+        selectedAnswer:
+          this.answers[i] || ''
 
       }))
     };
+
+    console.log(
+      'Submitting test:',
+      submission
+    );
 
     this.aptitudeService
       .submitTest(
@@ -349,6 +518,8 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
 
           this.testStarted = false;
 
+          this.isSubmitting = false;
+
           this.loadResults();
         },
 
@@ -359,6 +530,7 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
             err
           );
 
+          this.isSubmitting = false;
         }
 
       });
@@ -371,21 +543,20 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
     this.stopTimer();
 
     this.testStarted = false;
-
     this.showResults = false;
+    this.loading = false;
+    this.isSubmitting = false;
 
     this.questions = [];
-
     this.answers = [];
 
     this.currentQuestionIndex = 0;
 
-    this.timeElapsed = 0;
-
-    // Reset timer to currently selected duration
-    this.timeRemaining = this.selectedTime * 60;
-
-    this.questionCount = this.selectedTime;
+    /*
+     * Reset timer according to
+     * currently selected time.
+     */
+    this.setTestConfiguration();
   }
 
   // ================= LOGOUT =================

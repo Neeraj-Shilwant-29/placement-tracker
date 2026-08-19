@@ -1,159 +1,559 @@
 <div class="aptitude-page animate-fadeIn">
+
+  <!-- ================= PAGE HEADER ================= -->
+
   <div class="page-header">
     <div>
-      <h1><i class="fas fa-brain"></i> Aptitude Test</h1>
-      <p>Practice quantitative, verbal, and logical reasoning</p>
+      <h1>
+        <i class="fas fa-brain"></i>
+        Aptitude Test
+      </h1>
+
+      <p>
+        Practice quantitative, verbal, and logical reasoning
+      </p>
     </div>
   </div>
 
-  
-  <!-- Setup Phase -->
-  <div *ngIf="!testStarted && !showResults" class="setup-section">
+
+  <!-- ================= SETUP PHASE ================= -->
+
+  <div
+    *ngIf="!testStarted && !showResults"
+    class="setup-section">
+
     <div class="config-card">
+
       <div class="config-header">
-        <h3><i class="fas fa-sliders-h"></i> Configure Your Test</h3>
-        <p>Choose your preferred test settings</p>
+        <h3>
+          <i class="fas fa-sliders-h"></i>
+          Configure Your Test
+        </h3>
+
+        <p>
+          Choose your preferred test settings
+        </p>
       </div>
+
+
       <div class="config-body">
+
         <div class="config-grid">
+
+
+          <!-- CATEGORY -->
+
           <div class="config-field">
-            <label class="form-label">Category</label>
+
+            <label class="form-label">
+              Category
+            </label>
+
             <div class="option-pills">
-              <button class="pill" [class.active]="selectedCategory === 'Quantitative'"
-                      (click)="selectedCategory = 'Quantitative'">
-                <i class="fas fa-calculator"></i> Quantitative
+
+              <button
+                type="button"
+                class="pill"
+                [class.active]="selectedCategory === 'Quantitative'"
+                (click)="selectedCategory = 'Quantitative'">
+
+                <i class="fas fa-calculator"></i>
+                Quantitative
+
               </button>
-              <button class="pill" [class.active]="selectedCategory === 'Logical'"
-                      (click)="selectedCategory = 'Logical'">
-                <i class="fas fa-puzzle-piece"></i> Logical
+
+
+              <button
+                type="button"
+                class="pill"
+                [class.active]="selectedCategory === 'Logical'"
+                (click)="selectedCategory = 'Logical'">
+
+                <i class="fas fa-puzzle-piece"></i>
+                Logical
+
               </button>
-          
+
             </div>
+
           </div>
+
+
+          <!-- DIFFICULTY -->
+
           <div class="config-field">
-            <label class="form-label">Difficulty</label>
-            <select class="form-select" [(ngModel)]="selectedDifficulty">
-              <option value="">Mixed (All Levels)</option>
-              <option value="Easy">Easy</option>
-              <option value="Medium">Medium</option>
-              <option value="Hard">Hard</option>
+
+            <label class="form-label">
+              Difficulty
+            </label>
+
+            <select
+              class="form-select"
+              [(ngModel)]="selectedDifficulty">
+
+              <option value="">
+                Mixed (All Levels)
+              </option>
+
+              <option value="Easy">
+                Easy
+              </option>
+
+              <option value="Medium">
+                Medium
+              </option>
+
+              <option value="Hard">
+                Hard
+              </option>
+
             </select>
+
           </div>
+
+
+          <!-- TEST TIME -->
+
           <div class="config-field">
-            <label class="form-label">Test Time</label>
 
-<select
-  class="form-select"
-  [(ngModel)]="selectedTime">
+            <label class="form-label">
+              Test Time
+            </label>
 
-  <option [ngValue]="60">60 Minutes</option>
-  <option [ngValue]="30">30 Minutes</option>
-  <option [ngValue]="15">15 Minutes</option>
+            <select
+              class="form-select"
+              [(ngModel)]="selectedTime">
 
-</select>
+              <option [ngValue]="15">
+                15 Minutes / 15 Questions
+              </option>
+
+              <option [ngValue]="30">
+                30 Minutes / 30 Questions
+              </option>
+
+              <option [ngValue]="60">
+                60 Minutes / 60 Questions
+              </option>
+
+            </select>
+
           </div>
+
         </div>
+
       </div>
+
+
+      <!-- START BUTTON -->
+
       <div class="config-footer">
-        <button class="btn btn-primary btn-lg" (click)="startTest()" [disabled]="loading">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
-          <i *ngIf="!loading" class="fas fa-play"></i>
-          {{loading ? 'Loading...' : 'Start Test'}}
+
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          (click)="startTest()"
+          [disabled]="loading">
+
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm me-2">
+          </span>
+
+          <i
+            *ngIf="!loading"
+            class="fas fa-play">
+          </i>
+
+          {{ loading ? 'Loading...' : 'Start Test' }}
+
         </button>
+
       </div>
+
     </div>
+
   </div>
 
-  <!-- Test In Progress -->
-  <div *ngIf="testStarted && !showResults" class="test-section animate-fadeIn">
+
+  <!-- ================= TEST IN PROGRESS ================= -->
+
+  <div
+    *ngIf="testStarted && !showResults"
+    class="test-section animate-fadeIn">
+
+
+    <!-- QUESTION PROGRESS -->
+
     <div class="test-progress-track">
-      <div class="test-progress-fill" [style.width]="((currentQuestionIndex + 1) / questions.length * 100) + '%'"></div>
+
+      <div
+        class="test-progress-fill"
+        [style.width]="
+          ((currentQuestionIndex + 1) /
+          questions.length * 100) + '%'
+        ">
+      </div>
+
     </div>
+
+
+    <!-- TEST TOOLBAR -->
 
     <div class="test-toolbar">
+
+
+      <!-- QUESTION NUMBER -->
+
       <span class="toolbar-badge">
+
         <i class="fas fa-question-circle"></i>
-        Question {{currentQuestionIndex + 1}} / {{questions.length}}
+
+        Question
+        {{ currentQuestionIndex + 1 }}
+        /
+        {{ questions.length }}
+
       </span>
-      <span class="toolbar-badge timer">
-        <i class="fas fa-clock"></i> {{formatTime(timeElapsed)}}
+
+
+      <!-- TIMER -->
+
+      <!-- IMPORTANT:
+           Use timeRemaining, NOT timeElapsed -->
+
+      <span
+        class="toolbar-badge timer"
+        [class.text-danger]="timeRemaining <= 60">
+
+        <i class="fas fa-clock"></i>
+
+        {{ formatTime(timeRemaining) }}
+
       </span>
+
+
+      <!-- QUESTION PROGRESS -->
+
       <span class="toolbar-progress">
-        {{((currentQuestionIndex + 1) / questions.length * 100) | number:'1.0-0'}}% Complete
+
+        {{
+          (
+            (currentQuestionIndex + 1) /
+            questions.length * 100
+          ) | number:'1.0-0'
+        }}% Complete
+
       </span>
+
     </div>
 
-    <div class="question-card" *ngIf="questions[currentQuestionIndex] as question">
-      <div class="question-number">Q{{currentQuestionIndex + 1}}</div>
-      <h4 class="question-text">{{question.question}}</h4>
+
+    <!-- ================= QUESTION ================= -->
+
+    <div
+      class="question-card"
+      *ngIf="questions[currentQuestionIndex] as question">
+
+
+      <!-- QUESTION NUMBER -->
+
+      <div class="question-number">
+
+        Q{{ currentQuestionIndex + 1 }}
+
+      </div>
+
+
+      <!-- QUESTION TEXT -->
+
+      <h4 class="question-text">
+
+        {{ question.question }}
+
+      </h4>
+
+
+      <!-- OPTIONS -->
 
       <div class="options-list">
-        <div class="option" *ngFor="let option of ['A', 'B', 'C', 'D']"
-             [class.selected]="answers[currentQuestionIndex] === option"
-             (click)="answers[currentQuestionIndex] = option">
-          <div class="option-marker" [class.checked]="answers[currentQuestionIndex] === option">
-            <span *ngIf="answers[currentQuestionIndex] !== option">{{option}}</span>
-            <i *ngIf="answers[currentQuestionIndex] === option" class="fas fa-check"></i>
+
+        <div
+          class="option"
+          *ngFor="let option of ['A', 'B', 'C', 'D']"
+
+          [class.selected]="
+            answers[currentQuestionIndex] === option
+          "
+
+          (click)="
+            answers[currentQuestionIndex] = option
+          ">
+
+
+          <!-- OPTION MARKER -->
+
+          <div
+            class="option-marker"
+            [class.checked]="
+              answers[currentQuestionIndex] === option
+            ">
+
+            <span
+              *ngIf="
+                answers[currentQuestionIndex] !== option
+              ">
+
+              {{ option }}
+
+            </span>
+
+            <i
+              *ngIf="
+                answers[currentQuestionIndex] === option
+              "
+              class="fas fa-check">
+            </i>
+
           </div>
-          <span class="option-text">{{question['option' + option]}}</span>
+
+
+          <!-- OPTION TEXT -->
+
+          <span class="option-text">
+
+            {{ question['option' + option] }}
+
+          </span>
+
         </div>
+
       </div>
+
     </div>
+
+
+    <!-- ================= QUESTION NAVIGATION ================= -->
 
     <div class="test-nav">
-      <button class="btn btn-outline-secondary" (click)="previousQuestion()"
-              [disabled]="currentQuestionIndex === 0">
-        <i class="fas fa-chevron-left"></i> Previous
+
+
+      <!-- PREVIOUS -->
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+
+        (click)="previousQuestion()"
+
+        [disabled]="currentQuestionIndex === 0">
+
+        <i class="fas fa-chevron-left"></i>
+
+        Previous
+
       </button>
-      <button *ngIf="currentQuestionIndex < questions.length - 1"
-              class="btn btn-primary" (click)="nextQuestion()">
-        Next <i class="fas fa-chevron-right"></i>
+
+
+      <!-- NEXT -->
+
+      <button
+        *ngIf="
+          currentQuestionIndex <
+          questions.length - 1
+        "
+
+        type="button"
+
+        class="btn btn-primary"
+
+        (click)="nextQuestion()">
+
+        Next
+
+        <i class="fas fa-chevron-right"></i>
+
       </button>
-      <button *ngIf="currentQuestionIndex === questions.length - 1"
-              class="btn btn-success" (click)="submitTest()">
-        <i class="fas fa-paper-plane"></i> Submit Test
+
+
+      <!-- SUBMIT -->
+
+      <button
+        *ngIf="
+          currentQuestionIndex ===
+          questions.length - 1
+        "
+
+        type="button"
+
+        class="btn btn-success"
+
+        (click)="submitTest()"
+
+        [disabled]="isSubmitting">
+
+        <span
+          *ngIf="isSubmitting"
+          class="spinner-border spinner-border-sm me-2">
+        </span>
+
+        <i
+          *ngIf="!isSubmitting"
+          class="fas fa-paper-plane">
+        </i>
+
+        {{ isSubmitting ? 'Submitting...' : 'Submit Test' }}
+
       </button>
+
     </div>
+
   </div>
 
-  <!-- Results -->
-  <div *ngIf="showResults" class="results-section animate-scaleIn">
+
+  <!-- ================= RESULTS ================= -->
+
+  <div
+    *ngIf="showResults"
+    class="results-section animate-scaleIn">
+
+
     <div class="results-card">
-      <div class="results-trophy"><i class="fas fa-trophy"></i></div>
-      <h2>Test Complete!</h2>
+
+
+      <!-- TROPHY -->
+
+      <div class="results-trophy">
+
+        <i class="fas fa-trophy"></i>
+
+      </div>
+
+
+      <!-- TITLE -->
+
+      <h2>
+        Test Complete!
+      </h2>
+
+
+      <!-- SCORE -->
+
       <div class="results-score">
-        <span class="score-big">{{result?.marksObtained}}</span>
-        <span class="score-suffix">marks</span>
+
+        <span class="score-big">
+          {{ result?.marksObtained }}
+        </span>
+
+        <span class="score-suffix">
+          marks
+        </span>
+
       </div>
+
+
+      <!-- RESULT STATS -->
+
       <div class="results-stats">
+
+
+        <!-- CORRECT ANSWERS -->
+
         <div class="result-stat">
-          <i class="fas fa-check-circle text-success"></i>
-          Correct: <strong>{{result?.correctAnswers}} / {{result?.totalQuestions}}</strong>
+
+          <i
+            class="fas fa-check-circle text-success">
+          </i>
+
+          Correct:
+
+          <strong>
+            {{ result?.correctAnswers }}
+            /
+            {{ result?.totalQuestions }}
+          </strong>
+
         </div>
+
+
+        <!-- TIME -->
+
         <div class="result-stat">
-          <i class="fas fa-clock text-info"></i>
-          Time: <strong>{{formatTime(result?.timeTaken)}}</strong>
+
+          <i
+            class="fas fa-clock text-info">
+          </i>
+
+          Time:
+
+          <strong>
+            {{ formatTime(result?.timeTaken) }}
+          </strong>
+
         </div>
+
       </div>
-      <button class="btn btn-primary btn-lg" (click)="resetTest()">
-        <i class="fas fa-redo"></i> Take Another Test
+
+
+      <!-- TAKE ANOTHER TEST -->
+
+      <button
+        type="button"
+        class="btn btn-primary btn-lg"
+        (click)="resetTest()">
+
+        <i class="fas fa-redo"></i>
+
+        Take Another Test
+
       </button>
+
     </div>
+
   </div>
 
-  <!-- Previous Results -->
-  <div *ngIf="results.length > 0 && !testStarted && !showResults" class="history-section animate-fadeIn">
-    <h3 class="section-title"><i class="fas fa-history"></i> Previous Attempts</h3>
+
+  <!-- ================= PREVIOUS RESULTS ================= -->
+
+  <div
+    *ngIf="
+      results.length > 0 &&
+      !testStarted &&
+      !showResults
+    "
+    class="history-section animate-fadeIn">
+
+
+    <h3 class="section-title">
+
+      <i class="fas fa-history"></i>
+
+      Previous Attempts
+
+    </h3>
+
+
     <div class="grid-card">
+
       <ag-grid-angular
         class="ag-theme-alpine"
+
         [rowData]="results"
+
         [columnDefs]="historyColumnDefs"
+
         [defaultColDef]="defaultColDef"
+
         [animateRows]="true"
+
         [domLayout]="'autoHeight'"
+
         (gridReady)="onGridReady($event)">
+
       </ag-grid-angular>
+
     </div>
+
   </div>
+
 </div>
