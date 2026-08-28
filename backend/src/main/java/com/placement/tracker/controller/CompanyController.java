@@ -1,8 +1,7 @@
 package com.placement.tracker.controller;
 
 import com.placement.tracker.dto.CompanyDTO;
-import com.placement.tracker.dto.OpeningRoleRequest;
-import com.placement.tracker.dto.OpeningRoleResponse;
+import com.placement.tracker.dto.OpeningRoleDTO;
 import com.placement.tracker.service.CompanyService;
 import com.placement.tracker.service.OpeningRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class CompanyController {
     }
 
     @GetMapping("/openings")
-    public ResponseEntity<List<OpeningRoleResponse>> getAllOpenings() {
+    public ResponseEntity<List<OpeningRoleDTO>> getAllOpenings() {
         return ResponseEntity.ok(openingRoleService.getAllOpenings());
     }
 
@@ -65,21 +64,21 @@ public class CompanyController {
     }
 
     @GetMapping("/{companyId}/openings")
-    public ResponseEntity<List<OpeningRoleResponse>> getOpeningsByCompany(@PathVariable Long companyId) {
+    public ResponseEntity<List<OpeningRoleDTO>> getOpeningsByCompany(@PathVariable Long companyId) {
         return ResponseEntity.ok(openingRoleService.getOpeningsByCompany(companyId));
     }
 
     @PostMapping("/{companyId}/openings")
-    public ResponseEntity<OpeningRoleResponse> createOpenRole(
+    public ResponseEntity<OpeningRoleDTO> createOpenRole(
             @PathVariable Long companyId,
-            @RequestBody OpeningRoleRequest dto) {
+            @RequestBody OpeningRoleDTO dto) {
         return ResponseEntity.ok(openingRoleService.createOpeningRole(companyId, dto));
     }
 
     @PostMapping("/{companyId}/createRole")
-    public ResponseEntity<OpeningRoleResponse> createOpenRoleLegacy(
+    public ResponseEntity<OpeningRoleDTO> createOpenRoleLegacy(
             @PathVariable Long companyId,
-            @RequestBody OpeningRoleRequest dto) {
+            @RequestBody OpeningRoleDTO dto) {
         return ResponseEntity.ok(openingRoleService.createOpeningRole(companyId, dto));
     }
 }

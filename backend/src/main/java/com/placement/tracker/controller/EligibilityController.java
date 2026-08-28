@@ -1,6 +1,7 @@
 package com.placement.tracker.controller;
 
 import com.placement.tracker.dto.EligibilityResult;
+import com.placement.tracker.dto.OpeningRoleDTO;
 import com.placement.tracker.service.EligibilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,9 @@ public class EligibilityController {
         return ResponseEntity.ok(eligibilityService.checkEligibility(studentId));
     }
 
-    @GetMapping("/check/{studentId}/company/{companyId}")
-    public ResponseEntity<EligibilityResult> checkCompanyEligibility(
-            @PathVariable Long studentId, @PathVariable Long companyId) {
-        return ResponseEntity.ok(eligibilityService.checkCompanyEligibility(studentId, companyId));
+    @GetMapping("/check/{studentId}/openingRole/{openingRoleId}")
+    public ResponseEntity<OpeningRoleDTO> checkCompanyEligibility(
+            @PathVariable Long studentId, @PathVariable Long openingRoleId) {
+        return ResponseEntity.ok(eligibilityService.checkCompanyEligibility(studentId, openingRoleId));
     }
 }

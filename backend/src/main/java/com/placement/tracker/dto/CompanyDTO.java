@@ -17,9 +17,6 @@ public class CompanyDTO {
     private String industry;
     private String location;
     private String bond;
-    private double minCgpa;
-    private double minTenth;
-    private double minTwelfth;
     private Set<String> eligibleBranches;
     private boolean active;
 }

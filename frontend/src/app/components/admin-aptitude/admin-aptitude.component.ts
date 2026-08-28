@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { AptitudeService } from '../../services/aptitude.service';
 
@@ -10,6 +11,27 @@ import { AptitudeService } from '../../services/aptitude.service';
 export class AdminAptitudeComponent implements OnInit {
 
   questions: any[] = [];
+  
+  quantitativeTopics: string[] = [
+  'Number System',
+  'Percentage',
+  'Profit and Loss',
+  'Ratio and Proportion',
+  'Average',
+  'Time and Work',
+  'Time, Speed and Distance'
+];
+
+logicalTopics: string[] = [
+  'Number Series',
+  'Coding-Decoding',
+  'Blood Relations',
+  'Direction Sense',
+  'Logical Puzzles',
+  'Syllogism'
+];
+
+availableTopics: string[] = [];
 
   showForm = false;
   editingQuestion: any = null;
@@ -18,17 +40,7 @@ export class AdminAptitudeComponent implements OnInit {
   errorMessage = '';
   saving = false;
 
-  form: any = {
-    question: '',
-    optionA: '',
-    optionB: '',
-    optionC: '',
-    optionD: '',
-    correctAnswer: 'A',
-    category: 'Quantitative',
-    difficulty: 'Easy',
-    explanation: ''
-  };
+  form: FormGroup;
 
   gridApi!: GridApi;
 
@@ -122,8 +134,22 @@ export class AdminAptitudeComponent implements OnInit {
   ];
 
   constructor(
-    private aptitudeService: AptitudeService
-  ) {}
+    private aptitudeService: AptitudeService,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      question: ['', Validators.required],
+      optionA: ['', Validators.required],
+      optionB: ['', Validators.required],
+      optionC: ['', Validators.required],
+      optionD: ['', Validators.required],
+      correctAnswer: ['A', Validators.required],
+      category: ['', Validators.required],
+      topic: ['', Validators.required],
+      difficulty: ['Easy', Validators.required],
+      explanation: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.loadQuestions();
@@ -205,7 +231,7 @@ export class AdminAptitudeComponent implements OnInit {
 
     this.editingQuestion = null;
 
-    this.form = {
+    this.form.reset({
       question: '',
       optionA: '',
       optionB: '',
@@ -213,10 +239,12 @@ export class AdminAptitudeComponent implements OnInit {
       optionD: '',
       correctAnswer: 'A',
       category: 'Quantitative',
+      topic: '',
       difficulty: 'Easy',
       explanation: ''
-    };
+    });
 
+    this.availableTopics = this.quantitativeTopics;
     this.errorMessage = '';
     this.successMessage = '';
 
@@ -231,58 +259,15 @@ export class AdminAptitudeComponent implements OnInit {
 
     console.log('Save button clicked');
 
-    console.log('Form data:', this.form);
+    this.form.markAllAsTouched();
 
     this.errorMessage = '';
     this.successMessage = '';
 
-    // -----------------------------
-    // VALIDATION
-    // -----------------------------
-
-    if (!this.form.question?.trim()) {
-      this.errorMessage = 'Please enter the question.';
+    if (this.form.invalid) {
+      this.errorMessage = 'Please fill all required fields.';
       return;
     }
-
-    if (!this.form.optionA?.trim()) {
-      this.errorMessage = 'Please enter Option A.';
-      return;
-    }
-
-    if (!this.form.optionB?.trim()) {
-      this.errorMessage = 'Please enter Option B.';
-      return;
-    }
-
-    if (!this.form.optionC?.trim()) {
-      this.errorMessage = 'Please enter Option C.';
-      return;
-    }
-
-    if (!this.form.optionD?.trim()) {
-      this.errorMessage = 'Please enter Option D.';
-      return;
-    }
-
-    if (!this.form.correctAnswer) {
-      this.errorMessage = 'Please select the correct answer.';
-      return;
-    }
-
-    if (!this.form.category) {
-      this.errorMessage = 'Please select a category.';
-      return;
-    }
-
-    if (!this.form.difficulty) {
-      this.errorMessage = 'Please select difficulty.';
-      return;
-    }
-
-    // -----------------------------
-    // PREVENT DOUBLE CLICK
-    // -----------------------------
 
     if (this.saving) {
       return;
@@ -290,25 +275,18 @@ export class AdminAptitudeComponent implements OnInit {
 
     this.saving = true;
 
-    // -----------------------------
-    // PAYLOAD
-    // -----------------------------
-
+    const f = this.form.value;
     const payload = {
-      question: this.form.question.trim(),
-
-      optionA: this.form.optionA.trim(),
-      optionB: this.form.optionB.trim(),
-      optionC: this.form.optionC.trim(),
-      optionD: this.form.optionD.trim(),
-
-      correctAnswer: this.form.correctAnswer,
-
-      category: this.form.category,
-
-      difficulty: this.form.difficulty,
-
-      explanation: this.form.explanation?.trim() || ''
+      question: f.question.trim(),
+      optionA: f.optionA.trim(),
+      optionB: f.optionB.trim(),
+      optionC: f.optionC.trim(),
+      optionD: f.optionD.trim(),
+      correctAnswer: f.correctAnswer,
+      category: f.category,
+      topic: f.topic,
+      difficulty: f.difficulty,
+      explanation: f.explanation?.trim() || ''
     };
 
     console.log('Sending payload to backend:', payload);
@@ -434,22 +412,21 @@ export class AdminAptitudeComponent implements OnInit {
 
     this.editingQuestion = question;
 
-    this.form = {
-      question: question.question || '',
+    const category = question.category || 'Quantitative';
+    this.onChangeCategory(category);
 
+    this.form.reset({
+      question: question.question || '',
       optionA: question.optionA || '',
       optionB: question.optionB || '',
       optionC: question.optionC || '',
       optionD: question.optionD || '',
-
       correctAnswer: question.correctAnswer || 'A',
-
-      category: question.category || 'Quantitative',
-
+      category: category,
+      topic: question.topic || '',
       difficulty: question.difficulty || 'Easy',
-
       explanation: question.explanation || ''
-    };
+    });
 
     this.errorMessage = '';
     this.successMessage = '';
@@ -521,6 +498,23 @@ export class AdminAptitudeComponent implements OnInit {
     }, 3000);
   }
 
+  onChangeCategory(category: string): void {
+
+  if (category === 'Quantitative') {
+    this.availableTopics = this.quantitativeTopics;
+  }
+  else if (category === 'Logical') {
+    this.availableTopics = this.logicalTopics;
+  }
+  else {
+    this.availableTopics = [];
+  }
+
+  this.form.get('topic')?.setValue('');
+
+  console.log('Available Topics:', this.availableTopics);
+  }
+
   // ==========================================
   // ERROR MESSAGE
   // ==========================================
@@ -552,23 +546,20 @@ export class AdminAptitudeComponent implements OnInit {
 
     this.errorMessage = '';
 
-    this.form = {
-
+    this.form.reset({
       question: '',
-
       optionA: '',
       optionB: '',
       optionC: '',
       optionD: '',
-
       correctAnswer: 'A',
-
       category: 'Quantitative',
-
+      topic: '',
       difficulty: 'Easy',
-
       explanation: ''
-    };
+    });
+
+    this.availableTopics = this.quantitativeTopics;
   }
 
 }

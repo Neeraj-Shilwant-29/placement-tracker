@@ -1,7 +1,6 @@
 package com.placement.tracker.service;
 
-import com.placement.tracker.dto.OpeningRoleRequest;
-import com.placement.tracker.dto.OpeningRoleResponse;
+import com.placement.tracker.dto.OpeningRoleDTO;
 import com.placement.tracker.entity.Company;
 import com.placement.tracker.entity.OpeningRoles;
 import com.placement.tracker.repository.CompanyRepository;
@@ -21,19 +20,19 @@ public class OpeningRoleService {
     @Autowired
     private OpeningRolesRepository openingRoleRepository;
 
-    public List<OpeningRoleResponse> getAllOpenings() {
+    public List<OpeningRoleDTO> getAllOpenings() {
         return openingRoleRepository.findByActiveTrue().stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<OpeningRoleResponse> getOpeningsByCompany(Long companyId) {
+    public List<OpeningRoleDTO> getOpeningsByCompany(Long companyId) {
         return openingRoleRepository.findByCompanyId(companyId).stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public OpeningRoleResponse createOpeningRole(Long companyId, OpeningRoleRequest dto) {
+    public OpeningRoleDTO createOpeningRole(Long companyId, OpeningRoleDTO dto) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
 
@@ -57,10 +56,10 @@ public class OpeningRoleService {
         return toDTO(savedOpeningRole);
     }
 
-    private OpeningRoleResponse toDTO(OpeningRoles openingRole) {
+    private OpeningRoleDTO toDTO(OpeningRoles openingRole) {
         Company company = openingRole.getCompany();
 
-        return OpeningRoleResponse.builder()
+        return OpeningRoleDTO.builder()
                 .id(openingRole.getId())
                 .companyId(company.getId())
                 .companyName(company.getName())

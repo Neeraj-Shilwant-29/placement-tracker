@@ -45,38 +45,26 @@ public class DataInitializer {
         if (companyRepository.count() == 0) {
             companyRepository.save(Company.builder()
                     .name("TCS").industry("IT Services").location("Pan India")
-                    .minCgpa(6.0).minTenth(60).minTwelfth(60)
-                    .eligibleBranches(Set.of("CSE", "IT", "ECE", "EEE", "ME", "CE"))
                     .description("Tata Consultancy Services - Leading IT services company").build());
 
             companyRepository.save(Company.builder()
                     .name("Infosys").industry("IT Services").location("Pan India")
-                    .minCgpa(6.0).minTenth(60).minTwelfth(60)
-                    .eligibleBranches(Set.of("CSE", "IT", "ECE", "EEE"))
                     .description("Infosys - Global leader in digital services").build());
 
             companyRepository.save(Company.builder()
                     .name("Wipro").industry("IT Services").location("Pan India")
-                    .minCgpa(6.0).minTenth(60).minTwelfth(60)
-                    .eligibleBranches(Set.of("CSE", "IT", "ECE"))
                     .description("Wipro - Technology services and consulting company").build());
 
             companyRepository.save(Company.builder()
                     .name("Google").industry("Technology").location("Bangalore, Hyderabad")
-                    .minCgpa(7.5).minTenth(80).minTwelfth(80)
-                    .eligibleBranches(Set.of("CSE", "IT"))
                     .description("Google - Leading technology company").build());
 
             companyRepository.save(Company.builder()
                     .name("Microsoft").industry("Technology").location("Hyderabad")
-                     .minCgpa(7.5).minTenth(80).minTwelfth(80)
-                    .eligibleBranches(Set.of("CSE", "IT"))
                     .description("Microsoft - Global technology corporation").build());
 
             companyRepository.save(Company.builder()
                     .name("Amazon").industry("E-Commerce/Technology").location("Hyderabad, Chennai")
-                    .minCgpa(7.0).minTenth(75).minTwelfth(75)
-                    .eligibleBranches(Set.of("CSE", "IT", "ECE"))
                     .description("Amazon - World's largest e-commerce company").build());
 
             System.out.println("Sample companies initialized!");

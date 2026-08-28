@@ -91,15 +91,6 @@
                  placeholder="e.g. Bangalore">
         </div>
 
-        <div class="col-md-4">
-          <label class="form-label">Minimum CGPA</label>
-          <input type="number"
-                 class="form-control"
-                 [(ngModel)]="companyForm.minCgpa"
-                 step="0.1"
-                 placeholder="e.g. 7.0">
-        </div>
-
 
         <div class="col-md-4">
           <label class="form-label">Website</label>
@@ -110,7 +101,25 @@
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-4">
+          <label class="form-label">Logo URL</label>
+          <input type="text"
+                 class="form-control"
+                 [(ngModel)]="companyForm.logo"
+                 placeholder="https://logo-url...">
+        </div>
+
+
+        <div class="col-md-4">
+          <label class="form-label">Bond</label>
+          <input type="text"
+                 class="form-control"
+                 [(ngModel)]="companyForm.bond"
+                 placeholder="e.g. 2 years">
+        </div>
+
+
+        <div class="col-md-8">
           <label class="form-label">Company Description</label>
 
           <textarea
@@ -122,27 +131,14 @@
         </div>
 
 
-        <div class="col-md-6">
-          <label class="form-label">Job Description</label>
-
-          <textarea
-            class="form-control"
-            rows="4"
-            [(ngModel)]="companyForm.jobDescription"
-            placeholder="Describe job role, responsibilities, skills required">
-          </textarea>
-        </div>
-
-
-        <div class="col-md-6">
-          <label class="form-label">Eligible Branches</label>
-
-          <textarea
-            class="form-control"
-            rows="4"
-            [(ngModel)]="eligibleBranchesInput"
-            placeholder="CSE, IT, ECE">
-          </textarea>
+        <div class="col-md-4 d-flex align-items-center">
+          <div class="form-check form-switch">
+            <input class="form-check-input"
+                   type="checkbox"
+                   [(ngModel)]="companyForm.active"
+                   id="companyActiveSwitch">
+            <label class="form-check-label" for="companyActiveSwitch">Active</label>
+          </div>
         </div>
 
 

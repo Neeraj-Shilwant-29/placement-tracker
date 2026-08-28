@@ -8,7 +8,7 @@
 
     <button class="btn"
             [ngClass]="showForm ? 'btn-outline-secondary' : 'btn-primary'"
-            (click)="showForm ? resetForm() : showForm = true">
+            (click)="showForm ? resetForm() : openAddForm()">
 
       <i class="fas" [ngClass]="showForm ? 'fa-times' : 'fa-plus'"></i>
       {{showForm ? 'Cancel' : 'Add Question'}}
@@ -33,6 +33,21 @@
   </div>
 
 
+  <!-- Error Message -->
+  <div *ngIf="errorMessage"
+       class="alert alert-danger alert-dismissible fade show mb-3"
+       role="alert">
+
+    <i class="fas fa-exclamation-circle me-2"></i>
+    {{errorMessage}}
+
+    <button type="button"
+            class="btn-close"
+            (click)="errorMessage=''">
+    </button>
+
+  </div>
+
 
   <!-- Form -->
   <div *ngIf="showForm"
@@ -53,206 +68,166 @@
     </div>
 
 
-
-
     <div class="form-card-body">
 
-      <div class="row g-4">
+      <form [formGroup]="form">
+        <div class="row g-4">
 
+          <!-- Question -->
+          <div class="col-12">
+            <label class="form-label">Question <span class="text-danger">*</span></label>
+            <textarea
+              class="form-control"
+              rows="3"
+              formControlName="question"
+              placeholder="Enter the question text"
+              >
+            </textarea>
+          </div>
 
-        <!-- Question -->
+          <!-- Option A -->
+          <div class="col-md-3">
+            <label class="form-label">Option A <span class="text-danger">*</span></label>
+            <input type="text"
+                   class="form-control"
+                   formControlName="optionA"
+                   placeholder="Enter option A"
+                   >
+          </div>
 
-        <div class="col-12">
+          <!-- Option B -->
+          <div class="col-md-3">
+            <label class="form-label">Option B <span class="text-danger">*</span></label>
+            <input type="text"
+                   class="form-control"
+                   formControlName="optionB"
+                   placeholder="Enter option B"
+                   >
+          </div>
 
-          <label class="form-label">
-            Question
-          </label>
+          <!-- Option C -->
+          <div class="col-md-3">
+            <label class="form-label">Option C <span class="text-danger">*</span></label>
+            <input type="text"
+                   class="form-control"
+                   formControlName="optionC"
+                   placeholder="Enter option C"
+                   [ngClass]="{'is-invalid': form.get('optionC')?.invalid && form.get('optionC')?.touched}">
+            <div class="invalid-feedback" *ngIf="form.get('optionC')?.invalid && form.get('optionC')?.touched">
+              Option C is required.
+            </div>
+          </div>
 
-          <textarea
-            class="form-control"
-            rows="3"
-            [(ngModel)]="form.question"
-            placeholder="Enter the question text">
-          </textarea>
+          <!-- Option D -->
+          <div class="col-md-3">
+            <label class="form-label">Option D <span class="text-danger">*</span></label>
+            <input type="text"
+                   class="form-control"
+                   formControlName="optionD"
+                   placeholder="Enter option D"
+                   [ngClass]="{'is-invalid': form.get('optionD')?.invalid && form.get('optionD')?.touched}">
+            <div class="invalid-feedback" *ngIf="form.get('optionD')?.invalid && form.get('optionD')?.touched">
+              Option D is required.
+            </div>
+          </div>
 
-        </div>
+          <!-- Correct Answer -->
+          <div class="col-md-4">
+            <label class="form-label">Correct Answer <span class="text-danger">*</span></label>
+            <select class="form-select"
+                    formControlName="correctAnswer"
+                    [ngClass]="{'is-invalid': form.get('correctAnswer')?.invalid && form.get('correctAnswer')?.touched}">
+              <option value="">Select Answer</option>
+              <option value="A">Option A</option>
+              <option value="B">Option B</option>
+              <option value="C">Option C</option>
+              <option value="D">Option D</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="form.get('correctAnswer')?.invalid && form.get('correctAnswer')?.touched">
+              Correct answer is required.
+            </div>
+          </div>
 
+          <!-- Category -->
+          <div class="col-md-4">
+            <label class="form-label">Category <span class="text-danger">*</span></label>
+            <select class="form-select"
+                    formControlName="category"
+                    (change)="onChangeCategory($event.target.value)"
+                    [ngClass]="{'is-invalid': form.get('category')?.invalid && form.get('category')?.touched}">
+              <option value="">Select Category</option>
+              <option value="Quantitative">Quantitative</option>
+              <option value="Verbal">Verbal</option>
+              <option value="Logical">Logical</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="form.get('category')?.invalid && form.get('category')?.touched">
+              Category is required.
+            </div>
+          </div>
 
+          <!-- Topic -->
+          <div class="col-md-4">
+            <label class="form-label">Topic <span class="text-danger">*</span></label>
+            <select class="form-select"
+                    formControlName="topic"
+                    [ngClass]="{'is-invalid': form.get('topic')?.invalid && form.get('topic')?.touched}">
+              <option value="">Select Topic</option>
+              <option *ngFor="let topic of availableTopics" [value]="topic">
+                {{ topic }}
+              </option>
+            </select>
+            <div class="invalid-feedback" *ngIf="form.get('topic')?.invalid && form.get('topic')?.touched">
+              Topic is required.
+            </div>
+          </div>
 
+          <!-- Difficulty -->
+          <div class="col-md-4">
+            <label class="form-label">Difficulty <span class="text-danger">*</span></label>
+            <select class="form-select"
+                    formControlName="difficulty"
+                    [ngClass]="{'is-invalid': form.get('difficulty')?.invalid && form.get('difficulty')?.touched}">
+              <option value="">Select Difficulty</option>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="form.get('difficulty')?.invalid && form.get('difficulty')?.touched">
+              Difficulty is required.
+            </div>
+          </div>
 
-
-        <!-- Option A -->
-
-        <div class="col-md-3">
-
-          <label class="form-label">
-            Option A
-          </label>
-
-          <input type="text"
-                 class="form-control"
-                 [(ngModel)]="form.optionA"
-                 placeholder="Enter option A">
-
-        </div>
-
-
-
-
-        <!-- Option B -->
-
-        <div class="col-md-3">
-
-          <label class="form-label">
-            Option B
-          </label>
-
-          <input type="text"
-                 class="form-control"
-                 [(ngModel)]="form.optionB"
-                 placeholder="Enter option B">
-
-        </div>
-
-
-
-
-
-        <!-- Option C -->
-
-        <div class="col-md-3">
-
-          <label class="form-label">
-            Option C
-          </label>
-
-          <input type="text"
-                 class="form-control"
-                 [(ngModel)]="form.optionC"
-                 placeholder="Enter option C">
-
-        </div>
-
-
-
-
-
-        <!-- Option D -->
-
-        <div class="col-md-3">
-
-          <label class="form-label">
-            Option D
-          </label>
-
-          <input type="text"
-                 class="form-control"
-                 [(ngModel)]="form.optionD"
-                 placeholder="Enter option D">
-
-        </div>
-
-
-
-
-
-
-        <!-- Correct Answer -->
-
-        <div class="col-md-4">
-
-          <label class="form-label">
-            Correct Answer
-          </label>
-
-          <select class="form-select"
-                  [(ngModel)]="form.correctAnswer">
-
-            <option value="">Select Answer</option>
-            <option value="A">Option A</option>
-            <option value="B">Option B</option>
-            <option value="C">Option C</option>
-            <option value="D">Option D</option>
-
-          </select>
-
-        </div>
-
-
-
-
-
-        <!-- Category -->
-
-        <div class="col-md-4">
-
-          <label class="form-label">
-            Category
-          </label>
-
-          <select class="form-select"
-                  [(ngModel)]="form.category">
-
-            <option value="">Select Category</option>
-            <option value="Quantitative">Quantitative</option>
-            <option value="Verbal">Verbal</option>
-            <option value="Logical">Logical</option>
-
-          </select>
+          <!-- Explanation -->
+          <div class="col-12">
+            <label class="form-label">Explanation</label>
+            <textarea
+              class="form-control"
+              rows="2"
+              formControlName="explanation"
+              placeholder="Enter explanation (optional)">
+            </textarea>
+          </div>
 
         </div>
-
-
-
-
-
-        <!-- Difficulty -->
-
-        <div class="col-md-4">
-
-          <label class="form-label">
-            Difficulty
-          </label>
-
-          <select class="form-select"
-                  [(ngModel)]="form.difficulty">
-
-            <option value="">Select Difficulty</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-
-          </select>
-
-        </div>
-
-
-
-      </div>
+      </form>
 
     </div>
-
-
-
 
 
     <div class="form-card-footer">
 
       <button class="btn btn-primary me-2"
-              (click)="saveQuestion()">
+              (click)="saveQuestion()"
+              [disabled]="form.invalid || saving">
 
         <i class="fas fa-save"></i>
         {{editingQuestion ? 'Update' : 'Save'}}
 
       </button>
 
-
-
       <button class="btn btn-outline-secondary"
               (click)="resetForm()">
-
         Cancel
-
       </button>
 
     </div>
@@ -261,11 +236,7 @@
   </div>
 
 
-
-
-
   <!-- Grid -->
-
   <div class="grid-card">
 
     <ag-grid-angular
@@ -280,8 +251,6 @@
       (cellClicked)="onCellClicked($event)">
     </ag-grid-angular>
 
-
-
     <div *ngIf="questions.length === 0"
          class="empty-state">
 
@@ -295,8 +264,6 @@
 
     </div>
 
-
   </div>
-
 
 </div>

@@ -25,6 +25,7 @@ import { AdminAptitudeComponent } from './components/admin-aptitude/admin-aptitu
 import { AdminCodingComponent } from './components/admin-coding/admin-coding.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { CommonModule } from '@angular/common';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -88,7 +89,8 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
-    AgGridModule
+    AgGridModule,
+    CommonModule
   ],
   providers: [
     AuthGuard,

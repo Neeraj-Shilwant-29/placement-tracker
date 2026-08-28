@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./eligibility-checker.component.scss']
 })
 export class EligibilityCheckerComponent implements OnInit {
-  companiesList: any[] = [];
+  openingRolesList: any[] = [];
   appliedJobs: any[] = [];
   loading = false;
   activeTab: 'jobs' | 'applied' = 'jobs';
@@ -30,10 +30,11 @@ export class EligibilityCheckerComponent implements OnInit {
 
   private checkEligibility(): void {
     this.loading = true;
-    const appliedCompanyIds = this.appliedJobs?.map(job=>job.companyId);
+    const appliedRolesIds = this.appliedJobs?.map(job=>job.companyId);
     this.eligibilityService.checkEligibility(this.user?.id).subscribe({
       next: (data) => {
-        this.companiesList = data.filter(res=> !appliedCompanyIds.includes(res?.company?.id));
+        this.openingRolesList = data.filter(res=> !appliedRolesIds.includes(res?.openingRoles
+?.id));
         this.loading = false;
       },
       error: (err) => {
@@ -43,11 +44,11 @@ export class EligibilityCheckerComponent implements OnInit {
     });
   }
 
-  public applyByCompanyId(companyId: any) {
-     this.eligibilityService.applyByCompanyId(companyId,this.user?.id).subscribe({
+  public applyByCompanyId(companyId: any, openingRoleId: any) {
+     this.eligibilityService.applyByCompanyId(companyId, openingRoleId, this.user?.id).subscribe({
       next: (response) => {
         if(response?.success){
-            for(const cmp of this.companiesList){
+            for(const cmp of this.openingRolesList){
               if(response?.companyId === cmp?.company?.id){
                 cmp.status = "APPLIED";
                 break;

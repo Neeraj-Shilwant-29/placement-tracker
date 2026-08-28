@@ -30,14 +30,17 @@ public class JobApplicationController {
         return ResponseEntity.ok(jobApplicationService.getApplicationById(applicationId));
     }
 
-    @PostMapping("/company/{companyId}")
+    @PostMapping("/company/{companyId}/opening/{openingRoleId}")
     public ResponseEntity<Map<String, Object>> apply(
             @PathVariable("companyId") Long companyId,
-            @RequestBody JobApplicationRequest request) {
+            @PathVariable("openingRoleId") Long openingRoleId,
+            @RequestBody JobApplicationRequest request
+        ) {
 
         jobApplicationService.apply(
                 request.getStudentId(),
-                companyId
+                companyId,
+                openingRoleId
         );
 
         return ResponseEntity.ok( Map.of(

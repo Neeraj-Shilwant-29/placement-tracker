@@ -29,15 +29,6 @@ public class Company {
     private String location;
     private String bond;
 
-    private double minCgpa;
-    private double minTenth;
-    private double minTwelfth;
-
-    @Builder.Default
-    @ElementCollection
-    @CollectionTable(name = "company_eligible_branches", joinColumns = @JoinColumn(name = "company_id"))
-    private Set<String> eligibleBranches = new HashSet<>();
-
     @Builder.Default
     @Column(nullable = false)
     private boolean active = true;

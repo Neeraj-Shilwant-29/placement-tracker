@@ -47,10 +47,6 @@ public class CompanyService {
                 .industry(dto.getIndustry())
                 .location(dto.getLocation())
                 .bond(dto.getBond())
-                .minCgpa(dto.getMinCgpa())
-                .minTenth(dto.getMinTenth())
-                .minTwelfth(dto.getMinTwelfth())
-                .eligibleBranches(dto.getEligibleBranches())
                 .build();
         return toDTO(companyRepository.save(company));
     }
@@ -65,10 +61,6 @@ public class CompanyService {
         company.setIndustry(dto.getIndustry());
         company.setLocation(dto.getLocation());
         company.setBond(dto.getBond());
-        company.setMinCgpa(dto.getMinCgpa());
-        company.setMinTenth(dto.getMinTenth());
-        company.setMinTwelfth(dto.getMinTwelfth());
-        company.setEligibleBranches(dto.getEligibleBranches());
         return toDTO(companyRepository.save(company));
     }
 
@@ -89,10 +81,6 @@ public class CompanyService {
         dto.setIndustry(company.getIndustry());
         dto.setLocation(company.getLocation());
         dto.setBond(company.getBond());
-        dto.setMinCgpa(company.getMinCgpa());
-        dto.setMinTenth(company.getMinTenth());
-        dto.setMinTwelfth(company.getMinTwelfth());
-        dto.setEligibleBranches(company.getEligibleBranches());
         dto.setActive(company.isActive());
         return dto;
     }

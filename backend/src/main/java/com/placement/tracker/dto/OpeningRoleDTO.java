@@ -12,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OpeningRoleResponse {
+public class OpeningRoleDTO {
 
     private Long id;
 

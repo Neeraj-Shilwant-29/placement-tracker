@@ -25,15 +25,15 @@
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!loading && companiesList.length === 0" class="empty-state">
+    <div *ngIf="!loading && openingRolesList.length === 0" class="empty-state">
       <div class="empty-icon"><i class="fas fa-clipboard-list"></i></div>
       <h4>No companies to check</h4>
       <p>Companies need to be added to the system first</p>
     </div>
 
-    <!-- companiesList -->
+    <!-- openingRolesList -->
     <div class="eligibility-grid" *ngIf="!loading">
-    <div class="eligibility-card animate-fadeIn" *ngFor="let result of companiesList; let i = index"
+    <div class="eligibility-card animate-fadeIn" *ngFor="let result of openingRolesList; let i = index"
          [class.eligible]="result.eligible" [class.not-eligible]="!result.eligible"
          [style.animation-delay]="(i * 0.04) + 's'">
 
@@ -44,7 +44,7 @@
           </div>
           <div>
             <h4>{{result.company?.name}}</h4>
-            <span class="company-meta">{{result.company?.industry}} &middot; {{result.company?.location}}</span>
+            <span class="company-meta">{{result.openingRoles?.roleName}} &middot; {{result.company?.industry}} &middot; {{result.openingRoles?.location || result.company?.location}}</span>
           </div>
         </div>
         <div class="elig-actions">
@@ -59,7 +59,7 @@
               <button
                 type="button"
                 class="btn btn-primary"
-                (click)="applyByCompanyId(result?.company?.id)">
+                (click)="applyByCompanyId(result?.company?.id, result?.openingRoles?.id)">
                 Apply
               </button>
             }
@@ -75,18 +75,11 @@
       <p class="elig-message">{{result.message}}</p>
 
       <div class="elig-details">
-         <!-- <div class="detail-chip">
-          <i class="fas fa-money-bill-wave"></i>
-          <div>
-            <small>Package</small>
-            <strong>{{result.company?.packageOffered}}</strong>
-          </div> 
-        </div>  -->
         <div class="detail-chip">
           <i class="fas fa-star"></i>
           <div>
             <small>Min CGPA</small>
-            <strong>{{result.company?.minCgpa}}</strong>
+            <strong>{{result.openingRoles?.minCgpa}}</strong>
           </div>
         </div>
         <div class="detail-chip branches-chip">
@@ -94,7 +87,7 @@
           <div>
             <small>Branches</small>
             <span class="branch-tags">
-              <span *ngFor="let b of result.company?.eligibleBranches" class="branch-chip">{{b}}</span>
+              <span *ngFor="let b of result.openingRoles?.eligibleBranches" class="branch-chip">{{b}}</span>
             </span>
           </div>
         </div>
@@ -120,10 +113,12 @@
         <div class="elig-header">
           <div class="company-info-row">
             <div class="company-avatar avatar-eligible">
-              {{app.companyName?.charAt(0)}}
+              {{app?.openingRoles?.companyName?.charAt(0)}}
             </div>
             <div>
-              <h4>{{app.companyName}}</h4>
+              <h4>{{app?.openingRoles?.companyName}}</h4>
+              <span class="company-meta">{{app?.openingRoles?.roleName}} &middot; {{app.openingRoles?.location}}</span>
+
             </div>
           </div>
           <div class="elig-badge badge-applied">

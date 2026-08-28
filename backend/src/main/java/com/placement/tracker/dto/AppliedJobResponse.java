@@ -4,9 +4,8 @@ import java.time.LocalDateTime;
 
 public record AppliedJobResponse(
         Long applicationId,
-        Long companyId,
-        String companyName,
         String status,
+        OpeningRoleDTO openingRoles,
         LocalDateTime appliedAt
 ) {
 }

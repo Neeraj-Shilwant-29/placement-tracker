@@ -40,6 +40,11 @@ public class JobApplications {
     @JoinColumn(name="company_id")
     private Company company;
 
+    @ManyToOne
+    @JoinColumn(name="opening_role_id")
+    private OpeningRoles openingRoles;
+
+
     private String status;
 
     private LocalDateTime appliedAt;

@@ -11,4 +11,5 @@ public class EligibilityResult {
     private boolean eligible;
     private String message;
     private CompanyDTO company;
+    private OpeningRoleDTO openingRoles;
 }

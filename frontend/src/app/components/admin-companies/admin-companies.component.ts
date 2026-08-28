@@ -13,7 +13,6 @@ export class AdminCompaniesComponent implements OnInit {
   showForm = false;
   showOpeningForm = false;
   editingCompany: any = null;
-  eligibleBranchesInput = '';
   openingBranchesInput = '';
 
   // Success message
@@ -23,10 +22,11 @@ export class AdminCompaniesComponent implements OnInit {
     name: '',
     industry: '',
     location: '',
-    minCgpa: 0,
     website: '',
+    logo: '',
     description: '',
-    eligibleBranches: []
+    bond: '',
+    active: true
   };
 
   openingForm: any = {
@@ -70,9 +70,15 @@ export class AdminCompaniesComponent implements OnInit {
       flex: 1
     },
     {
-      headerName: 'Min CGPA',
-      field: 'minCgpa',
+      headerName: 'Bond',
+      field: 'bond',
       flex: 1
+    },
+    {
+      headerName: 'Active',
+      field: 'active',
+      flex: 0.7,
+      cellRenderer: (params: any) => params.value ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-secondary">No</span>'
     },
     {
       headerName: 'Actions',
@@ -147,11 +153,6 @@ export class AdminCompaniesComponent implements OnInit {
   }
 
   saveCompany(): void {
-    this.companyForm.eligibleBranches = this.eligibleBranchesInput
-      .split(',')
-      .map((s: string) => s.trim())
-      .filter((s: string) => s);
-
     if (this.editingCompany) {
       this.companyService
         .updateCompany(this.editingCompany.id, this.companyForm)
@@ -199,15 +200,14 @@ export class AdminCompaniesComponent implements OnInit {
       return;
     }
 
+    const { companyId: _, ...rest } = this.openingForm;
     const payload = {
-      ...this.openingForm,
+      ...rest,
       eligibleBranches: this.openingBranchesInput
         .split(',')
         .map((s: string) => s.trim())
         .filter((s: string) => s)
     };
-
-    delete payload.companyId;
 
     this.companyService.createJobOpening(companyId, payload).subscribe({
       next: () => {
@@ -230,8 +230,6 @@ export class AdminCompaniesComponent implements OnInit {
   editCompany(company: any): void {
     this.editingCompany = company;
     this.companyForm = { ...company };
-    this.eligibleBranchesInput =
-      company.eligibleBranches?.join(', ') || '';
     this.showForm = true;
   }
 
@@ -260,13 +258,12 @@ export class AdminCompaniesComponent implements OnInit {
       name: '',
       industry: '',
       location: '',
-      minCgpa: 0,
       website: '',
+      logo: '',
       description: '',
-      eligibleBranches: []
+      bond: '',
+      active: true
     };
-
-    this.eligibleBranchesInput = '';
   }
 
   resetOpeningForm(): void {

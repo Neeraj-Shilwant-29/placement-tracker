@@ -13,17 +13,17 @@ export class EligibilityService {
     return this.http.get<any[]>(`${this.apiUrl}/check/${studentId}`);
   }
 
-  checkCompanyEligibility(studentId: number, companyId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/check/${studentId}/company/${companyId}`);
+  checkOpeningRoleEligibility(studentId: number, openingRoleId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/check/${studentId}/openingRole/${openingRoleId}`);
   }
 
-  applyByCompanyId(companyId: number,studentId:number): Observable<any>{
+  applyByCompanyId(companyId: number, openingRoleId: number, studentId: number): Observable<any>{
   return this.http.post<any>(
-      `${environment?.apiBaseUrl}/applications/company/${companyId}`,
+      `${environment?.apiBaseUrl}/applications/company/${companyId}/opening/${openingRoleId}`,
       {
         studentId: studentId
       }
-    ); 
+    );
   }
 
   getAppliedJobsData(studentId:number){
