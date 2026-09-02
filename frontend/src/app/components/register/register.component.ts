@@ -18,10 +18,10 @@ export class RegisterComponent {
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      phone: [''],
-      college: [''],
-      branch: [''],
-      cgpa: ['']
+      phone: ['' ,[Validators.required, Validators.minLength(10)]],
+      college: ['',Validators.required],
+      branch: ['',Validators.required],
+      cgpa: ['',Validators.required]
     });
   }
 

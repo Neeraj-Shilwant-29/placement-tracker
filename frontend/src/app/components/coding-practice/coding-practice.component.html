@@ -4,30 +4,48 @@
       <h1><i class="fas fa-code"></i> Coding Practice</h1>
       <p>Solve coding problems and sharpen your skills</p>
     </div>
+
     <span class="results-count" *ngIf="!selectedQuestion">
-      <i class="fas fa-list"></i> {{filteredQuestions.length}} problems
+      <i class="fas fa-list"></i> {{ filteredQuestions.length }} problems
     </span>
   </div>
 
   <!-- Filters -->
   <div *ngIf="!selectedQuestion" class="filter-bar">
     <div class="filter-group">
-      <label class="form-label"><i class="fas fa-signal"></i> Difficulty</label>
-      <select class="form-select" [(ngModel)]="filterDifficulty" (change)="filterQuestions()">
+      <label class="form-label">
+        <i class="fas fa-signal"></i> Difficulty
+      </label>
+
+      <select
+        class="form-select"
+        [(ngModel)]="filterDifficulty"
+        (change)="filterQuestions()"
+      >
         <option value="">All Difficulties</option>
         <option value="Easy">Easy</option>
         <option value="Medium">Medium</option>
         <option value="Hard">Hard</option>
       </select>
     </div>
+
     <div class="filter-group">
-      <label class="form-label"><i class="fas fa-tags"></i> Category</label>
-      <select class="form-select" [(ngModel)]="filterCategory" (change)="filterQuestions()">
+      <label class="form-label">
+        <i class="fas fa-tags"></i> Category
+      </label>
+
+      <select
+        class="form-select"
+        [(ngModel)]="filterCategory"
+        (change)="filterQuestions()"
+      >
         <option value="">All Categories</option>
         <option value="Arrays">Arrays</option>
         <option value="Strings">Strings</option>
         <option value="Linked Lists">Linked Lists</option>
-        <option value="Dynamic Programming">Dynamic Programming</option>
+        <option value="Dynamic Programming">
+          Dynamic Programming
+        </option>
         <option value="Searching">Searching</option>
       </select>
     </div>
@@ -35,67 +53,442 @@
 
   <!-- Question List -->
   <div *ngIf="!selectedQuestion" class="problems-grid">
-    <div class="problem-card animate-fadeIn" *ngFor="let q of filteredQuestions; let i = index"
-         [style.animation-delay]="(i * 0.04) + 's'" (click)="selectQuestion(q)">
+    <div
+      class="problem-card animate-fadeIn"
+      *ngFor="let q of filteredQuestions; let i = index"
+      [style.animation-delay]="i * 0.04 + 's'"
+    >
       <div class="problem-top">
-        <h4 class="problem-title">{{q.title}}</h4>
-        <span class="diff-badge" [ngClass]="{
-          'diff-easy': q.difficulty === 'Easy',
-          'diff-medium': q.difficulty === 'Medium',
-          'diff-hard': q.difficulty === 'Hard'
-        }">{{q.difficulty}}</span>
+        <h4 class="problem-title">{{ q.title }}</h4>
+
+        <span
+          class="diff-badge"
+          [ngClass]="{
+            'diff-easy': q.difficulty === 'Easy',
+            'diff-medium': q.difficulty === 'Medium',
+            'diff-hard': q.difficulty === 'Hard'
+          }"
+        >
+          {{ q.difficulty }}
+        </span>
       </div>
-      <span class="category-tag"><i class="fas fa-tag"></i> {{q.category}}</span>
-      <p class="problem-desc">{{q.description | slice:0:120}}...</p>
-      <span class="view-link">
-        View Problem <i class="fas fa-arrow-right"></i>
+
+      <span class="category-tag">
+        <i class="fas fa-tag"></i>
+        {{ q.category }}
       </span>
+
+      <p class="problem-desc">
+        {{ q.description | slice: 0 : 120 }}...
+      </p>
+
+      <button
+        type="button"
+        class="view-link"
+        (click)="selectQuestion(q)"
+      >
+        View Problem
+        <i class="fas fa-arrow-right"></i>
+      </button>
     </div>
   </div>
 
-  <div *ngIf="!selectedQuestion && filteredQuestions.length === 0" class="empty-state">
-    <div class="empty-icon"><i class="fas fa-code"></i></div>
+  <!-- Empty State -->
+  <div
+    *ngIf="!selectedQuestion && filteredQuestions.length === 0"
+    class="empty-state"
+  >
+    <div class="empty-icon">
+      <i class="fas fa-code"></i>
+    </div>
+
     <h4>No problems found</h4>
+
     <p>Try adjusting your filters</p>
   </div>
 
   <!-- Question Detail -->
-  <div *ngIf="selectedQuestion" class="problem-detail animate-fadeIn">
-    <button class="btn btn-outline-secondary back-btn" (click)="selectedQuestion = null">
-      <i class="fas fa-arrow-left"></i> Back to Problems
+  <div
+    *ngIf="selectedQuestion"
+    class="problem-detail animate-fadeIn"
+  >
+    <button
+      class="btn btn-outline-secondary back-btn"
+      (click)="selectedQuestion = null"
+    >
+      <i class="fas fa-arrow-left"></i>
+      Back to Problems
     </button>
 
     <div class="detail-card">
       <div class="detail-header">
-        <h2>{{selectedQuestion.title}}</h2>
-        <span class="diff-badge" [ngClass]="{
-          'diff-easy': selectedQuestion.difficulty === 'Easy',
-          'diff-medium': selectedQuestion.difficulty === 'Medium',
-          'diff-hard': selectedQuestion.difficulty === 'Hard'
-        }">{{selectedQuestion.difficulty}}</span>
+        <h2>{{ selectedQuestion.title }}</h2>
+
+        <span
+          class="diff-badge"
+          [ngClass]="{
+            'diff-easy': selectedQuestion.difficulty === 'Easy',
+            'diff-medium': selectedQuestion.difficulty === 'Medium',
+            'diff-hard': selectedQuestion.difficulty === 'Hard'
+          }"
+        >
+          {{ selectedQuestion.difficulty }}
+        </span>
       </div>
-      <span class="category-tag"><i class="fas fa-tag"></i> {{selectedQuestion.category}}</span>
+
+      <span class="category-tag">
+        <i class="fas fa-tag"></i>
+        {{ selectedQuestion.category }}
+      </span>
 
       <div class="detail-section">
-        <h5><i class="fas fa-info-circle"></i> Description</h5>
-        <p>{{selectedQuestion.description}}</p>
+        <h5>
+          <i class="fas fa-info-circle"></i>
+          Description
+        </h5>
+
+        <p>
+          {{ selectedQuestion.description }}
+        </p>
       </div>
 
       <div class="io-grid">
         <div class="io-block">
-          <h5><i class="fas fa-sign-in-alt"></i> Sample Input</h5>
-          <pre><code>{{selectedQuestion.sampleInput}}</code></pre>
+          <h5>
+            <i class="fas fa-sign-in-alt"></i>
+            Sample Input
+          </h5>
+
+          <pre><code>{{ selectedQuestion.sampleInput }}</code></pre>
         </div>
+
         <div class="io-block">
-          <h5><i class="fas fa-sign-out-alt"></i> Sample Output</h5>
-          <pre><code>{{selectedQuestion.sampleOutput}}</code></pre>
+          <h5>
+            <i class="fas fa-sign-out-alt"></i>
+            Sample Output
+          </h5>
+
+          <pre><code>{{ selectedQuestion.sampleOutput }}</code></pre>
         </div>
       </div>
 
-      <div *ngIf="selectedQuestion.constraints" class="detail-section">
-        <h5><i class="fas fa-ruler"></i> Constraints</h5>
-        <p class="constraints">{{selectedQuestion.constraints}}</p>
+      <div
+        *ngIf="selectedQuestion.constraints"
+        class="detail-section"
+      >
+        <h5>
+          <i class="fas fa-ruler"></i>
+          Constraints
+        </h5>
+
+        <p class="constraints">
+          {{ selectedQuestion.constraints }}
+        </p>
       </div>
     </div>
   </div>
+</div>
+
+
+<!-- ====================================================== -->
+<!-- CODING IDE -->
+<!-- ====================================================== -->
+
+<div *ngIf="selectedQuestion" class="coding-page">
+
+  <!-- HEADER -->
+  <div class="coding-header">
+
+    <div>
+      <strong>
+        {{ selectedQuestion.title }}
+      </strong>
+    </div>
+
+    <div class="actions">
+
+      <button
+        class="run-btn"
+        (click)="runCode()"
+        [disabled]="isRunning"
+      >
+        <i class="fas fa-play"></i>
+
+        {{ isRunning ? 'Running...' : 'Run' }}
+      </button>
+
+      <button
+        class="submit-btn"
+        (click)="submitCode()"
+        [disabled]="isSubmitting"
+      >
+        <i class="fas fa-check"></i>
+
+        {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- WORKSPACE -->
+
+  <div class="workspace">
+
+    <!-- LEFT SIDE -->
+    <div
+      class="left-panel"
+      [style.width.%]="leftWidth"
+    >
+
+      <div class="editor-toolbar">
+
+        <select
+          [(ngModel)]="selectedLanguage"
+          (change)="changeLanguage()"
+        >
+          <option value="cpp">C++</option>
+          <option value="java">Java</option>
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript</option>
+        </select>
+
+        <span>
+          ● Saved
+        </span>
+
+      </div>
+
+
+      <!-- MONACO -->
+
+      <div class="editor-wrapper">
+
+        <app-code-editor
+          [language]="selectedLanguage"
+          [code]="code"
+          (codeChange)="onCodeChange($event)"
+        >
+        </app-code-editor>
+
+      </div>
+
+    </div>
+
+
+    <!-- DRAG HANDLE -->
+
+    <div
+      class="resize-handle"
+      (mousedown)="startResize($event)"
+    ></div>
+
+
+    <!-- RIGHT SIDE -->
+
+    <div
+      class="right-panel"
+      [style.width.%]="100 - leftWidth"
+    >
+
+      <!-- TABS -->
+
+      <div class="result-tabs">
+
+        <button
+          class="result-tab"
+          [class.active]="activeTab === 'testcase'"
+          (click)="activeTab = 'testcase'"
+        >
+          Testcase
+        </button>
+
+        <button
+          class="result-tab"
+          [class.active]="activeTab === 'result'"
+          (click)="activeTab = 'result'"
+        >
+          Test Result
+        </button>
+
+      </div>
+
+
+      <!-- ============================================== -->
+      <!-- TESTCASE -->
+      <!-- ============================================== -->
+
+      <div
+        *ngIf="activeTab === 'testcase'"
+        class="testcase-panel"
+      >
+
+        <!-- TEST CASE BUTTONS -->
+
+        <div class="testcase-list">
+
+          <button
+            *ngFor="let test of testCases; let i = index"
+            class="testcase-button"
+            [class.active]="selectedTestCase === i"
+            (click)="selectedTestCase = i"
+          >
+            Case {{ i + 1 }}
+          </button>
+
+          <button class="add-testcase">
+            +
+          </button>
+
+        </div>
+
+
+        <!-- TEST CASE CONTENT -->
+
+        <div class="testcase-content">
+
+          <label>
+            Input
+          </label>
+
+          <pre>{{ testCases[selectedTestCase].input }}</pre>
+
+
+          <label>
+            Expected Output
+          </label>
+
+          <pre>{{ testCases[selectedTestCase].expected }}</pre>
+
+        </div>
+
+      </div>
+
+
+      <!-- ============================================== -->
+      <!-- TEST RESULT -->
+      <!-- ============================================== -->
+
+      <div
+        *ngIf="activeTab === 'result'"
+        class="test-result-panel"
+      >
+
+        <!-- BEFORE RUN -->
+
+        <div
+          *ngIf="!runResult"
+          class="empty-result"
+        >
+
+          <i class="fas fa-play-circle"></i>
+
+          <p>
+            Run your code to see the test result
+          </p>
+
+        </div>
+
+
+        <!-- SUCCESS -->
+
+        <div
+          *ngIf="runResult === 'success'"
+          class="success-result"
+        >
+
+          <div class="result-heading">
+
+            <i class="fas fa-check-circle"></i>
+
+            <strong>
+              Accepted
+            </strong>
+
+          </div>
+
+          <p>
+            {{ passedTestCases }}/{{ totalTestCases }}
+            test cases passed
+          </p>
+
+        </div>
+
+
+        <!-- ERROR -->
+
+        <div
+          *ngIf="runResult === 'error'"
+          class="failed-result"
+        >
+
+          <div class="result-heading">
+
+            <i class="fas fa-times-circle"></i>
+
+            <strong>
+              Wrong Answer
+            </strong>
+
+          </div>
+
+          <p>
+            {{ resultMessage }}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ====================================================== -->
+<!-- TOAST -->
+<!-- ====================================================== -->
+
+<div
+  *ngIf="toast.visible"
+  class="coding-toast"
+  [ngClass]="'toast-' + toast.type"
+>
+
+  <div class="toast-icon">
+
+    <i
+      class="fas"
+      [ngClass]="{
+        'fa-check-circle': toast.type === 'success',
+        'fa-times-circle': toast.type === 'error',
+        'fa-info-circle': toast.type === 'info',
+        'fa-exclamation-circle': toast.type === 'warning'
+      }"
+    ></i>
+
+  </div>
+
+  <div class="toast-content">
+
+    <strong>
+      {{ toast.title }}
+    </strong>
+
+    <span>
+      {{ toast.message }}
+    </span>
+
+  </div>
+
+  <button
+    class="toast-close"
+    (click)="closeToast()"
+  >
+    ×
+  </button>
+
 </div>

@@ -26,6 +26,7 @@ import { AdminCodingComponent } from './components/admin-coding/admin-coding.com
 import { AuthGuard } from './guards/auth.guard';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CommonModule } from '@angular/common';
+import { CodeEditorComponent } from './components/code-editor/code-editor.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -73,6 +74,7 @@ const routes: Routes = [
     CompanyDatabaseComponent,
     AptitudeTestComponent,
     CodingPracticeComponent,
+    CodeEditorComponent,
     MockInterviewComponent,
     EligibilityCheckerComponent,
     ProfileComponent,

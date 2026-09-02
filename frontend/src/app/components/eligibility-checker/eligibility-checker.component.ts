@@ -33,8 +33,8 @@ export class EligibilityCheckerComponent implements OnInit {
     const appliedRolesIds = this.appliedJobs?.map(job=>job.companyId);
     this.eligibilityService.checkEligibility(this.user?.id).subscribe({
       next: (data) => {
-        this.openingRolesList = data.filter(res=> !appliedRolesIds.includes(res?.openingRoles
-?.id));
+        this.openingRolesList = data.filter(res=> !appliedRolesIds.includes(res?.companyId
+        ?.id));
         this.loading = false;
       },
       error: (err) => {
