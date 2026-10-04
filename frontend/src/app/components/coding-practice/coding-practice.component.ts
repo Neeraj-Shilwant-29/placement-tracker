@@ -1,7 +1,32 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { CodingService } from "../../services/coding.service";
 import { AuthService } from "../../services/auth.service";
+import { CodeEditorComponent } from "../code-editor/code-editor.component";
+
+interface TestCase {
+  input: string;
+  expected: string;
+  actual: string;
+  status: "pending" | "running" | "passed" | "failed" | "error";
+  error?: string;
+}
+
+interface TestResult {
+  testCase: number;
+  input: string;
+  expected: string;
+  actual: string;
+  passed: boolean;
+  error?: string;
+}
+
+interface CodeExecutionResponse {
+  success: boolean;
+  results: TestResult[];
+  output?: string;
+  error?: string;
+}
 
 @Component({
   selector: "app-coding-practice",
@@ -9,6 +34,10 @@ import { AuthService } from "../../services/auth.service";
   styleUrls: ["./coding-practice.component.scss"],
 })
 export class CodingPracticeComponent implements OnInit {
+
+  @ViewChild(CodeEditorComponent)
+  private codeEditor?: CodeEditorComponent;
+
   questions: any[] = [];
   filteredQuestions: any[] = [];
   selectedQuestion: any = null;
@@ -34,45 +63,41 @@ int main() {
     return 0;
 }`;
 
-  // ─── RUN / SUBMIT ────────────────────────────────────────
+  // ─────────────────────────────────────────────
+  // RUN / SUBMIT
+  // ─────────────────────────────────────────────
 
   isRunning = false;
   isSubmitting = false;
 
-  runResult = "";
+  runResult: "" | "success" | "error" = "";
   resultMessage = "";
 
-  // ─── TEST CASES ──────────────────────────────────────────
+  // Actual output of complete program
+  output = "";
 
-  testCases = [
-    {
-      input: "nums = [2, 7, 11, 15], target = 9",
-      expected: "[0, 1]",
-      actual: "",
-      status: "pending",
-    },
-    {
-      input: "nums = [3, 2, 4], target = 6",
-      expected: "[1, 2]",
-      actual: "",
-      status: "pending",
-    },
-    {
-      input: "nums = [3, 3], target = 6",
-      expected: "[0, 1]",
-      actual: "",
-      status: "pending",
-    },
-  ];
+  // Runtime / compilation error
+  executionError = "";
+
+  // ─────────────────────────────────────────────
+  // TEST CASES
+  // ─────────────────────────────────────────────
+
+  testCases: TestCase[] = [];
 
   passedTestCases = 0;
-  totalTestCases = this.testCases.length;
+  totalTestCases = 0;
 
-  // ─── TOAST ────────────────────────────────────────────────
+  selectedTestCase = 0;
+  activeTab = "testcase";
+
+  // ─────────────────────────────────────────────
+  // TOAST
+  // ─────────────────────────────────────────────
 
   toast = {
     visible: false,
-    type: "info",
+    type: "info" as "success" | "error" | "info" | "warning",
     title: "",
     message: "",
   };
@@ -85,19 +110,42 @@ int main() {
     private router: Router,
   ) {}
 
+  // ─────────────────────────────────────────────
+  // INIT
+  // ─────────────────────────────────────────────
+
   ngOnInit(): void {
+
     this.codingService.getAllQuestions().subscribe({
+
       next: (data) => {
-        this.questions = data;
-        this.filteredQuestions = data;
+
+        this.questions = data || [];
+        this.filteredQuestions = this.questions;
+
       },
-      error: (err) => console.error(err),
+
+      error: (err) => {
+
+        console.error("Error loading coding questions:", err);
+
+        this.showToast(
+          "error",
+          "Error",
+          "Unable to load coding questions."
+        );
+
+      }
+
     });
   }
 
-  // ─── RESIZE ──────────────────────────────────────────────
+  // ─────────────────────────────────────────────
+  // RESIZE
+  // ─────────────────────────────────────────────
 
   startResize(event: MouseEvent): void {
+
     event.preventDefault();
 
     this.isResizing = true;
@@ -111,57 +159,268 @@ int main() {
     }
 
     const onMouseMove = (e: MouseEvent) => {
+
       if (!this.isResizing) {
         return;
       }
 
       const rect = workspace.getBoundingClientRect();
 
-      // Calculate left panel width as percentage
-      let newWidth = ((e.clientX - rect.left) / rect.width) * 100;
+      let newWidth =
+        ((e.clientX - rect.left) / rect.width) * 100;
 
-      // Minimum 25%, maximum 75%
-      newWidth = Math.max(25, Math.min(75, newWidth));
+      newWidth = Math.max(
+        25,
+        Math.min(75, newWidth)
+      );
 
       this.leftWidth = newWidth;
     };
 
     const onMouseUp = () => {
+
       this.isResizing = false;
 
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener(
+        "mousemove",
+        onMouseMove
+      );
+
+      document.removeEventListener(
+        "mouseup",
+        onMouseUp
+      );
 
       document.body.style.cursor = "default";
       document.body.style.userSelect = "auto";
     };
 
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener(
+      "mousemove",
+      onMouseMove
+    );
+
+    document.addEventListener(
+      "mouseup",
+      onMouseUp
+    );
 
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
   }
 
-  // ─── CODE EDITOR ─────────────────────────────────────────
+  // ─────────────────────────────────────────────
+  // CODE EDITOR
+  // ─────────────────────────────────────────────
 
   onCodeChange(code: string): void {
     this.code = code;
   }
 
-  changeLanguage(): void {
-    console.log("Language:", this.selectedLanguage);
+  private getCurrentCode(): string {
+    const editorCode = this.codeEditor?.getCode();
+
+    if (editorCode !== undefined) {
+      this.code = editorCode;
+    }
+
+    return this.code;
   }
 
-  // ─── RUN CODE ────────────────────────────────────────────
+  changeLanguage(): void {
+    this.code = this.getCodeTemplate(this.selectedLanguage);
+
+    this.resetResults();
+
+  }
+
+  private getCodeTemplate(language: string): string {
+
+    switch (language) {
+      case "java":
+        return `import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] arr = {2, 3, 4, 6};
+        int target = 5;
+
+        System.out.println(arr[0]);
+    }
+}`;
+
+      case "python":
+        return `arr = [2, 3, 4, 6]
+target = 5
+
+print(arr[0])`;
+
+      case "javascript":
+        return `const arr = [2, 3, 4, 6];
+const target = 5;
+
+console.log(arr[0]);`;
+
+      case "cpp":
+      default:
+        return `#include <iostream>
+using namespace std;
+
+int main() {
+    int arr[10] = {2, 3, 4, 6};
+    int target = 5;
+
+    cout << arr[0];
+
+    return 0;
+}`;
+    }
+
+  }
+
+  // ─────────────────────────────────────────────
+  // LOAD TEST CASES
+  // ─────────────────────────────────────────────
+
+  private loadTestCases(): void {
+
+    /*
+      Your database question should ideally contain:
+
+      testCases: [
+        {
+          input: "...",
+          expected: "..."
+        },
+        {
+          input: "...",
+          expected: "..."
+        }
+      ]
+    */
+
+    if (
+      this.selectedQuestion &&
+      Array.isArray(this.selectedQuestion.testCases) &&
+      this.selectedQuestion.testCases.length > 0
+    ) {
+
+      this.testCases =
+        this.selectedQuestion.testCases.map(
+          (test: any) => ({
+
+            input: test.input || "",
+            expected: test.expected || "",
+            actual: "",
+            status: "pending",
+
+          })
+        );
+
+    } else {
+
+      /*
+        Fallback test cases.
+
+        These are only examples.
+        Prefer storing test cases in your database.
+      */
+
+      this.testCases = [
+
+        {
+          input: "nums = [2, 7, 11, 15], target = 9",
+          expected: "[0, 1]",
+          actual: "",
+          status: "pending",
+        },
+
+        {
+          input: "nums = [3, 2, 4], target = 6",
+          expected: "[1, 2]",
+          actual: "",
+          status: "pending",
+        },
+
+        {
+          input: "nums = [3, 3], target = 6",
+          expected: "[0, 1]",
+          actual: "",
+          status: "pending",
+        },
+
+      ];
+
+    }
+
+    this.totalTestCases = this.testCases.length;
+    this.passedTestCases = 0;
+    this.selectedTestCase = 0;
+
+  }
+
+  // ─────────────────────────────────────────────
+  // RESET RESULTS
+  // ─────────────────────────────────────────────
+
+  private resetResults(): void {
+
+    this.runResult = "";
+    this.resultMessage = "";
+    this.output = "";
+    this.executionError = "";
+
+    this.passedTestCases = 0;
+
+    this.testCases.forEach((test) => {
+
+      test.status = "pending";
+      test.actual = "";
+      test.error = undefined;
+
+    });
+
+  }
+
+  // ─────────────────────────────────────────────
+  // RUN CODE
+  // ─────────────────────────────────────────────
 
   runCode(): void {
-    // Check if code is empty
-    if (!this.code || !this.code.trim()) {
+
+    const currentCode = this.getCurrentCode();
+
+    // Empty code
+    if (!currentCode || !currentCode.trim()) {
+
       this.showToast(
         "warning",
         "Code Required",
-        "Please write some code before running.",
+        "Please write some code before running."
+      );
+
+      return;
+    }
+
+    // No question selected
+    if (!this.selectedQuestion) {
+
+      this.showToast(
+        "warning",
+        "No Problem Selected",
+        "Please select a coding problem first."
+      );
+
+      return;
+    }
+
+    // No test cases
+    if (!this.testCases.length) {
+
+      this.showToast(
+        "error",
+        "No Test Cases",
+        "This problem does not have any test cases."
       );
 
       return;
@@ -169,56 +428,263 @@ int main() {
 
     this.isRunning = true;
 
-    this.runResult = "";
-    this.resultMessage = "";
-    this.passedTestCases = 0;
+    this.activeTab = "result";
 
-    // Reset test cases
-    this.testCases.forEach((test) => {
-      test.status = "pending";
-      test.actual = "";
-    });
+    this.resetResults();
 
-    // Show running popup
     this.showToast(
       "info",
       "Running Code",
-      "Your code is being executed...",
+      "Your code is being compiled and tested..."
     );
 
-    // Temporary simulation
-    setTimeout(() => {
-      this.testCases.forEach((test) => {
-        test.status = "passed";
-        test.actual = test.expected;
+    /*
+      IMPORTANT:
 
-        this.passedTestCases++;
+      Angular should NOT directly execute arbitrary
+      C++ / Java / Python code in the browser.
+
+      The backend should compile/run the code and
+      return the result for every testcase.
+    */
+
+    this.codingService
+      .runCode({
+        code: currentCode,
+        language: this.selectedLanguage,
+        testCases: this.testCases.map((test) => ({
+          input: test.input,
+          expected: test.expected,
+        })),
+      })
+      .subscribe({
+
+        next: (response: CodeExecutionResponse) => {
+
+          this.handleExecutionResponse(response);
+
+          this.isRunning = false;
+
+        },
+
+        error: (err) => {
+
+          console.error(
+            "Code execution error:",
+            err
+          );
+
+          this.isRunning = false;
+
+          this.runResult = "error";
+
+          this.executionError =
+            err?.error?.message ||
+            err?.error?.error ||
+            "Unable to execute code.";
+
+          this.resultMessage =
+            this.executionError;
+
+          this.showToast(
+            "error",
+            "Execution Failed",
+            this.executionError
+          );
+
+        }
+
       });
 
-      this.isRunning = false;
+  }
+
+  // ─────────────────────────────────────────────
+  // HANDLE RESULT
+  // ─────────────────────────────────────────────
+
+  private handleExecutionResponse(
+    response: CodeExecutionResponse
+  ): void {
+
+    if (!response) {
+
+      this.runResult = "error";
+
+      this.resultMessage =
+        "No response received from code execution server.";
+
+      return;
+
+    }
+
+    // Runtime / compilation error
+    if (
+      !response.success &&
+      response.error
+    ) {
+
+      this.runResult = "error";
+
+      this.executionError =
+        response.error;
+
+      this.resultMessage =
+        response.error;
+
+      this.showToast(
+        "error",
+        "Compilation / Runtime Error",
+        response.error
+      );
+
+      return;
+
+    }
+
+    // Clear old values
+    this.output = "";
+
+    this.passedTestCases = 0;
+
+    // Process every testcase
+    if (
+      Array.isArray(response.results)
+    ) {
+
+      response.results.forEach(
+        (result: TestResult, index: number) => {
+
+          const test =
+            this.testCases[index];
+
+          if (!test) {
+            return;
+          }
+
+          test.actual =
+            result.actual || "";
+
+          test.error =
+            result.error;
+
+          if (result.passed) {
+
+            test.status = "passed";
+
+            this.passedTestCases++;
+
+          } else {
+
+            test.status = "failed";
+
+          }
+
+        }
+      );
+
+    }
+
+    this.totalTestCases =
+      this.testCases.length;
+
+    // ─────────────────────────────────────
+    // ALL TEST CASES PASSED
+    // ─────────────────────────────────────
+
+    if (
+      this.passedTestCases ===
+      this.totalTestCases
+    ) {
 
       this.runResult = "success";
 
       this.resultMessage =
-        "Your code executed successfully and passed all test cases.";
+        "Accepted! All test cases passed.";
+
+      /*
+        Only show actual program output
+        when all test cases are correct.
+      */
+
+      this.output =
+        response.output ||
+        this.testCases
+          .map((test) => test.actual)
+          .filter((value) => value !== "")
+          .join("\n");
 
       this.showToast(
         "success",
-        "Code Executed",
-        "All test cases passed successfully.",
+        "Accepted",
+        `All ${this.totalTestCases} test cases passed.`
       );
-    }, 1500);
+
+      return;
+    }
+
+    // ─────────────────────────────────────
+    // SOME TEST CASE FAILED
+    // ─────────────────────────────────────
+
+    this.runResult = "error";
+
+    const failedIndex =
+      this.testCases.findIndex(
+        (test) => test.status === "failed"
+      );
+
+    const failedTest =
+      failedIndex >= 0
+        ? this.testCases[failedIndex]
+        : null;
+
+    if (failedTest) {
+
+      this.resultMessage =
+        `Test Case ${failedIndex + 1} failed. ` +
+        `Expected: ${failedTest.expected} | ` +
+        `Actual: ${failedTest.actual || "No output"}`;
+
+    } else {
+
+      this.resultMessage =
+        "Your solution did not pass all test cases.";
+
+    }
+
+    this.showToast(
+      "error",
+      "Wrong Answer",
+      this.resultMessage
+    );
+
   }
 
-  // ─── SUBMIT CODE ─────────────────────────────────────────
+  // ─────────────────────────────────────────────
+  // SUBMIT CODE
+  // ─────────────────────────────────────────────
 
   submitCode(): void {
-    // Check if code is empty
-    if (!this.code || !this.code.trim()) {
+
+    const currentCode = this.getCurrentCode();
+
+    if (!currentCode || !currentCode.trim()) {
+
       this.showToast(
         "warning",
         "Code Required",
-        "Please write some code before submitting.",
+        "Please write some code before submitting."
+      );
+
+      return;
+    }
+
+    if (!this.selectedQuestion) {
+
+      this.showToast(
+        "warning",
+        "No Problem Selected",
+        "Please select a coding problem."
       );
 
       return;
@@ -226,95 +692,195 @@ int main() {
 
     this.isSubmitting = true;
 
-    // Show submitting popup
+    this.activeTab = "result";
+
+    this.resetResults();
+
     this.showToast(
       "info",
       "Submitting Solution",
-      "Your solution is being evaluated...",
+      "Your solution is being evaluated..."
     );
 
-    // Temporary simulation
-    setTimeout(() => {
-      this.isSubmitting = false;
+    this.codingService
+      .runCode({
+        code: currentCode,
+        language: this.selectedLanguage,
+        testCases: this.testCases.map((test) => ({
+          input: test.input,
+          expected: test.expected,
+        })),
+      })
+      .subscribe({
 
-      this.runResult = "success";
+        next: (response: CodeExecutionResponse) => {
 
-      this.resultMessage =
-        "Accepted! Your solution passed all test cases.";
+          this.handleExecutionResponse(
+            response
+          );
 
-      this.testCases.forEach((test) => {
-        test.status = "passed";
-        test.actual = test.expected;
+          this.isSubmitting = false;
+
+          if (
+            response.success &&
+            this.passedTestCases ===
+              this.totalTestCases
+          ) {
+
+            this.showToast(
+              "success",
+              "Accepted!",
+              "Your solution passed all test cases."
+            );
+
+          }
+
+        },
+
+        error: (err) => {
+
+          console.error(
+            "Submission error:",
+            err
+          );
+
+          this.isSubmitting = false;
+
+          this.runResult = "error";
+
+          this.executionError =
+            err?.error?.message ||
+            err?.error?.error ||
+            "Submission failed.";
+
+          this.resultMessage =
+            this.executionError;
+
+          this.showToast(
+            "error",
+            "Submission Failed",
+            this.executionError
+          );
+
+        }
+
       });
 
-      this.passedTestCases = this.totalTestCases;
-
-      this.showToast(
-        "success",
-        "Accepted!",
-        "Your solution passed all test cases.",
-      );
-    }, 2000);
   }
 
-  // ─── TOAST ───────────────────────────────────────────────
+  // ─────────────────────────────────────────────
+  // TOAST
+  // ─────────────────────────────────────────────
 
   showToast(
-    type: "success" | "error" | "info" | "warning",
+    type:
+      | "success"
+      | "error"
+      | "info"
+      | "warning",
     title: string,
     message: string,
   ): void {
-    // Clear previous timeout
+
     if (this.toastTimeout) {
       clearTimeout(this.toastTimeout);
     }
 
-    // Update toast
     this.toast = {
       visible: true,
-      type: type,
-      title: title,
-      message: message,
+      type,
+      title,
+      message,
     };
 
-    // Automatically close after 4 seconds
-    this.toastTimeout = setTimeout(() => {
-      this.closeToast();
-    }, 4000);
+    this.toastTimeout =
+      setTimeout(() => {
+
+        this.closeToast();
+
+      }, 4000);
+
   }
 
   closeToast(): void {
+
     this.toast.visible = false;
 
     if (this.toastTimeout) {
-      clearTimeout(this.toastTimeout);
+
+      clearTimeout(
+        this.toastTimeout
+      );
+
     }
+
   }
 
-  // ─── FILTER QUESTIONS ───────────────────────────────────
+  // ─────────────────────────────────────────────
+  // FILTER QUESTIONS
+  // ─────────────────────────────────────────────
 
   filterQuestions(): void {
-    this.filteredQuestions = this.questions.filter((q) => {
-      const matchDifficulty =
-        !this.filterDifficulty || q.difficulty === this.filterDifficulty;
 
-      const matchCategory =
-        !this.filterCategory || q.category === this.filterCategory;
+    this.filteredQuestions =
+      this.questions.filter((q) => {
 
-      return matchDifficulty && matchCategory;
-    });
+        const matchDifficulty =
+          !this.filterDifficulty ||
+          q.difficulty ===
+            this.filterDifficulty;
+
+        const matchCategory =
+          !this.filterCategory ||
+          q.category ===
+            this.filterCategory;
+
+        return (
+          matchDifficulty &&
+          matchCategory
+        );
+
+      });
+
   }
 
-  // ─── SELECT QUESTION ────────────────────────────────────
+  // ─────────────────────────────────────────────
+  // SELECT QUESTION
+  // ─────────────────────────────────────────────
 
   selectQuestion(q: any): void {
+
     this.selectedQuestion = q;
+
+    /*
+      Every question gets its own
+      test cases.
+    */
+
+    this.loadTestCases();
+
+    this.code =
+      q.starterCode ||
+      q.codeTemplate ||
+      this.code;
+
+    this.resetResults();
+
   }
 
-  // ─── LOGOUT ──────────────────────────────────────────────
+  // ─────────────────────────────────────────────
+  // LOGOUT
+  // ─────────────────────────────────────────────
 
   logout(): void {
+
     this.authService.logout();
-    this.router.navigate(["/login"]);
+
+    this.router.navigate([
+      "/login"
+    ]);
+
   }
+
 }
+

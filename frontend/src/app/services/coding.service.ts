@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class CodingService {
+
   private apiUrl = `${environment.apiBaseUrl}/coding`;
 
   constructor(private http: HttpClient) {}
@@ -14,26 +15,59 @@ export class CodingService {
   }
 
   getQuestionsByCategory(category: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/questions/category/${category}`);
+    return this.http.get<any[]>(
+      `${this.apiUrl}/questions/category/${category}`
+    );
   }
 
   getQuestionsByDifficulty(difficulty: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/questions/difficulty/${difficulty}`);
+    return this.http.get<any[]>(
+      `${this.apiUrl}/questions/difficulty/${difficulty}`
+    );
   }
 
   getQuestionById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/questions/${id}`);
+    return this.http.get<any>(
+      `${this.apiUrl}/questions/${id}`
+    );
   }
 
   addQuestion(question: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/admin/questions`, question);
+    return this.http.post(
+      `${this.apiUrl}/admin/questions`,
+      question
+    );
   }
 
   updateQuestion(id: number, question: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/admin/questions/${id}`, question);
+    return this.http.put(
+      `${this.apiUrl}/admin/questions/${id}`,
+      question
+    );
   }
 
   deleteQuestion(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/admin/questions/${id}`);
+    return this.http.delete(
+      `${this.apiUrl}/admin/questions/${id}`
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  // RUN USER CODE
+  // ─────────────────────────────────────────────
+
+  runCode(data: {
+    code: string;
+    language: string;
+    testCases: {
+      input: string;
+      expected: string;
+    }[];
+  }): Observable<any> {
+
+    return this.http.post(
+      `${this.apiUrl}/run`,
+      data
+    );
   }
 }

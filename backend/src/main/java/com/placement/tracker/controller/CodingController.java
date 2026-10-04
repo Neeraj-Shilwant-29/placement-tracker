@@ -1,7 +1,10 @@
 package com.placement.tracker.controller;
 
 import com.placement.tracker.entity.CodingQuestion;
+import com.placement.tracker.dto.CodeExecutionRequest;
+import com.placement.tracker.dto.CodeExecutionResponse;
 import com.placement.tracker.service.CodingService;
+import com.placement.tracker.service.CodeExecutionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,9 @@ public class CodingController {
 
     @Autowired
     private CodingService codingService;
+
+    @Autowired
+    private CodeExecutionService codeExecutionService;
 
     @GetMapping("/questions")
     public ResponseEntity<List<CodingQuestion>> getAllQuestions() {
@@ -40,6 +46,13 @@ public class CodingController {
     @GetMapping("/stats")
     public ResponseEntity<Long> getTotalQuestions() {
         return ResponseEntity.ok(codingService.getTotalQuestions());
+    }
+
+    @PostMapping("/run")
+    public ResponseEntity<CodeExecutionResponse> runCode(
+            @RequestBody CodeExecutionRequest request
+    ) {
+        return ResponseEntity.ok(codeExecutionService.execute(request));
     }
 
     // Admin endpoints

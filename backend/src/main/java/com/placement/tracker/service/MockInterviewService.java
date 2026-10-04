@@ -37,12 +37,14 @@ public class MockInterviewService {
     public MockInterview updateInterview(Long id, MockInterview updated) {
         MockInterview interview = interviewRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Interview not found"));
+        interview.setInterviewType(updated.getInterviewType());
         interview.setTechnicalScore(updated.getTechnicalScore());
         interview.setAptitudeScore(updated.getAptitudeScore());
         interview.setCommunicationScore(updated.getCommunicationScore());
         interview.setFeedback(updated.getFeedback());
         interview.setInterviewerName(updated.getInterviewerName());
         interview.setStatus(updated.getStatus());
+        interview.setCompany(updated.getCompany());
 
         int overall = (int) ((updated.getTechnicalScore() + updated.getAptitudeScore() +
                 updated.getCommunicationScore()) / 3.0);

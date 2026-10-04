@@ -1,43 +1,42 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
-import { AptitudeService } from '../../services/aptitude.service';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ColDef, GridReadyEvent, GridApi } from "ag-grid-community";
+import { AptitudeService } from "../../services/aptitude.service";
 
 @Component({
-  selector: 'app-admin-aptitude',
-  templateUrl: './admin-aptitude.component.html',
-  styleUrls: ['./admin-aptitude.component.scss']
+  selector: "app-admin-aptitude",
+  templateUrl: "./admin-aptitude.component.html",
+  styleUrls: ["./admin-aptitude.component.scss"],
 })
 export class AdminAptitudeComponent implements OnInit {
-
   questions: any[] = [];
-  
+
   quantitativeTopics: string[] = [
-  'Number System',
-  'Percentage',
-  'Profit and Loss',
-  'Ratio and Proportion',
-  'Average',
-  'Time and Work',
-  'Time, Speed and Distance'
-];
+    "Number System",
+    "Percentage",
+    "Profit and Loss",
+    "Ratio and Proportion",
+    "Average",
+    "Time and Work",
+    "Time, Speed and Distance",
+  ];
 
-logicalTopics: string[] = [
-  'Number Series',
-  'Coding-Decoding',
-  'Blood Relations',
-  'Direction Sense',
-  'Logical Puzzles',
-  'Syllogism'
-];
+  logicalTopics: string[] = [
+    "Number Series",
+    "Coding-Decoding",
+    "Blood Relations",
+    "Direction Sense",
+    "Logical Puzzles",
+    "Syllogism",
+  ];
 
-availableTopics: string[] = [];
+  availableTopics: string[] = [];
 
   showForm = false;
   editingQuestion: any = null;
 
-  successMessage = '';
-  errorMessage = '';
+  successMessage = "";
+  errorMessage = "";
   saving = false;
 
   form: FormGroup;
@@ -47,65 +46,61 @@ availableTopics: string[] = [];
   defaultColDef: ColDef = {
     sortable: true,
     filter: true,
-    resizable: true
+    resizable: true,
   };
 
   columnDefs: ColDef[] = [
-
     {
-      headerName: 'Question',
-      field: 'question',
+      headerName: "Question",
+      field: "question",
       flex: 3,
       cellRenderer: (params: any) => {
-        const text = params.value || '';
+        const text = params.value || "";
 
-        return text.length > 70
-          ? text.substring(0, 70) + '...'
-          : text;
-      }
+        return text.length > 70 ? text.substring(0, 70) + "..." : text;
+      },
     },
 
     {
-      headerName: 'Category',
-      field: 'category',
+      headerName: "Category",
+      field: "category",
       flex: 1,
       cellRenderer: (params: any) =>
-        `<span class="badge bg-info">${params.value}</span>`
+        `<span class="badge bg-info">${params.value}</span>`,
     },
 
     {
-      headerName: 'Difficulty',
-      field: 'difficulty',
+      headerName: "Difficulty",
+      field: "difficulty",
       flex: 1,
       cellRenderer: (params: any) => {
-
         const cls =
-          params.value === 'Easy'
-            ? 'bg-success'
-            : params.value === 'Medium'
-              ? 'bg-warning'
-              : 'bg-danger';
+          params.value === "Easy"
+            ? "bg-success"
+            : params.value === "Medium"
+              ? "bg-warning"
+              : "bg-danger";
 
         return `
           <span class="badge ${cls}">
             ${params.value}
           </span>
         `;
-      }
+      },
     },
 
     {
-      headerName: 'Answer',
-      field: 'correctAnswer',
+      headerName: "Answer",
+      field: "correctAnswer",
       flex: 0.5,
       cellStyle: {
-        fontWeight: '700'
-      }
+        fontWeight: "700",
+      },
     },
 
     {
-      headerName: 'Actions',
-      field: 'id',
+      headerName: "Actions",
+      field: "id",
       flex: 1,
       sortable: false,
       filter: false,
@@ -128,26 +123,25 @@ availableTopics: string[] = [];
           </button>
 
         </div>
-      `
-    }
-
+      `,
+    },
   ];
 
   constructor(
     private aptitudeService: AptitudeService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) {
     this.form = this.fb.group({
-      question: ['', Validators.required],
-      optionA: ['', Validators.required],
-      optionB: ['', Validators.required],
-      optionC: ['', Validators.required],
-      optionD: ['', Validators.required],
-      correctAnswer: ['A', Validators.required],
-      category: ['', Validators.required],
-      topic: ['', Validators.required],
-      difficulty: ['Easy', Validators.required],
-      explanation: ['']
+      question: ["", Validators.required],
+      optionA: ["", Validators.required],
+      optionB: ["", Validators.required],
+      optionC: ["", Validators.required],
+      optionD: ["", Validators.required],
+      correctAnswer: ["A", Validators.required],
+      category: ["", Validators.required],
+      topic: ["", Validators.required],
+      difficulty: ["Easy", Validators.required],
+      explanation: [""],
     });
   }
 
@@ -160,27 +154,19 @@ availableTopics: string[] = [];
   // ==========================================
 
   loadQuestions(): void {
-
     this.aptitudeService.getAllQuestions().subscribe({
-
       next: (data: any[]) => {
-
-        console.log('Questions loaded:', data);
+        console.log("Questions loaded:", data);
 
         this.questions = data || [];
-
       },
 
       error: (err) => {
-
-        console.error('Error loading questions:', err);
+        console.error("Error loading questions:", err);
 
         this.errorMessage =
-          err?.error?.message ||
-          'Failed to load aptitude questions.';
-
-      }
-
+          err?.error?.message || "Failed to load aptitude questions.";
+      },
     });
   }
 
@@ -189,7 +175,6 @@ availableTopics: string[] = [];
   // ==========================================
 
   onGridReady(event: GridReadyEvent): void {
-
     this.gridApi = event.api;
 
     setTimeout(() => {
@@ -198,27 +183,25 @@ availableTopics: string[] = [];
   }
 
   onCellClicked(event: any): void {
-
     const target = event.event?.target as HTMLElement;
 
     if (!target) {
       return;
     }
 
-    const actionBtn =
-      target.closest('[data-action]') as HTMLElement;
+    const actionBtn = target.closest("[data-action]") as HTMLElement;
 
     if (!actionBtn) {
       return;
     }
 
-    const action = actionBtn.dataset['action'];
+    const action = actionBtn.dataset["action"];
 
-    if (action === 'edit') {
+    if (action === "edit") {
       this.editQuestion(event.data);
     }
 
-    if (action === 'delete') {
+    if (action === "delete") {
       this.deleteQuestion(event.data.id);
     }
   }
@@ -228,25 +211,24 @@ availableTopics: string[] = [];
   // ==========================================
 
   openAddForm(): void {
-
     this.editingQuestion = null;
 
     this.form.reset({
-      question: '',
-      optionA: '',
-      optionB: '',
-      optionC: '',
-      optionD: '',
-      correctAnswer: 'A',
-      category: 'Quantitative',
-      topic: '',
-      difficulty: 'Easy',
-      explanation: ''
+      question: "",
+      optionA: "",
+      optionB: "",
+      optionC: "",
+      optionD: "",
+      correctAnswer: "A",
+      category: "Quantitative",
+      topic: "",
+      difficulty: "Easy",
+      explanation: "",
     });
 
     this.availableTopics = this.quantitativeTopics;
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.errorMessage = "";
+    this.successMessage = "";
 
     this.showForm = true;
   }
@@ -256,16 +238,15 @@ availableTopics: string[] = [];
   // ==========================================
 
   saveQuestion(): void {
-
-    console.log('Save button clicked');
+    console.log("Save button clicked");
 
     this.form.markAllAsTouched();
 
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.errorMessage = "";
+    this.successMessage = "";
 
     if (this.form.invalid) {
-      this.errorMessage = 'Please fill all required fields.';
+      this.errorMessage = "Please fill all required fields.";
       return;
     }
 
@@ -286,35 +267,21 @@ availableTopics: string[] = [];
       category: f.category,
       topic: f.topic,
       difficulty: f.difficulty,
-      explanation: f.explanation?.trim() || ''
+      explanation: f.explanation?.trim() || "",
     };
 
-    console.log('Sending payload to backend:', payload);
+    console.log("Sending payload to backend:", payload);
 
     // ==========================================
     // UPDATE
     // ==========================================
 
     if (this.editingQuestion?.id) {
+      console.log("Updating question:", this.editingQuestion.id);
 
-      console.log(
-        'Updating question:',
-        this.editingQuestion.id
-      );
-
-      this.aptitudeService
-        .updateQuestion(
-          this.editingQuestion.id,
-          payload
-        )
-        .subscribe({
-
+      this.aptitudeService.updateQuestion(this.editingQuestion.id, payload).subscribe({
           next: (response) => {
-
-            console.log(
-              'Question updated successfully:',
-              response
-            );
+            console.log("Question updated successfully:", response);
 
             this.saving = false;
 
@@ -322,26 +289,16 @@ availableTopics: string[] = [];
 
             this.resetForm();
 
-            this.showSuccess(
-              'Aptitude question updated successfully!'
-            );
+            this.showSuccess("Aptitude question updated successfully!");
           },
 
           error: (err) => {
-
-            console.error(
-              'Error updating question:',
-              err
-            );
+            console.error("Error updating question:", err);
 
             this.saving = false;
 
-            this.showError(
-              err?.error?.message ||
-              'Failed to update question.'
-            );
-          }
-
+            this.showError(err?.error?.message || "Failed to update question.");
+          },
         });
 
       return;
@@ -351,55 +308,38 @@ availableTopics: string[] = [];
     // ADD NEW QUESTION
     // ==========================================
 
-    console.log('Adding new question...');
+    console.log("Adding new question...");
 
-    this.aptitudeService
-      .addQuestion(payload)
-      .subscribe({
+    this.aptitudeService.addQuestion(payload).subscribe({
+      next: (response) => {
+        console.log("Question added successfully:", response);
 
-        next: (response) => {
+        this.saving = false;
 
-          console.log(
-            'Question added successfully:',
-            response
-          );
+        // Reload from database
+        this.loadQuestions();
 
-          this.saving = false;
+        // Close form
+        this.resetForm();
 
-          // Reload from database
-          this.loadQuestions();
+        // Success message
+        this.showSuccess("Aptitude question added successfully!");
+      },
 
-          // Close form
-          this.resetForm();
+      error: (err) => {
+        console.error("Error adding question:", err);
 
-          // Success message
-          this.showSuccess(
-            'Aptitude question added successfully!'
-          );
-        },
+        this.saving = false;
 
-        error: (err) => {
+        console.error("Backend error:", err?.error);
 
-          console.error(
-            'Error adding question:',
-            err
-          );
-
-          this.saving = false;
-
-          console.error(
-            'Backend error:',
-            err?.error
-          );
-
-          this.showError(
-            err?.error?.message ||
+        this.showError(
+          err?.error?.message ||
             err?.error ||
-            'Failed to add aptitude question.'
-          );
-        }
-
-      });
+            "Failed to add aptitude question.",
+        );
+      },
+    });
   }
 
   // ==========================================
@@ -407,29 +347,28 @@ availableTopics: string[] = [];
   // ==========================================
 
   editQuestion(question: any): void {
-
-    console.log('Editing question:', question);
+    console.log("Editing question:", question);
 
     this.editingQuestion = question;
 
-    const category = question.category || 'Quantitative';
+    const category = question.category || "Quantitative";
     this.onChangeCategory(category);
 
     this.form.reset({
-      question: question.question || '',
-      optionA: question.optionA || '',
-      optionB: question.optionB || '',
-      optionC: question.optionC || '',
-      optionD: question.optionD || '',
-      correctAnswer: question.correctAnswer || 'A',
+      question: question.question || "",
+      optionA: question.optionA || "",
+      optionB: question.optionB || "",
+      optionC: question.optionC || "",
+      optionD: question.optionD || "",
+      correctAnswer: question.correctAnswer || "A",
       category: category,
-      topic: question.topic || '',
-      difficulty: question.difficulty || 'Easy',
-      explanation: question.explanation || ''
+      topic: question.topic || "",
+      difficulty: question.difficulty || "Easy",
+      explanation: question.explanation || "",
     });
 
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.errorMessage = "";
+    this.successMessage = "";
 
     this.showForm = true;
   }
@@ -439,46 +378,29 @@ availableTopics: string[] = [];
   // ==========================================
 
   deleteQuestion(id: number): void {
-
     if (!id) {
       return;
     }
 
-    if (!confirm('Delete this question?')) {
+    if (!confirm("Delete this question?")) {
       return;
     }
 
-    this.aptitudeService
-      .deleteQuestion(id)
-      .subscribe({
+    this.aptitudeService.deleteQuestion(id).subscribe({
+      next: () => {
+        console.log("Question deleted successfully");
 
-        next: () => {
+        this.loadQuestions();
 
-          console.log(
-            'Question deleted successfully'
-          );
+        this.showSuccess("Aptitude question deleted successfully!");
+      },
 
-          this.loadQuestions();
+      error: (err) => {
+        console.error("Error deleting question:", err);
 
-          this.showSuccess(
-            'Aptitude question deleted successfully!'
-          );
-        },
-
-        error: (err) => {
-
-          console.error(
-            'Error deleting question:',
-            err
-          );
-
-          this.showError(
-            err?.error?.message ||
-            'Failed to delete question.'
-          );
-        }
-
-      });
+        this.showError(err?.error?.message || "Failed to delete question.");
+      },
+    });
   }
 
   // ==========================================
@@ -486,33 +408,27 @@ availableTopics: string[] = [];
   // ==========================================
 
   showSuccess(message: string): void {
-
     this.successMessage = message;
 
-    this.errorMessage = '';
+    this.errorMessage = "";
 
     setTimeout(() => {
-
-      this.successMessage = '';
-
+      this.successMessage = "";
     }, 3000);
   }
 
   onChangeCategory(category: string): void {
+    if (category === "Quantitative") {
+      this.availableTopics = this.quantitativeTopics;
+    } else if (category === "Logical") {
+      this.availableTopics = this.logicalTopics;
+    } else {
+      this.availableTopics = [];
+    }
 
-  if (category === 'Quantitative') {
-    this.availableTopics = this.quantitativeTopics;
-  }
-  else if (category === 'Logical') {
-    this.availableTopics = this.logicalTopics;
-  }
-  else {
-    this.availableTopics = [];
-  }
+    this.form.get("topic")?.setValue("");
 
-  this.form.get('topic')?.setValue('');
-
-  console.log('Available Topics:', this.availableTopics);
+    console.log("Available Topics:", this.availableTopics);
   }
 
   // ==========================================
@@ -520,15 +436,12 @@ availableTopics: string[] = [];
   // ==========================================
 
   showError(message: string): void {
-
     this.errorMessage = message;
 
-    this.successMessage = '';
+    this.successMessage = "";
 
     setTimeout(() => {
-
-      this.errorMessage = '';
-
+      this.errorMessage = "";
     }, 5000);
   }
 
@@ -537,29 +450,27 @@ availableTopics: string[] = [];
   // ==========================================
 
   resetForm(): void {
-
     this.showForm = false;
 
     this.editingQuestion = null;
 
     this.saving = false;
 
-    this.errorMessage = '';
+    this.errorMessage = "";
 
     this.form.reset({
-      question: '',
-      optionA: '',
-      optionB: '',
-      optionC: '',
-      optionD: '',
-      correctAnswer: 'A',
-      category: 'Quantitative',
-      topic: '',
-      difficulty: 'Easy',
-      explanation: ''
+      question: "",
+      optionA: "",
+      optionB: "",
+      optionC: "",
+      optionD: "",
+      correctAnswer: "A",
+      category: "Quantitative",
+      topic: "",
+      difficulty: "Easy",
+      explanation: "",
     });
 
     this.availableTopics = this.quantitativeTopics;
   }
-
 }

@@ -23,6 +23,7 @@ import { AdminOverviewComponent } from './components/admin-overview/admin-overvi
 import { AdminCompaniesComponent } from './components/admin-companies/admin-companies.component';
 import { AdminAptitudeComponent } from './components/admin-aptitude/admin-aptitude.component';
 import { AdminCodingComponent } from './components/admin-coding/admin-coding.component';
+import { AdminMockInterviewComponent } from './components/admin-mock-interview/admin-mock-interview.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { CommonModule } from '@angular/common';
@@ -57,6 +58,7 @@ const routes: Routes = [
       { path: 'companies', component: AdminCompaniesComponent },
       { path: 'aptitude', component: AdminAptitudeComponent },
       { path: 'coding', component: AdminCodingComponent },
+      { path: 'mock-interview', component: AdminMockInterviewComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
@@ -83,7 +85,8 @@ const routes: Routes = [
     AdminOverviewComponent,
     AdminCompaniesComponent,
     AdminAptitudeComponent,
-    AdminCodingComponent
+    AdminCodingComponent,
+    AdminMockInterviewComponent
   ],
   imports: [
     BrowserModule,

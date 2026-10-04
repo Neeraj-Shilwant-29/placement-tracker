@@ -5,7 +5,9 @@ import {
   ViewChild,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 
 import loader from '@monaco-editor/loader';
@@ -15,7 +17,7 @@ import loader from '@monaco-editor/loader';
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.css']
 })
-export class CodeEditorComponent implements AfterViewInit {
+export class CodeEditorComponent implements AfterViewInit, OnChanges {
 
   @ViewChild('editorContainer', { static: true })
   editorContainer!: ElementRef;
@@ -27,6 +29,8 @@ export class CodeEditorComponent implements AfterViewInit {
   @Output() codeChange = new EventEmitter<string>();
 
   private editor: any;
+
+  private editorReady = false;
 
   async ngAfterViewInit() {
 
@@ -66,6 +70,8 @@ export class CodeEditorComponent implements AfterViewInit {
       }
     );
 
+    this.editorReady = true;
+
     this.editor.onDidChangeModelContent(() => {
 
       this.codeChange.emit(
@@ -73,6 +79,20 @@ export class CodeEditorComponent implements AfterViewInit {
       );
 
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.editorReady || !this.editor) {
+      return;
+    }
+
+    if (changes['language'] && !changes['language'].firstChange) {
+      this.editor.getModel()?.setLanguage(this.language);
+    }
+
+    if (changes['code'] && changes['code'].currentValue !== this.editor.getValue()) {
+      this.editor.setValue(this.code);
+    }
   }
 
 

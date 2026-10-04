@@ -20,7 +20,10 @@
             <i class="fas fa-user"></i> Full Name
           </label>
           <input type="text" class="form-control" formControlName="fullName"
-                 placeholder="Enter your full name">
+                 placeholder="Enter your full name" autocomplete="name">
+          <div class="text-danger" *ngIf="registerForm.get('fullName')?.touched && registerForm.get('fullName')?.invalid">
+            Enter a valid name using letters and spaces only.
+          </div>
         </div>
 
         <div class="form-group">
@@ -28,7 +31,10 @@
             <i class="fas fa-envelope"></i> Email Address
           </label>
           <input type="email" class="form-control" formControlName="email"
-                 placeholder="you@college.edu">
+                 placeholder="you@college.edu" autocomplete="email">
+          <div class="text-danger" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+            Enter a valid email that starts with a letter.
+          </div>
         </div>
 
         <div class="form-group">
@@ -36,15 +42,21 @@
             <i class="fas fa-lock"></i> Password
           </label>
           <input type="password" class="form-control" formControlName="password"
-                 placeholder="Min 6 characters">
+                 placeholder="Min 6 characters" autocomplete="new-password">
+          <div class="text-danger" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+            Password must be at least 6 characters.
+          </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">
             <i class="fas fa-phone"></i> Phone Number
           </label>
-          <input type="text" class="form-control" formControlName="phone"
-                 placeholder="Enter phone number">
+             <input type="tel" class="form-control" formControlName="phone"
+               placeholder="Enter 10-digit phone number" inputmode="numeric" maxlength="10" autocomplete="tel">
+             <div class="text-danger" *ngIf="registerForm.get('phone')?.touched && registerForm.get('phone')?.invalid">
+               Enter exactly 10 digits.
+             </div>
         </div>
 
         <div class="form-group">
@@ -52,7 +64,10 @@
             <i class="fas fa-university"></i> College
           </label>
           <input type="text" class="form-control" formControlName="college"
-                 placeholder="Enter your college name">
+                 placeholder="Enter your college name" autocomplete="organization">
+          <div class="text-danger" *ngIf="registerForm.get('college')?.touched && registerForm.get('college')?.invalid">
+            Enter a valid college name using letters and spaces only.
+          </div>
         </div>
 
         <div class="row">
@@ -70,6 +85,9 @@
                 <option value="ME">ME</option>
                 <option value="CE">CE</option>
               </select>
+              <div class="text-danger" *ngIf="registerForm.get('branch')?.touched && registerForm.get('branch')?.invalid">
+                Select your branch.
+              </div>
             </div>
           </div>
           <div class="col-6">
@@ -78,7 +96,10 @@
                 <i class="fas fa-star"></i> CGPA
               </label>
               <input type="text" class="form-control" formControlName="cgpa"
-                     placeholder="e.g. 8.5">
+                     placeholder="e.g. 8.5" inputmode="decimal">
+              <div class="text-danger" *ngIf="registerForm.get('cgpa')?.touched && registerForm.get('cgpa')?.invalid">
+                Enter a number between 0 and 10.
+              </div>
             </div>
           </div>
         </div>

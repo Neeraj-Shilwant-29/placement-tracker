@@ -1,0 +1,260 @@
+<div class="admin-page animate-fadeIn">
+
+  <div class="page-header">
+    <div>
+      <h1><i class="fas fa-calendar-check"></i> Mock Interviews</h1>
+      <p>Create interview slots, manage bookings and track interview status</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="showForm ? cancelEdit() : openAddForm()">
+      <i class="fas" [ngClass]="showForm ? 'fa-times' : 'fa-plus'"></i>
+      {{ showForm ? 'Cancel' : 'Create Slot' }}
+    </button>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show">
+    <i class="fas fa-check-circle me-2"></i>{{ successMessage }}
+    <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show">
+    <i class="fas fa-exclamation-circle me-2"></i>{{ errorMessage }}
+    <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-calendar"></i></div>
+      <div><span>Total</span><strong>{{ getTotalCount() }}</strong></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon available"><i class="fas fa-check"></i></div>
+      <div><span>Available</span><strong>{{ getCount('AVAILABLE') }}</strong></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon booked"><i class="fas fa-user-check"></i></div>
+      <div><span>Booked</span><strong>{{ getCount('BOOKED') }}</strong></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon completed"><i class="fas fa-flag-checkered"></i></div>
+      <div><span>Completed</span><strong>{{ getCount('COMPLETED') }}</strong></div>
+    </div>
+  </div>
+
+  <div *ngIf="showForm" class="form-card animate-scaleIn">
+    <div class="form-card-header">
+      <h4>
+        <i class="fas" [ngClass]="editingSlot ? 'fa-edit' : 'fa-plus-circle'"></i>
+        {{ editingSlot ? 'Edit Interview Slot' : 'Create Interview Slot' }}
+      </h4>
+      <span>Students will see AVAILABLE slots on their Mock Interview calendar.</span>
+    </div>
+
+    <div class="form-card-body">
+      <form #slotForm="ngForm">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Interviewer Name <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              class="form-control"
+              name="interviewerName"
+              [(ngModel)]="form.interviewerName"
+              placeholder="e.g. Rahul Sharma"
+              required>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Interviewer Email</label>
+            <input
+              type="email"
+              class="form-control"
+              name="interviewerEmail"
+              [(ngModel)]="form.interviewerEmail"
+              placeholder="interviewer@company.com">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Interview Type</label>
+            <select class="form-select" name="interviewType" [(ngModel)]="form.interviewType">
+              <option value="Technical Mock Interview">Technical Mock Interview</option>
+              <option value="HR Mock Interview">HR Mock Interview</option>
+              <option value="Aptitude + Technical">Aptitude + Technical</option>
+              <option value="Behavioral Interview">Behavioral Interview</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Company / Context</label>
+            <input
+              type="text"
+              class="form-control"
+              name="company"
+              [(ngModel)]="form.company"
+              placeholder="e.g. TCS / General"
+            >
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Interviewer ID</label>
+            <input
+              type="number"
+              class="form-control"
+              name="interviewerId"
+              [(ngModel)]="form.interviewerId"
+              placeholder="Optional"
+            >
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Date <span class="text-danger">*</span></label>
+            <input
+              type="date"
+              class="form-control"
+              name="date"
+              [(ngModel)]="form.date"
+              required
+            >
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Start Time <span class="text-danger">*</span></label>
+            <input
+              type="time"
+              class="form-control"
+              name="startTime"
+              [(ngModel)]="form.startTime"
+              required
+            >
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">End Time <span class="text-danger">*</span></label>
+            <input
+              type="time"
+              class="form-control"
+              name="endTime"
+              [(ngModel)]="form.endTime"
+              required
+            >
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="form-card-footer">
+      <button type="button" class="btn btn-outline-secondary me-2" (click)="cancelEdit()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="saving"
+        (click)="saveSlot()">
+        <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+        <i *ngIf="!saving" class="fas fa-save me-2"></i>
+        {{ saving ? 'Saving...' : (editingSlot ? 'Update Slot' : 'Create Slot') }}
+      </button>
+    </div>
+  </div>
+
+  <div class="toolbar-card">
+    <div class="toolbar-title">
+      <div>
+        <strong>Interview Schedule</strong>
+        <small>Manage slots for students and monitor bookings.</small>
+      </div>
+      <button type="button" class="btn btn-outline-primary" (click)="loadSlots()" [disabled]="loading">
+        <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i> Refresh
+      </button>
+    </div>
+
+    <div class="toolbar-filters">
+      <div>
+        <label class="form-label">Date</label>
+        <input type="date" class="form-control" [(ngModel)]="dateFilter" (change)="loadSlots()">
+      </div>
+      <div>
+        <label class="form-label">Status</label>
+        <select class="form-select" [(ngModel)]="statusFilter" (change)="applyFilters()">
+          <option value="">All Statuses</option>
+          <option value="AVAILABLE">Available</option>
+          <option value="BOOKED">Booked</option>
+          <option value="CANCELLED">Cancelled</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="NO_SHOW">No Show</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-card">
+    <span class="spinner-border spinner-border-sm me-2"></span>
+    Loading interview slots...
+  </div>
+
+  <div *ngIf="!loading && filteredSlots.length === 0" class="empty-state">
+    <div class="empty-icon"><i class="fas fa-calendar-times"></i></div>
+    <h4>No interview slots found</h4>
+    <p>Create a slot or change the selected date/status filter.</p>
+  </div>
+
+  <div *ngIf="!loading && filteredSlots.length > 0" class="slot-list">
+    <div class="slot-card" *ngFor="let slot of filteredSlots">
+      <div class="slot-main">
+        <div class="slot-time">
+          <strong>{{ formatTime(slot.startTime) }}</strong>
+          <span>to {{ formatTime(slot.endTime) }}</span>
+        </div>
+
+        <div class="slot-info">
+          <h4>{{ slot.interviewerName || 'Interviewer' }}</h4>
+          <p>
+            <span><i class="fas fa-briefcase"></i>{{ slot.interviewType || 'Mock Interview' }}</span>
+            <span *ngIf="slot.company"><i class="fas fa-building"></i>{{ slot.company }}</span>
+          </p>
+        </div>
+
+        <div class="slot-status">
+          <span class="status-badge" [ngClass]="getStatusClass(slot.status)">
+            {{ slot.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="slot-booking" *ngIf="slot.bookedByName || slot.bookedBy || slot.googleMeetLink">
+        <div *ngIf="slot.bookedByName || slot.bookedBy" class="student-detail">
+          <span class="label">Booked by</span>
+          <strong>{{ slot.bookedByName || ('Student #' + slot.bookedBy) }}</strong>
+        </div>
+        <a
+          *ngIf="slot.googleMeetLink"
+          class="btn btn-sm btn-outline-success"
+          [href]="slot.googleMeetLink"
+          target="_blank"
+          rel="noopener">
+          <i class="fas fa-video me-1"></i> Join Meet
+        </a>
+      </div>
+
+      <div class="slot-actions">
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="editSlot(slot)" [disabled]="slot.status === 'COMPLETED'">
+          <i class="fas fa-edit me-1"></i> Edit
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="cancelSlot(slot)" [disabled]="slot.status === 'CANCELLED' || slot.status === 'COMPLETED'">
+          <i class="fas fa-ban me-1"></i> Cancel
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-success" (click)="completeSlot(slot)" [disabled]="slot.status !== 'BOOKED'">
+          <i class="fas fa-check me-1"></i> Complete
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-warning" (click)="markNoShow(slot)" [disabled]="slot.status !== 'BOOKED'">
+          <i class="fas fa-user-slash me-1"></i> No Show
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

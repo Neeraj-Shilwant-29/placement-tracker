@@ -15,29 +15,32 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.registerForm = this.fb.group({
-      fullName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      fullName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+(?:[\s'-][A-Za-z]+)*$/)]],
+      email: ['', [Validators.required, Validators.pattern(/^[A-Za-z][A-Za-z0-9._%+-]*@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      phone: ['' ,[Validators.required, Validators.minLength(10)]],
-      college: ['',Validators.required],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      college: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+(?:\s+[A-Za-z]+)*$/)]],
       branch: ['',Validators.required],
-      cgpa: ['',Validators.required]
+      cgpa: ['', [Validators.required, Validators.pattern(/^(?:\d+)(?:\.\d+)?$/), Validators.min(0), Validators.max(10)]]
     });
   }
 
   onSubmit(): void {
-    if (this.registerForm.valid) {
-      this.loading = true;
-      this.error = '';
-      this.authService.register(this.registerForm.value).subscribe({
-        next: () => {
-          this.router.navigate(['/student/dashboard']);
-        },
-        error: (err) => {
-          this.error = err.error?.message || 'Registration failed';
-          this.loading = false;
-        }
-      });
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
     }
+
+    this.loading = true;
+    this.error = '';
+    this.authService.register(this.registerForm.value).subscribe({
+      next: () => {
+        this.router.navigate(['/student/dashboard']);
+      },
+      error: (err) => {
+        this.error = err.error?.message || 'Registration failed';
+        this.loading = false;
+      }
+    });
   }
 }
