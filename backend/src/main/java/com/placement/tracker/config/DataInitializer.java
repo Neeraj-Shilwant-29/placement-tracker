@@ -76,38 +76,38 @@ public class DataInitializer {
             aptitudeQuestionRepository.save(AptitudeQuestion.builder()
                     .question("What is 15% of 200?")
                     .optionA("25").optionB("30").optionC("35").optionD("40")
-                    .correctAnswer("B").category("Quantitative").difficulty("Easy")
+                    .correctAnswer("B").category("Quantitative").topic("Percentages").difficulty("Easy")
                     .explanation("15/100 * 200 = 30").build());
 
             aptitudeQuestionRepository.save(AptitudeQuestion.builder()
                     .question("If A can do a work in 10 days and B can do it in 15 days, how many days will they take together?")
                     .optionA("5").optionB("6").optionC("7").optionD("8")
-                    .correctAnswer("B").category("Quantitative").difficulty("Medium")
+                    .correctAnswer("B").category("Quantitative").topic("Time and Work").difficulty("Medium")
                     .explanation("1/10 + 1/15 = 1/6, so 6 days").build());
 
             aptitudeQuestionRepository.save(AptitudeQuestion.builder()
                     .question("Choose the synonym of 'ABANDON'")
                     .optionA("Keep").optionB("Leave").optionC("Support").optionD("Build")
-                    .correctAnswer("B").category("Verbal").difficulty("Easy")
+                    .correctAnswer("B").category("Verbal").topic("Synonyms").difficulty("Easy")
                     .explanation("Abandon means to leave or give up").build());
 
             aptitudeQuestionRepository.save(AptitudeQuestion.builder()
                     .question("Find the odd one out: 2, 3, 5, 7, 11, 14, 17")
                     .optionA("2").optionB("7").optionC("14").optionD("17")
-                    .correctAnswer("C").category("Logical").difficulty("Easy")
+                    .correctAnswer("C").category("Logical").topic("Number Series").difficulty("Easy")
                     .explanation("14 is not a prime number").build());
 
             aptitudeQuestionRepository.save(AptitudeQuestion.builder()
                     .question("A train 100m long passes a pole in 20 seconds. What is its speed?")
                     .optionA("18 km/h").optionB("20 km/h").optionC("36 km/h").optionD("54 km/h")
-                    .correctAnswer("C").category("Quantitative").difficulty("Medium")
+                    .correctAnswer("A").category("Quantitative").topic("Time, Speed and Distance").difficulty("Medium")
                     .explanation("Speed = 100/20 = 5 m/s = 18 km/h").build());
 
             aptitudeQuestionRepository.save(AptitudeQuestion.builder()
                     .question("If FRIEND is coded as HUMJTK, how is CANDLE coded?")
-                    .optionA("EDRIGL").optionB("DCNLFJ").optionC("EDRIGL").optionD("DCNLFJ")
-                    .correctAnswer("A").category("Logical").difficulty("Hard")
-                    .explanation("Each letter is shifted by +2").build());
+                    .optionA("EDRIRL").optionB("DCNLFJ").optionC("EDRIGL").optionD("FESJSM")
+                    .correctAnswer("A").category("Logical").topic("Coding-Decoding").difficulty("Hard")
+                    .explanation("Letters are shifted by +2, +3, +4, +5, +6, and +7 respectively").build());
 
             System.out.println("Sample aptitude questions initialized!");
         }
