@@ -159,7 +159,7 @@
             Sample Input
           </h5>
 
-          <pre><code>{{ selectedQuestion.sampleInput }}</code></pre>
+          <pre><code>{{ testCases[0]?.input || selectedQuestion.sampleInput }}</code></pre>
         </div>
 
         <div class="io-block">
@@ -168,7 +168,7 @@
             Sample Output
           </h5>
 
-          <pre><code>{{ selectedQuestion.sampleOutput }}</code></pre>
+          <pre><code>{{ testCases[0]?.expected || selectedQuestion.sampleOutput }}</code></pre>
         </div>
       </div>
 
@@ -428,7 +428,7 @@
             <i class="fas fa-times-circle"></i>
 
             <strong>
-              Wrong Answer
+              {{ executionError ? 'Execution Error' : 'Wrong Answer' }}
             </strong>
 
           </div>

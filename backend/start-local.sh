@@ -62,6 +62,16 @@ setup_java() {
   log "Java ${JAVA_VERSION} ready"
 }
 
+check_cpp_compiler() {
+  if command -v g++ >/dev/null 2>&1; then
+    log "C++ compiler ready: $(command -v g++)"
+    return
+  fi
+
+  warn "g++ not found. C++ Run/Submit will be unavailable until GCC is installed and on PATH."
+  warn "Install with 'brew install gcc' (macOS) or 'sudo apt install g++' (Ubuntu/Debian), then restart the backend."
+}
+
 start_mysql() {
   if mysqladmin ping -h "${DB_HOST}" -P "${DB_PORT}" -u "${DB_USER}" --silent 2>/dev/null; then
     log "MySQL running (${DB_USER}@${DB_HOST}:${DB_PORT})"
@@ -126,6 +136,7 @@ main() {
   require_command mysqladmin
 
   setup_java
+  check_cpp_compiler
   start_mysql
   create_database
   build_app

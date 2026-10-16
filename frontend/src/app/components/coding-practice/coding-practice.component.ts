@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { CodingService } from "../../services/coding.service";
 import { AuthService } from "../../services/auth.service";
 import { CodeEditorComponent } from "../code-editor/code-editor.component";
+import { getCodingPracticeProblem } from "./coding-practice-problems";
 
 interface TestCase {
   input: string;
@@ -229,53 +230,46 @@ int main() {
 
   changeLanguage(): void {
     this.code = this.getCodeTemplate(this.selectedLanguage);
-
     this.resetResults();
-
   }
 
   private getCodeTemplate(language: string): string {
+    const problem = this.selectedQuestion
+      ? getCodingPracticeProblem(this.selectedQuestion.title)
+      : undefined;
+    return problem?.starterCode[language] || this.getDefaultCodeTemplate(language);
+  }
 
+  private getDefaultCodeTemplate(language: string): string {
     switch (language) {
       case "java":
         return `import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        int[] arr = {2, 3, 4, 6};
-        int target = 5;
-
-        System.out.println(arr[0]);
+        Scanner scanner = new Scanner(System.in);
+        // Read input and print the answer.
     }
 }`;
-
       case "python":
-        return `arr = [2, 3, 4, 6]
-target = 5
+        return `import sys
 
-print(arr[0])`;
-
+data = sys.stdin.read()
+# Read input and print the answer.`;
       case "javascript":
-        return `const arr = [2, 3, 4, 6];
-const target = 5;
-
-console.log(arr[0]);`;
-
+        return `const fs = require("fs");
+const input = fs.readFileSync(0, "utf8");
+// Read input and print the answer.`;
       case "cpp":
       default:
         return `#include <iostream>
 using namespace std;
 
 int main() {
-    int arr[10] = {2, 3, 4, 6};
-    int target = 5;
-
-    cout << arr[0];
-
+    // Read input and print the answer.
     return 0;
 }`;
     }
-
   }
 
   // ─────────────────────────────────────────────
@@ -299,59 +293,25 @@ int main() {
       ]
     */
 
-    if (
-      this.selectedQuestion &&
-      Array.isArray(this.selectedQuestion.testCases) &&
-      this.selectedQuestion.testCases.length > 0
-    ) {
+    const questionCases = Array.isArray(this.selectedQuestion?.testCases)
+      ? this.selectedQuestion.testCases
+      : undefined;
+    const problem = this.selectedQuestion
+      ? getCodingPracticeProblem(this.selectedQuestion.title)
+      : undefined;
+    const cases = questionCases?.length
+      ? questionCases
+      : problem?.testCases || [{
+        input: this.selectedQuestion?.sampleInput || "",
+        expected: this.selectedQuestion?.sampleOutput || "",
+      }];
 
-      this.testCases =
-        this.selectedQuestion.testCases.map(
-          (test: any) => ({
-
-            input: test.input || "",
-            expected: test.expected || "",
-            actual: "",
-            status: "pending",
-
-          })
-        );
-
-    } else {
-
-      /*
-        Fallback test cases.
-
-        These are only examples.
-        Prefer storing test cases in your database.
-      */
-
-      this.testCases = [
-
-        {
-          input: "nums = [2, 7, 11, 15], target = 9",
-          expected: "[0, 1]",
-          actual: "",
-          status: "pending",
-        },
-
-        {
-          input: "nums = [3, 2, 4], target = 6",
-          expected: "[1, 2]",
-          actual: "",
-          status: "pending",
-        },
-
-        {
-          input: "nums = [3, 3], target = 6",
-          expected: "[0, 1]",
-          actual: "",
-          status: "pending",
-        },
-
-      ];
-
-    }
+    this.testCases = cases.map((test: any) => ({
+      input: test.input || "",
+      expected: test.expected ?? test.expectedOutput ?? "",
+      actual: "",
+      status: "pending",
+    }));
 
     this.totalTestCases = this.testCases.length;
     this.passedTestCases = 0;
@@ -574,9 +534,7 @@ int main() {
             this.passedTestCases++;
 
           } else {
-
-            test.status = "failed";
-
+            test.status = result.error ? "error" : "failed";
           }
 
         }
@@ -630,7 +588,7 @@ int main() {
 
     const failedIndex =
       this.testCases.findIndex(
-        (test) => test.status === "failed"
+        (test) => test.status === "failed" || test.status === "error"
       );
 
     const failedTest =
@@ -640,10 +598,12 @@ int main() {
 
     if (failedTest) {
 
-      this.resultMessage =
-        `Test Case ${failedIndex + 1} failed. ` +
-        `Expected: ${failedTest.expected} | ` +
-        `Actual: ${failedTest.actual || "No output"}`;
+      this.executionError = failedTest.error || "";
+      this.resultMessage = failedTest.error
+        ? `Test Case ${failedIndex + 1} runtime error: ${failedTest.error}`
+        : `Test Case ${failedIndex + 1} failed. ` +
+          `Expected: ${failedTest.expected} | ` +
+          `Actual: ${failedTest.actual || "No output"}`;
 
     } else {
 
@@ -654,7 +614,7 @@ int main() {
 
     this.showToast(
       "error",
-      "Wrong Answer",
+      this.executionError ? "Execution Error" : "Wrong Answer",
       this.resultMessage
     );
 
@@ -859,10 +819,9 @@ int main() {
 
     this.loadTestCases();
 
-    this.code =
-      q.starterCode ||
+    this.code = q.starterCode ||
       q.codeTemplate ||
-      this.code;
+      this.getCodeTemplate(this.selectedLanguage);
 
     this.resetResults();
 
@@ -883,4 +842,3 @@ int main() {
   }
 
 }
-

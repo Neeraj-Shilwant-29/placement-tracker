@@ -119,7 +119,7 @@ public class DataInitializer {
                     .title("Two Sum")
                     .description("Given an array of integers and a target, find two numbers that add up to the target.")
                     .difficulty("Easy").category("Arrays")
-                    .sampleInput("[2, 7, 11, 15], target = 9")
+                    .sampleInput("4\n2 7 11 15\n9")
                     .sampleOutput("[0, 1]")
                     .constraints("1 <= nums.length <= 10^4").build());
 
@@ -143,7 +143,7 @@ public class DataInitializer {
                     .title("Binary Search")
                     .description("Implement binary search to find a target in a sorted array.")
                     .difficulty("Easy").category("Searching")
-                    .sampleInput("[1, 2, 3, 4, 5], target = 3")
+                    .sampleInput("5\n1 2 3 4 5\n3")
                     .sampleOutput("2")
                     .constraints("1 <= nums.length <= 10^4").build());
 
@@ -151,7 +151,7 @@ public class DataInitializer {
                     .title("Detect Cycle in Linked List")
                     .description("Detect if a linked list has a cycle.")
                     .difficulty("Medium").category("Linked Lists")
-                    .sampleInput("[3, 2, 0, -4], pos = 1")
+                    .sampleInput("4\n3 2 0 -4\n1")
                     .sampleOutput("true")
                     .constraints("0 <= pos < length").build());
 
@@ -159,7 +159,7 @@ public class DataInitializer {
                     .title("Longest Common Subsequence")
                     .description("Find the longest common subsequence of two strings.")
                     .difficulty("Hard").category("Dynamic Programming")
-                    .sampleInput("abcde, ace")
+                    .sampleInput("abcde\nace")
                     .sampleOutput("3")
                     .constraints("1 <= text1.length, text2.length <= 1000").build());
 

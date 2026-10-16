@@ -215,13 +215,6 @@ export class AptitudeTestComponent implements OnInit, OnDestroy {
     // Make sure selected time is a number
     this.selectedTime = Number(this.selectedTime);
 
-    /*
-     * Configure test.
-     *
-     * 15 minutes -> 15 questions
-     * 30 minutes -> 30 questions
-     * 60 minutes -> 60 questions
-     */
     this.setTestConfiguration();
 
     // Stop any previous timer
